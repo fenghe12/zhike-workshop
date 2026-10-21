@@ -1,0 +1,215 @@
+{
+  "repositories": [
+    {
+      "name": "AniPortrait",
+      "repo": "Zejun-Yang/AniPortrait"
+    },
+    {
+      "name": "EchoMimic",
+      "repo": "BadToBest/EchoMimic"
+    },
+    {
+      "name": "Sonic",
+      "repo": "jixiaozhong/Sonic"
+    },
+    {
+      "name": "EDTalk",
+      "repo": "tanshuai0219/EDTalk"
+    },
+    {
+      "name": "AD-NeRF",
+      "repo": "YudongGuo/AD-NeRF"
+    },
+    {
+      "name": "Wan2.2",
+      "repo": "Wan-Video/Wan2.2"
+    },
+    {
+      "name": "Latte",
+      "repo": "maxin-cn/Latte"
+    },
+    {
+      "name": "SadTalker",
+      "repo": "OpenTalker/SadTalker"
+    },
+    {
+      "name": "Wav2Lip",
+      "repo": "Rudrabha/Wav2Lip"
+    },
+    {
+      "name": "MuseTalk2",
+      "repo": "TMElyralab/MuseTalk"
+    },
+    {
+      "name": "hallo",
+      "repo": "fudan-generative-vision/hallo"
+    },
+    {
+      "name": "MultiTalk-KAIST",
+      "repo": "kaist-ami/MultiTalk"
+    },
+    {
+      "name": "GaussianTalker",
+      "repo": "cvlab-kaist/GaussianTalker"
+    },
+    {
+      "name": "MultiTalk",
+      "repo": "MeiGen-AI/MultiTalk"
+    }
+  ],
+  "models": [
+    {
+      "name": "hallo",
+      "repo": "fudan-generative-ai/hallo"
+    },
+    {
+      "name": "wavlm-base-plus",
+      "repo": "microsoft/wavlm-base-plus",
+      "allow": [
+        "*.json",
+        "pytorch_model.bin",
+        "*.txt",
+        "*.md"
+      ]
+    },
+    {
+      "name": "echomimic",
+      "repo": "BadToBest/EchoMimic"
+    },
+    {
+      "name": "whisper-tiny",
+      "repo": "openai/whisper-tiny",
+      "allow": [
+        "*.json",
+        "*.txt",
+        "*.md",
+        "pytorch_model.bin",
+        "model.safetensors"
+      ]
+    },
+    {
+      "name": "sonic",
+      "repo": "LeonJoe13/Sonic"
+    },
+    {
+      "name": "musetalk",
+      "repo": "TMElyralab/MuseTalk"
+    },
+    {
+      "name": "dwpose",
+      "repo": "yzd-v/DWPose"
+    },
+    {
+      "name": "face-parse",
+      "repo": "ManyOtherFunctions/face-parse-bisent"
+    },
+    {
+      "name": "wan2.2-s2v-14b",
+      "repo": "Wan-AI/Wan2.2-S2V-14B"
+    },
+    {
+      "name": "wan2.1-i2v-14b",
+      "repo": "Wan-AI/Wan2.1-I2V-14B-480P"
+    },
+    {
+      "name": "multitalk",
+      "repo": "MeiGen-AI/MeiGen-MultiTalk",
+      "allow": [
+        "multitalk.safetensors",
+        "diffusion_pytorch_model.safetensors.index.json",
+        "README.md",
+        "assets/*",
+        ".gitattributes"
+      ]
+    },
+    {
+      "name": "latte/Latte-1",
+      "repo": "maxin-cn/Latte-1"
+    },
+    {
+      "name": "aniportrait",
+      "repo": "ZJYang/AniPortrait",
+      "allow": [
+        "audio2mesh.pt",
+        "audio2pose.pt",
+        "denoising_unet.pth",
+        "film_net_fp16.pt",
+        "motion_module.pth",
+        "pose_guider.pth",
+        "reference_unet.pth",
+        "*.md",
+        ".gitattributes"
+      ]
+    },
+    {
+      "name": "sadtalker",
+      "repo": "vinthony/SadTalker"
+    },
+    {
+      "name": "shared/sd-vae-ft-mse",
+      "repo": "stabilityai/sd-vae-ft-mse",
+      "allow": [
+        "config.json",
+        "diffusion_pytorch_model.bin",
+        "diffusion_pytorch_model.safetensors",
+        "*.md"
+      ]
+    },
+    {
+      "name": "shared/image-encoder",
+      "repo": "lambdalabs/sd-image-variations-diffusers",
+      "allow": [
+        "image_encoder/*",
+        "*.md",
+        "model_index.json"
+      ]
+    },
+    {
+      "name": "shared/sd15",
+      "repo": "stable-diffusion-v1-5/stable-diffusion-v1-5",
+      "allow": [
+        "unet/config.json",
+        "unet/diffusion_pytorch_model.bin",
+        "vae/config.json",
+        "vae/diffusion_pytorch_model.bin",
+        "text_encoder/config.json",
+        "text_encoder/pytorch_model.bin",
+        "tokenizer/*",
+        "scheduler/*",
+        "feature_extractor/*",
+        "model_index.json",
+        "README.md"
+      ]
+    },
+    {
+      "name": "shared/wav2vec2-base-960h",
+      "repo": "facebook/wav2vec2-base-960h",
+      "allow": [
+        "*.json",
+        "*.txt",
+        "*.md",
+        "pytorch_model.bin"
+      ]
+    },
+    {
+      "name": "svd-xt",
+      "repo": "stabilityai/stable-video-diffusion-img2vid-xt",
+      "allow": [
+        "*.json",
+        "*.md",
+        "feature_extractor/*",
+        "image_encoder/*.json",
+        "image_encoder/*.fp16.safetensors",
+        "scheduler/*",
+        "unet/*.json",
+        "unet/*.fp16.safetensors",
+        "vae/*.json",
+        "vae/*.fp16.safetensors"
+      ]
+    },
+    {
+      "name": "shared/chinese-wav2vec2-base",
+      "repo": "TencentGameMate/chinese-wav2vec2-base"
+    }
+  ]
+}

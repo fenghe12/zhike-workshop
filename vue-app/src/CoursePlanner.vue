@@ -1,0 +1,19 @@
+<script setup lang="ts">
+import {computed,ref} from 'vue'
+import {useRouter} from 'vue-router'
+
+const router=useRouter()
+const mode=ref<'plan'|'clarify'|'direct'>('plan')
+const topic=ref(''),audience=ref('高校本科生'),lessons=ref(6),depth=ref('入门')
+const answers=ref(['学习者已有的基础是什么？','课程最需要解决的实际问题是什么？','希望学习者完成什么练习或产出？','哪些术语、案例或资料必须保留？'])
+const outline=ref<{title:string;objective:string;activity:string}[]>([])
+const generated=computed(()=>outline.value.length>0)
+function generate(){
+ if(!topic.value.trim())return
+ outline.value=Array.from({length:Math.min(Math.max(lessons.value,1),12)},(_,i)=>({title:`第 ${i+1} 课 · ${topic.value}`,objective:`理解${topic.value}的第 ${i+1} 个关键概念，并能用自己的话解释。`,activity:i===0?'概念导入与案例分析':'示例演示、练习与课堂检查'}))
+}
+function start(){router.push(`/create?topic=${encodeURIComponent(topic.value)}&audience=${encodeURIComponent(audience.value)}&mode=topic`)}
+</script>
+<template><div class="planner"><div class="heading"><div><p class="eyebrow">COURSE PLANNING</p><h1>课程方案设计</h1><p>先审课程结构，再进入详细内容和课件生成。</p></div><el-tag effect="plain" round>可编辑中间态</el-tag></div><section class="panel planner-panel"><div class="mode-tabs"><button :class="{active:mode==='plan'}" @click="mode='plan'">方案模式</button><button :class="{active:mode==='clarify'}" @click="mode='clarify'">澄清模式</button><button :class="{active:mode==='direct'}" @click="mode='direct'">直出模式</button></div><div class="planner-form"><el-form label-position="top"><el-form-item label="课程主题"><el-input v-model="topic" placeholder="例如：面向教师的生成式 AI 应用基础"/></el-form-item><el-form-item label="目标学员"><el-input v-model="audience"/></el-form-item><el-form-item label="课时数"><el-input-number v-model="lessons" :min="1" :max="12"/></el-form-item><el-form-item label="课程深度"><el-select v-model="depth"><el-option label="入门" value="入门"/><el-option label="进阶" value="进阶"/><el-option label="高阶" value="高阶"/></el-select></el-form-item></el-form></div><div v-if="mode==='clarify'" class="clarify-box"><h3>智能体澄清四问</h3><p>回答这些问题后，课程方案会更贴近实际教学目标。</p><el-input v-for="(question,index) in answers" :key="question" v-model="answers[index]" type="textarea" :rows="2" :placeholder="question"/></div><div class="planner-actions"><el-button type="primary" @click="mode==='direct'?start():generate()">{{mode==='direct'?'一键直出':'生成课程方案'}}</el-button><el-button v-if="generated" @click="start">确认方案，进入课程创建</el-button></div></section><section v-if="generated" class="panel outline-panel"><div class="section-top"><h2>可编辑课程大纲</h2><span class="muted">{{outline.length}} 个课时 · {{depth}}版</span></div><div v-for="(item,index) in outline" :key="index" class="outline-row"><span class="outline-index">{{index+1}}</span><div><el-input v-model="item.title"/><el-input v-model="item.objective" class="outline-input"/><el-input v-model="item.activity" class="outline-input"/></div></div></section></div></template>
+<style scoped>.planner{max-width:1200px;margin:0 auto}.planner-panel{padding:24px}.mode-tabs{display:flex;gap:8px;border-bottom:1px solid #dce7df;margin-bottom:22px}.mode-tabs button{border:0;background:transparent;padding:12px 16px;color:#65786e;cursor:pointer}.mode-tabs button.active{color:#276447;border-bottom:2px solid #276447;font-weight:700}.planner-form{display:grid;grid-template-columns:2fr 1.3fr 1fr 1fr;gap:14px}.clarify-box{padding:16px;background:#f4f8f5;border-radius:10px;margin-top:8px}.clarify-box h3{margin:0 0 6px;color:#244c3a}.clarify-box .el-input{margin-top:10px}.planner-actions{display:flex;gap:10px;margin-top:18px}.outline-panel{margin-top:18px}.outline-row{display:grid;grid-template-columns:40px 1fr;gap:12px;align-items:start;padding:14px 0;border-top:1px solid #e4ece7}.outline-index{font-size:22px;color:#276447;font-weight:700}.outline-input{margin-top:8px}@media(max-width:800px){.planner-form{grid-template-columns:1fr 1fr}}@media(max-width:560px){.planner-form{grid-template-columns:1fr}}
+</style>

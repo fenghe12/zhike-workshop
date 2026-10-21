@@ -1,0 +1,2 @@
+# Additional dependency for local alignment of Huawei-generated course audio.
+faster-whisper==1.2.1

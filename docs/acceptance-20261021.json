@@ -1,0 +1,58 @@
+{
+  "date": "2026-10-21",
+  "scope": "Six one-slide courses; actual translation, narration, timestamped subtitles, avatar and final video.",
+  "limitations": [
+    "Short one-slide acceptance samples; full-length multilingual lectures were not validated in this session."
+  ],
+  "languages": [
+    {
+      "language": "de-DE",
+      "duration_seconds": 10.4,
+      "subtitle_entries": 2,
+      "caption_text_complete": true,
+      "numeric_tokens_preserved": true,
+      "slide_titles_match_validated_translation": true
+    },
+    {
+      "language": "en-US",
+      "duration_seconds": 38.08,
+      "subtitle_entries": 6,
+      "caption_text_complete": true,
+      "numeric_tokens_preserved": true,
+      "slide_titles_match_validated_translation": true
+    },
+    {
+      "language": "fr-FR",
+      "duration_seconds": 8.88,
+      "subtitle_entries": 2,
+      "caption_text_complete": true,
+      "numeric_tokens_preserved": true,
+      "slide_titles_match_validated_translation": true
+    },
+    {
+      "language": "ja-JP",
+      "duration_seconds": 9.84,
+      "subtitle_entries": 2,
+      "caption_text_complete": true,
+      "numeric_tokens_preserved": true,
+      "slide_titles_match_validated_translation": true
+    },
+    {
+      "language": "ko-KR",
+      "duration_seconds": 9.64,
+      "subtitle_entries": 2,
+      "caption_text_complete": true,
+      "numeric_tokens_preserved": true,
+      "slide_titles_match_validated_translation": true
+    },
+    {
+      "language": "zh-CN",
+      "duration_seconds": 34.04,
+      "subtitle_entries": 8,
+      "caption_text_complete": true,
+      "numeric_tokens_preserved": true,
+      "slide_titles_match_validated_translation": true
+    }
+  ],
+  "compute_status": "Both CPU and NPU notebooks stopped; persistent disks and OBS retained."
+}

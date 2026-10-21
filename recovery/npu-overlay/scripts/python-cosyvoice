@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -eo pipefail
+R=/home/ma-user/work/npu-migration
+source "$R/scripts/persistent-npu-env.sh"
+export NPU_MIGRATE=1 NPU_MIGRATE_LOG="$R/logs/npu-migration-20261021.log"
+export PYTHONPATH="$R/envs/cosyvoice-py311:$R/envs/npu-shims:$R/repos/CosyVoice:$R/repos/CosyVoice/third_party/Matcha-TTS:${PYTHONPATH:-}"
+exec "$R/envs/npu-base/bin/python" "$@"

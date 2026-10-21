@@ -1,0 +1,55 @@
+# 智课工坊配置
+
+api:
+  gw_token_env: "SMARTCOURSE_GW_TOKEN"
+  gw_token: ""
+  responses_url: "https://llm-gateway-proxy.inner.chj.cloud/llm-gateway/v1/responses"
+  text_model: "azure-gpt-5_2"
+  vl_model: "azure-gpt-5_2"
+
+defaults:
+  speaker_prompt: "uploads/default_speaker.wav"
+  ref_image: "uploads/default_avatar.png"
+  target_languages:
+    - "zh-CN"
+    - "en-US"
+    - "ja-JP"
+    - "ko-KR"
+    - "de-DE"
+    - "fr-FR"
+  target_language: "en-US"
+  total_pages: 10
+  gpu_id: 0
+
+models:
+  tts_checkpoints: "/mnt/smartcourse/models/index-tts/checkpoints"
+  float_checkpoint: "/mnt/smartcourse/models/float/checkpoints/float.pth"
+
+paths:
+  workspace: "/mnt/smartcourse/data/tasks"
+  pptx_translate: "/mnt/smartcourse/models/pptx-translate"
+  tts: "/mnt/smartcourse/models/index-tts"
+  float: "/mnt/smartcourse/models/float"
+  merger: "/mnt/smartcourse/models/merger"
+  uploads: "/mnt/smartcourse/data/uploads"
+
+tts:
+  whisper_model: "medium"
+  silence_sec: 0.28
+
+avatar:
+  emo: "neutral"
+  seed: 15
+  a_cfg: 2.0
+  e_cfg: 1.0
+  no_crop: true
+  bbox_size: 512
+
+compose:
+  transition: 0.5
+  default_position: "right_bottom"
+  default_face_size: "medium"
+
+server:
+  host: "0.0.0.0"
+  port: 8000

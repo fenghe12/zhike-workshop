@@ -1,0 +1,8 @@
+{
+  "repositories":[{"name":"CyberVerse","repo":"Lynpoint/CyberVerse"}],
+  "models":[
+    {"name":"edtalk","repo":"tanshuai0219/EDTalk"},
+    {"name":"shared/wav2vec2-large-xlsr-53","repo":"facebook/wav2vec2-large-xlsr-53","allow":["*.json","*.txt","*.md","pytorch_model.bin"]},
+    {"name":"flashhead","repo":"Soul-AILab/SoulX-FlashHead-1_3B"}
+  ]
+}

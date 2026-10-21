@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+set -eo pipefail
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+if [ -f "$REPO_ROOT/.env" ]; then set -a; source "$REPO_ROOT/.env"; set +a; fi
+export SMARTCOURSE_RUNTIME_ROOT="${SMARTCOURSE_RUNTIME_ROOT:-$REPO_ROOT/.runtime}"
+case "$SMARTCOURSE_RUNTIME_ROOT" in /tmp|/tmp/*|/var/tmp|/var/tmp/*|/private/tmp|/private/tmp/*) echo 'A persistent runtime location is required.' >&2; return 1;; esac
+mkdir -p "$SMARTCOURSE_RUNTIME_ROOT"
+df -P "$SMARTCOURSE_RUNTIME_ROOT"
+test -w "$SMARTCOURSE_RUNTIME_ROOT"
+export TMPDIR="$SMARTCOURSE_RUNTIME_ROOT/tmp" TEMP="$SMARTCOURSE_RUNTIME_ROOT/tmp" TMP="$SMARTCOURSE_RUNTIME_ROOT/tmp"
+export XDG_CACHE_HOME="$SMARTCOURSE_RUNTIME_ROOT/cache" PIP_CACHE_DIR="$SMARTCOURSE_RUNTIME_ROOT/cache/pip"
+export HF_HOME="$SMARTCOURSE_RUNTIME_ROOT/cache/huggingface" TORCH_HOME="$SMARTCOURSE_RUNTIME_ROOT/cache/torch"
+export TORCH_EXTENSIONS_DIR="$SMARTCOURSE_RUNTIME_ROOT/cache/torch-extensions"
+export MPLCONFIGDIR="$SMARTCOURSE_RUNTIME_ROOT/cache/matplotlib" NUMBA_CACHE_DIR="$SMARTCOURSE_RUNTIME_ROOT/cache/numba"
+export npm_config_cache="$SMARTCOURSE_RUNTIME_ROOT/cache/npm"
+export PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1
+export SMARTCOURSE_DATA_ROOT="$SMARTCOURSE_RUNTIME_ROOT/data" SMARTCOURSE_ARTIFACT_ROOT="$SMARTCOURSE_RUNTIME_ROOT/artifacts"
+export SMARTCOURSE_WORKSPACE_ROOT="$SMARTCOURSE_ARTIFACT_ROOT/tasks" SMARTCOURSE_AUTO_EXECUTE=0
+export SMARTCOURSE_AVATAR_ENGINE=flashhead SMARTCOURSE_DEVICE=npu:0
+export SMARTCOURSE_GATEWAY_TIMEOUT=600 SMARTCOURSE_GATEWAY_TEMPERATURE=0.2
+export SMARTCOURSE_WHISPER_BACKEND=faster-whisper
+export SMARTCOURSE_REMOTE_PYTHON="${SMARTCOURSE_REMOTE_NPU_ROOT:-/home/ma-user/work/npu-migration}/scripts/python-cosyvoice"
+export SMARTCOURSE_REMOTE_LAUNCHER_PYTHON="${SMARTCOURSE_REMOTE_NPU_ROOT:-/home/ma-user/work/npu-migration}/envs/npu-base/bin/python"
+export SMARTCOURSE_REMOTE_ENV_SCRIPT="${SMARTCOURSE_REMOTE_NPU_ROOT:-/home/ma-user/work/npu-migration}/scripts/persistent-npu-env.sh"
+export SMARTCOURSE_REMOTE_COSYVOICE_ROOT="${SMARTCOURSE_REMOTE_NPU_ROOT:-/home/ma-user/work/npu-migration}/repos/CosyVoice"
+export SMARTCOURSE_REMOTE_FLASHHEAD="${SMARTCOURSE_REMOTE_ROOT:-/home/ma-user/work/smartcourse}/flashhead_generate.sh"
+export PYTHONPATH="$REPO_ROOT/backend/smartcourse${PYTHONPATH:+:$PYTHONPATH}"
+mkdir -p "$TMPDIR" "$PIP_CACHE_DIR" "$HF_HOME" "$TORCH_HOME" "$TORCH_EXTENSIONS_DIR" "$MPLCONFIGDIR" "$NUMBA_CACHE_DIR" "$npm_config_cache" "$SMARTCOURSE_DATA_ROOT" "$SMARTCOURSE_ARTIFACT_ROOT" "$SMARTCOURSE_RUNTIME_ROOT/logs"

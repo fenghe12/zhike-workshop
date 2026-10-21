@@ -1,0 +1,11 @@
+{
+  "repositories":[
+    {"name":"index-tts","repo":"index-tts/index-tts"},
+    {"name":"CosyVoice","repo":"FunAudioLLM/CosyVoice"}
+  ],
+  "models":[
+    {"name":"course/deeppresenter-9b","repo":"Forceless/DeepPresenter-9B"},
+    {"name":"course/index-tts2","repo":"IndexTeam/IndexTTS-2"},
+    {"name":"course/cosyvoice3","repo":"FunAudioLLM/Fun-CosyVoice3-0.5B-2512"}
+  ]
+}

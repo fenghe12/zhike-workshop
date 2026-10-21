@@ -1,0 +1,47 @@
+{
+  "pages": [
+    "pages/login/login",
+    "pages/register/register",
+    "pages/home/home",
+    "pages/create/create",
+    "pages/results/results",
+    "pages/profile/profile",
+    "pages/task/task",
+    "pages/stage/stage",
+    "pages/agents/agents"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#F7F8FA",
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "智课工坊",
+    "backgroundColor": "#F4F6F8",
+    "backgroundTextStyle": "dark"
+  },
+  "tabBar": {
+    "color": "#8A9099",
+    "selectedColor": "#176B5B",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/home/home",
+        "text": "任务"
+      },
+      {
+        "pagePath": "pages/create/create",
+        "text": "新建"
+      },
+      {
+        "pagePath": "pages/results/results",
+        "text": "结果"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "text": "设置"
+      }
+    ]
+  },
+  "style": "v2",
+  "lazyCodeLoading": "requiredComponents",
+  "sitemapLocation": "sitemap.json"
+}

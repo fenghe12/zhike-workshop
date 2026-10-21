@@ -1,0 +1,48 @@
+{
+  "qwen": {
+    "repo": "ggml-org/Qwen3.6-35B-A3B-GGUF",
+    "files": [
+      {
+        "name": "Qwen3.6-35B-A3B-Q8_0.gguf",
+        "size": 36903139328,
+        "url": "https://huggingface.co/ggml-org/Qwen3.6-35B-A3B-GGUF/resolve/main/Qwen3.6-35B-A3B-Q8_0.gguf"
+      },
+      {
+        "name": "mmproj-Qwen3.6-35B-A3B-Q8_0.gguf",
+        "size": 614194304,
+        "url": "https://huggingface.co/ggml-org/Qwen3.6-35B-A3B-GGUF/resolve/main/mmproj-Qwen3.6-35B-A3B-Q8_0.gguf"
+      }
+    ]
+  },
+  "required_models": [
+    {
+      "name": "CosyVoice3",
+      "repository": "FunAudioLLM/Fun-CosyVoice3-0.5B-2512",
+      "destination": "checkpoints/course/cosyvoice3"
+    },
+    {
+      "name": "FlashHead",
+      "repository": "Soul-AILab/SoulX-FlashHead-1_3B",
+      "destination": "checkpoints/flashhead"
+    },
+    {
+      "name": "Whisper small (CTranslate2)",
+      "repository": "Systran/faster-whisper-small",
+      "destination": "models/whisper-small"
+    },
+    {
+      "name": "wav2vec2-base-960h",
+      "repository": "facebook/wav2vec2-base-960h",
+      "destination": "checkpoints/shared/wav2vec2-base-960h"
+    }
+  ],
+  "private_obs": {
+    "endpoint": "https://obs.cn-southwest-2.myhuaweicloud.com",
+    "bucket_environment": "OBS_BUCKET",
+    "original_prefix": "npu-migration/20261021-094243/",
+    "qwen_runtime_prefix": "npu-migration/runs/20261021-1023/",
+    "native_cann_archive": "npu-migration/runs/20261021-1023/npu-correction-1h/npu-correction-runtime-and-latte.tar.gz",
+    "latest_code_and_reports": "npu-migration/runs/20261021-1502-acceptance/acceptance-final-source-and-reports.tar.gz",
+    "original_code_archive": "npu-migration/20261021-094243/code-and-recovery.tar.gz"
+  }
+}

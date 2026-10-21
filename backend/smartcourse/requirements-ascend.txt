@@ -1,0 +1,2 @@
+-r requirements.txt
+# torch and torch_npu must be supplied by the ModelArts Ascend image with matching versions.

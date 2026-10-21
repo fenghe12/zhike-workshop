@@ -1,0 +1,1562 @@
+[
+  {
+    "object_relative": "code-and-recovery.tar.gz",
+    "size": 1487751946
+  },
+  {
+    "object_relative": "checkpoints/aniportrait/.gitattributes",
+    "size": 1570
+  },
+  {
+    "object_relative": "checkpoints/aniportrait/README.md",
+    "size": 395
+  },
+  {
+    "object_relative": "checkpoints/aniportrait/audio2mesh.pt",
+    "size": 382031763
+  },
+  {
+    "object_relative": "checkpoints/aniportrait/audio2pose.pt",
+    "size": 481586148
+  },
+  {
+    "object_relative": "checkpoints/aniportrait/denoising_unet.pth",
+    "size": 3438374981
+  },
+  {
+    "object_relative": "checkpoints/aniportrait/film_net_fp16.pt",
+    "size": 69032330
+  },
+  {
+    "object_relative": "checkpoints/aniportrait/motion_module.pth",
+    "size": 1817900817
+  },
+  {
+    "object_relative": "checkpoints/aniportrait/pose_guider.pth",
+    "size": 670182863
+  },
+  {
+    "object_relative": "checkpoints/aniportrait/reference_unet.pth",
+    "size": 3438324501
+  },
+  {
+    "object_relative": "checkpoints/course/cosyvoice3/.gitattributes",
+    "size": 1574
+  },
+  {
+    "object_relative": "checkpoints/course/cosyvoice3/README.md",
+    "size": 11982
+  },
+  {
+    "object_relative": "checkpoints/course/cosyvoice3/campplus.onnx",
+    "size": 28303423
+  },
+  {
+    "object_relative": "checkpoints/course/cosyvoice3/config.json",
+    "size": 2
+  },
+  {
+    "object_relative": "checkpoints/course/cosyvoice3/configuration.json",
+    "size": 47
+  },
+  {
+    "object_relative": "checkpoints/course/cosyvoice3/cosyvoice3.yaml",
+    "size": 6934
+  },
+  {
+    "object_relative": "checkpoints/course/cosyvoice3/flow.decoder.estimator.fp32.onnx",
+    "size": 1326216933
+  },
+  {
+    "object_relative": "checkpoints/course/cosyvoice3/flow.pt",
+    "size": 1329116148
+  },
+  {
+    "object_relative": "checkpoints/course/cosyvoice3/hift.pt",
+    "size": 83202622
+  },
+  {
+    "object_relative": "checkpoints/course/cosyvoice3/llm.pt",
+    "size": 2024669519
+  },
+  {
+    "object_relative": "checkpoints/course/cosyvoice3/llm.rl.pt",
+    "size": 2024682701
+  },
+  {
+    "object_relative": "checkpoints/course/cosyvoice3/speech_tokenizer_v3.batch.onnx",
+    "size": 969451579
+  },
+  {
+    "object_relative": "checkpoints/course/cosyvoice3/speech_tokenizer_v3.onnx",
+    "size": 969451503
+  },
+  {
+    "object_relative": "checkpoints/course/cosyvoice3/CosyVoice-BlankEN/config.json",
+    "size": 659
+  },
+  {
+    "object_relative": "checkpoints/course/cosyvoice3/CosyVoice-BlankEN/generation_config.json",
+    "size": 242
+  },
+  {
+    "object_relative": "checkpoints/course/cosyvoice3/CosyVoice-BlankEN/merges.txt",
+    "size": 1402109
+  },
+  {
+    "object_relative": "checkpoints/course/cosyvoice3/CosyVoice-BlankEN/model.safetensors",
+    "size": 988097824
+  },
+  {
+    "object_relative": "checkpoints/course/cosyvoice3/CosyVoice-BlankEN/tokenizer_config.json",
+    "size": 1287
+  },
+  {
+    "object_relative": "checkpoints/course/cosyvoice3/CosyVoice-BlankEN/vocab.json",
+    "size": 2776833
+  },
+  {
+    "object_relative": "checkpoints/course/cosyvoice3/asset/dingding.png",
+    "size": 122824
+  },
+  {
+    "object_relative": "checkpoints/course/deeppresenter-9b/.gitattributes",
+    "size": 1570
+  },
+  {
+    "object_relative": "checkpoints/course/deeppresenter-9b/README.md",
+    "size": 859
+  },
+  {
+    "object_relative": "checkpoints/course/deeppresenter-9b/chat_template.jinja",
+    "size": 7609
+  },
+  {
+    "object_relative": "checkpoints/course/deeppresenter-9b/config.json",
+    "size": 2847
+  },
+  {
+    "object_relative": "checkpoints/course/deeppresenter-9b/model-00001-of-00004.safetensors",
+    "size": 4911674496
+  },
+  {
+    "object_relative": "checkpoints/course/deeppresenter-9b/model-00002-of-00004.safetensors",
+    "size": 4954211152
+  },
+  {
+    "object_relative": "checkpoints/course/deeppresenter-9b/model-00003-of-00004.safetensors",
+    "size": 4988356912
+  },
+  {
+    "object_relative": "checkpoints/course/deeppresenter-9b/model-00004-of-00004.safetensors",
+    "size": 3965478424
+  },
+  {
+    "object_relative": "checkpoints/course/deeppresenter-9b/model.safetensors.index.json",
+    "size": 69216
+  },
+  {
+    "object_relative": "checkpoints/course/deeppresenter-9b/preprocessor_config.json",
+    "size": 390
+  },
+  {
+    "object_relative": "checkpoints/course/deeppresenter-9b/processor_config.json",
+    "size": 1300
+  },
+  {
+    "object_relative": "checkpoints/course/deeppresenter-9b/tokenizer.json",
+    "size": 19989343
+  },
+  {
+    "object_relative": "checkpoints/course/deeppresenter-9b/tokenizer_config.json",
+    "size": 1139
+  },
+  {
+    "object_relative": "checkpoints/course/index-tts2/.gitattributes",
+    "size": 1730
+  },
+  {
+    "object_relative": "checkpoints/course/index-tts2/LICENSE.txt",
+    "size": 10554
+  },
+  {
+    "object_relative": "checkpoints/course/index-tts2/LICENSE_ZH.txt",
+    "size": 7336
+  },
+  {
+    "object_relative": "checkpoints/course/index-tts2/README.md",
+    "size": 2511
+  },
+  {
+    "object_relative": "checkpoints/course/index-tts2/bpe.model",
+    "size": 475997
+  },
+  {
+    "object_relative": "checkpoints/course/index-tts2/config.yaml",
+    "size": 2882
+  },
+  {
+    "object_relative": "checkpoints/course/index-tts2/feat1.pt",
+    "size": 57170
+  },
+  {
+    "object_relative": "checkpoints/course/index-tts2/feat2.pt",
+    "size": 374866
+  },
+  {
+    "object_relative": "checkpoints/course/index-tts2/gpt.pth",
+    "size": 3484663079
+  },
+  {
+    "object_relative": "checkpoints/course/index-tts2/s2mel.pth",
+    "size": 1202198223
+  },
+  {
+    "object_relative": "checkpoints/course/index-tts2/wav2vec2bert_stats.pt",
+    "size": 9343
+  },
+  {
+    "object_relative": "checkpoints/course/index-tts2/qwen0.6bemo4-merge/Modelfile",
+    "size": 360
+  },
+  {
+    "object_relative": "checkpoints/course/index-tts2/qwen0.6bemo4-merge/added_tokens.json",
+    "size": 707
+  },
+  {
+    "object_relative": "checkpoints/course/index-tts2/qwen0.6bemo4-merge/chat_template.jinja",
+    "size": 550
+  },
+  {
+    "object_relative": "checkpoints/course/index-tts2/qwen0.6bemo4-merge/config.json",
+    "size": 727
+  },
+  {
+    "object_relative": "checkpoints/course/index-tts2/qwen0.6bemo4-merge/generation_config.json",
+    "size": 117
+  },
+  {
+    "object_relative": "checkpoints/course/index-tts2/qwen0.6bemo4-merge/merges.txt",
+    "size": 1671853
+  },
+  {
+    "object_relative": "checkpoints/course/index-tts2/qwen0.6bemo4-merge/model.safetensors",
+    "size": 1192135096
+  },
+  {
+    "object_relative": "checkpoints/course/index-tts2/qwen0.6bemo4-merge/special_tokens_map.json",
+    "size": 616
+  },
+  {
+    "object_relative": "checkpoints/course/index-tts2/qwen0.6bemo4-merge/tokenizer.json",
+    "size": 11422654
+  },
+  {
+    "object_relative": "checkpoints/course/index-tts2/qwen0.6bemo4-merge/tokenizer_config.json",
+    "size": 5433
+  },
+  {
+    "object_relative": "checkpoints/course/index-tts2/qwen0.6bemo4-merge/vocab.json",
+    "size": 2776833
+  },
+  {
+    "object_relative": "checkpoints/dwpose/.gitattributes",
+    "size": 1519
+  },
+  {
+    "object_relative": "checkpoints/dwpose/README.md",
+    "size": 28
+  },
+  {
+    "object_relative": "checkpoints/dwpose/dw-ll_ucoco.pth",
+    "size": 404734742
+  },
+  {
+    "object_relative": "checkpoints/dwpose/dw-ll_ucoco_384.onnx",
+    "size": 134399116
+  },
+  {
+    "object_relative": "checkpoints/dwpose/dw-ll_ucoco_384.pth",
+    "size": 406878486
+  },
+  {
+    "object_relative": "checkpoints/dwpose/dw-mm_ucoco.pth",
+    "size": 216812378
+  },
+  {
+    "object_relative": "checkpoints/dwpose/dw-ss_ucoco.pth",
+    "size": 102933707
+  },
+  {
+    "object_relative": "checkpoints/dwpose/dw-tt_ucoco.pth",
+    "size": 68475107
+  },
+  {
+    "object_relative": "checkpoints/dwpose/rtm-l_ucoco_256-95bb32f5_20230822.pth",
+    "size": 134223626
+  },
+  {
+    "object_relative": "checkpoints/dwpose/rtm-x_ucoco_256-05f5bcb7_20230822.pth",
+    "size": 226726579
+  },
+  {
+    "object_relative": "checkpoints/dwpose/rtm-x_ucoco_384-f5b50679_20230822.pth",
+    "size": 227246772
+  },
+  {
+    "object_relative": "checkpoints/dwpose/yolox_l.onnx",
+    "size": 216746733
+  },
+  {
+    "object_relative": "checkpoints/echomimic/.gitattributes",
+    "size": 1519
+  },
+  {
+    "object_relative": "checkpoints/echomimic/LICENSE",
+    "size": 11356
+  },
+  {
+    "object_relative": "checkpoints/echomimic/README.md",
+    "size": 12646
+  },
+  {
+    "object_relative": "checkpoints/echomimic/denoising_unet.pth",
+    "size": 3400035733
+  },
+  {
+    "object_relative": "checkpoints/echomimic/denoising_unet_acc.pth",
+    "size": 3400035045
+  },
+  {
+    "object_relative": "checkpoints/echomimic/denoising_unet_pose.pth",
+    "size": 3400035733
+  },
+  {
+    "object_relative": "checkpoints/echomimic/denoising_unet_pose_acc.pth",
+    "size": 3400035733
+  },
+  {
+    "object_relative": "checkpoints/echomimic/face_locator.pth",
+    "size": 4350203
+  },
+  {
+    "object_relative": "checkpoints/echomimic/face_locator_pose.pth",
+    "size": 4351355
+  },
+  {
+    "object_relative": "checkpoints/echomimic/motion_module.pth",
+    "size": 1817900817
+  },
+  {
+    "object_relative": "checkpoints/echomimic/motion_module_acc.pth",
+    "size": 1817900817
+  },
+  {
+    "object_relative": "checkpoints/echomimic/motion_module_pose.pth",
+    "size": 1817900817
+  },
+  {
+    "object_relative": "checkpoints/echomimic/motion_module_pose_acc.pth",
+    "size": 1817900227
+  },
+  {
+    "object_relative": "checkpoints/echomimic/reference_unet.pth",
+    "size": 3262322201
+  },
+  {
+    "object_relative": "checkpoints/echomimic/reference_unet_pose.pth",
+    "size": 3262322201
+  },
+  {
+    "object_relative": "checkpoints/echomimic/audio_processor/whisper_tiny.pt",
+    "size": 75572083
+  },
+  {
+    "object_relative": "checkpoints/echomimic/sd-image-variations-diffusers/README.md",
+    "size": 10594
+  },
+  {
+    "object_relative": "checkpoints/echomimic/sd-image-variations-diffusers/alias-montage.jpg",
+    "size": 151003
+  },
+  {
+    "object_relative": "checkpoints/echomimic/sd-image-variations-diffusers/default-montage.jpg",
+    "size": 147905
+  },
+  {
+    "object_relative": "checkpoints/echomimic/sd-image-variations-diffusers/earring.jpg",
+    "size": 112982
+  },
+  {
+    "object_relative": "checkpoints/echomimic/sd-image-variations-diffusers/inputs.jpg",
+    "size": 42611
+  },
+  {
+    "object_relative": "checkpoints/echomimic/sd-image-variations-diffusers/model_index.json",
+    "size": 545
+  },
+  {
+    "object_relative": "checkpoints/echomimic/sd-image-variations-diffusers/v1-montage.jpg",
+    "size": 613286
+  },
+  {
+    "object_relative": "checkpoints/echomimic/sd-image-variations-diffusers/v2-montage.jpg",
+    "size": 570296
+  },
+  {
+    "object_relative": "checkpoints/echomimic/sd-image-variations-diffusers/feature_extractor/preprocessor_config.json",
+    "size": 518
+  },
+  {
+    "object_relative": "checkpoints/echomimic/sd-image-variations-diffusers/image_encoder/config.json",
+    "size": 703
+  },
+  {
+    "object_relative": "checkpoints/echomimic/sd-image-variations-diffusers/image_encoder/pytorch_model.bin",
+    "size": 1215993967
+  },
+  {
+    "object_relative": "checkpoints/echomimic/sd-image-variations-diffusers/safety_checker/config.json",
+    "size": 5015
+  },
+  {
+    "object_relative": "checkpoints/echomimic/sd-image-variations-diffusers/safety_checker/pytorch_model.bin",
+    "size": 1216061799
+  },
+  {
+    "object_relative": "checkpoints/echomimic/sd-image-variations-diffusers/scheduler/scheduler_config.json",
+    "size": 308
+  },
+  {
+    "object_relative": "checkpoints/echomimic/sd-image-variations-diffusers/unet/config.json",
+    "size": 871
+  },
+  {
+    "object_relative": "checkpoints/echomimic/sd-image-variations-diffusers/unet/diffusion_pytorch_model.bin",
+    "size": 3438354725
+  },
+  {
+    "object_relative": "checkpoints/echomimic/sd-image-variations-diffusers/vae/config.json",
+    "size": 595
+  },
+  {
+    "object_relative": "checkpoints/echomimic/sd-image-variations-diffusers/vae/diffusion_pytorch_model.bin",
+    "size": 334707217
+  },
+  {
+    "object_relative": "checkpoints/echomimic/sd-vae-ft-mse/README.md",
+    "size": 6844
+  },
+  {
+    "object_relative": "checkpoints/echomimic/sd-vae-ft-mse/config.json",
+    "size": 547
+  },
+  {
+    "object_relative": "checkpoints/echomimic/sd-vae-ft-mse/diffusion_pytorch_model.bin",
+    "size": 334707217
+  },
+  {
+    "object_relative": "checkpoints/echomimic/sd-vae-ft-mse/diffusion_pytorch_model.safetensors",
+    "size": 334643276
+  },
+  {
+    "object_relative": "checkpoints/edtalk/.gitattributes",
+    "size": 1609
+  },
+  {
+    "object_relative": "checkpoints/edtalk/README.md",
+    "size": 349
+  },
+  {
+    "object_relative": "checkpoints/edtalk/ckpts/Audio2Lip.pt",
+    "size": 11342990
+  },
+  {
+    "object_relative": "checkpoints/edtalk/ckpts/EDTalk-V.pt",
+    "size": 327137325
+  },
+  {
+    "object_relative": "checkpoints/edtalk/ckpts/EDTalk.pt",
+    "size": 506458609
+  },
+  {
+    "object_relative": "checkpoints/edtalk/ckpts/EDTalk_lip_pose.pt",
+    "size": 842285931
+  },
+  {
+    "object_relative": "checkpoints/edtalk/data_preprocess/shape_predictor_68_face_landmarks.dat",
+    "size": 99693937
+  },
+  {
+    "object_relative": "checkpoints/edtalk/gfpgan/weights/detection_Resnet50_Final.pth",
+    "size": 109497761
+  },
+  {
+    "object_relative": "checkpoints/edtalk/gfpgan/weights/parsing_parsenet.pth",
+    "size": 85331193
+  },
+  {
+    "object_relative": "checkpoints/face-parse/.gitattributes",
+    "size": 1519
+  },
+  {
+    "object_relative": "checkpoints/face-parse/79999_iter.pth",
+    "size": 53289463
+  },
+  {
+    "object_relative": "checkpoints/face-parse/README.md",
+    "size": 138
+  },
+  {
+    "object_relative": "checkpoints/face-parse/resnet18-5c106cde.pth",
+    "size": 46827520
+  },
+  {
+    "object_relative": "checkpoints/flashhead/.gitattributes",
+    "size": 1876
+  },
+  {
+    "object_relative": "checkpoints/flashhead/README.md",
+    "size": 8872
+  },
+  {
+    "object_relative": "checkpoints/flashhead/config.json",
+    "size": 99
+  },
+  {
+    "object_relative": "checkpoints/flashhead/model_index.json",
+    "size": 77
+  },
+  {
+    "object_relative": "checkpoints/flashhead/Model_Lite/config.json",
+    "size": 357
+  },
+  {
+    "object_relative": "checkpoints/flashhead/Model_Lite/diffusion_pytorch_model.safetensors",
+    "size": 6107542048
+  },
+  {
+    "object_relative": "checkpoints/flashhead/Model_Pro/config.json",
+    "size": 353
+  },
+  {
+    "object_relative": "checkpoints/flashhead/Model_Pro/diffusion_pytorch_model.safetensors",
+    "size": 6030864656
+  },
+  {
+    "object_relative": "checkpoints/flashhead/VAE_LTX/config.json",
+    "size": 501
+  },
+  {
+    "object_relative": "checkpoints/flashhead/VAE_LTX/diffusion_pytorch_model.safetensors",
+    "size": 1676798532
+  },
+  {
+    "object_relative": "checkpoints/flashhead/VAE_Wan/Wan2.1_VAE.pth",
+    "size": 507609880
+  },
+  {
+    "object_relative": "checkpoints/flashhead/assets/chengdu.mp4",
+    "size": 2170506
+  },
+  {
+    "object_relative": "checkpoints/flashhead/assets/einstein.mp4",
+    "size": 5901287
+  },
+  {
+    "object_relative": "checkpoints/flashhead/assets/flashhead_logo.png",
+    "size": 317280
+  },
+  {
+    "object_relative": "checkpoints/flashhead/assets/qitiandasheng.mp4",
+    "size": 1682357
+  },
+  {
+    "object_relative": "checkpoints/flashhead/assets/soul_event_link.png",
+    "size": 111017
+  },
+  {
+    "object_relative": "checkpoints/flashhead/assets/soul_group.png",
+    "size": 80379
+  },
+  {
+    "object_relative": "checkpoints/flashhead/assets/wechat_group.png",
+    "size": 354447
+  },
+  {
+    "object_relative": "checkpoints/hallo/.gitattributes",
+    "size": 1598
+  },
+  {
+    "object_relative": "checkpoints/hallo/README.md",
+    "size": 2570
+  },
+  {
+    "object_relative": "checkpoints/hallo/config.json",
+    "size": 39
+  },
+  {
+    "object_relative": "checkpoints/hallo/audio_separator/Kim_Vocal_2.onnx",
+    "size": 66759214
+  },
+  {
+    "object_relative": "checkpoints/hallo/audio_separator/download_checks.json",
+    "size": 17194
+  },
+  {
+    "object_relative": "checkpoints/hallo/audio_separator/mdx_model_data.json",
+    "size": 11975
+  },
+  {
+    "object_relative": "checkpoints/hallo/audio_separator/vr_model_data.json",
+    "size": 4380
+  },
+  {
+    "object_relative": "checkpoints/hallo/face_analysis/models/1k3d68.onnx",
+    "size": 143607619
+  },
+  {
+    "object_relative": "checkpoints/hallo/face_analysis/models/2d106det.onnx",
+    "size": 5030888
+  },
+  {
+    "object_relative": "checkpoints/hallo/face_analysis/models/face_landmarker_v2_with_blendshapes.task",
+    "size": 3758596
+  },
+  {
+    "object_relative": "checkpoints/hallo/face_analysis/models/genderage.onnx",
+    "size": 1322532
+  },
+  {
+    "object_relative": "checkpoints/hallo/face_analysis/models/glintr100.onnx",
+    "size": 260665334
+  },
+  {
+    "object_relative": "checkpoints/hallo/face_analysis/models/scrfd_10g_bnkps.onnx",
+    "size": 16923827
+  },
+  {
+    "object_relative": "checkpoints/hallo/hallo/net.pth",
+    "size": 4850540707
+  },
+  {
+    "object_relative": "checkpoints/hallo/motion_module/mm_sd_v15_v2.ckpt",
+    "size": 1817888431
+  },
+  {
+    "object_relative": "checkpoints/hallo/sd-vae-ft-mse/.gitattributes",
+    "size": 1456
+  },
+  {
+    "object_relative": "checkpoints/hallo/sd-vae-ft-mse/README.md",
+    "size": 6844
+  },
+  {
+    "object_relative": "checkpoints/hallo/sd-vae-ft-mse/config.json",
+    "size": 547
+  },
+  {
+    "object_relative": "checkpoints/hallo/sd-vae-ft-mse/diffusion_pytorch_model.safetensors",
+    "size": 334643276
+  },
+  {
+    "object_relative": "checkpoints/hallo/stable-diffusion-v1-5/unet/config.json",
+    "size": 743
+  },
+  {
+    "object_relative": "checkpoints/hallo/stable-diffusion-v1-5/unet/diffusion_pytorch_model.safetensors",
+    "size": 3438167540
+  },
+  {
+    "object_relative": "checkpoints/hallo/wav2vec/wav2vec2-base-960h/.gitattributes",
+    "size": 790
+  },
+  {
+    "object_relative": "checkpoints/hallo/wav2vec/wav2vec2-base-960h/README.md",
+    "size": 4431
+  },
+  {
+    "object_relative": "checkpoints/hallo/wav2vec/wav2vec2-base-960h/config.json",
+    "size": 1596
+  },
+  {
+    "object_relative": "checkpoints/hallo/wav2vec/wav2vec2-base-960h/feature_extractor_config.json",
+    "size": 158
+  },
+  {
+    "object_relative": "checkpoints/hallo/wav2vec/wav2vec2-base-960h/model.safetensors",
+    "size": 377607901
+  },
+  {
+    "object_relative": "checkpoints/hallo/wav2vec/wav2vec2-base-960h/preprocessor_config.json",
+    "size": 159
+  },
+  {
+    "object_relative": "checkpoints/hallo/wav2vec/wav2vec2-base-960h/special_tokens_map.json",
+    "size": 85
+  },
+  {
+    "object_relative": "checkpoints/hallo/wav2vec/wav2vec2-base-960h/tokenizer_config.json",
+    "size": 163
+  },
+  {
+    "object_relative": "checkpoints/hallo/wav2vec/wav2vec2-base-960h/vocab.json",
+    "size": 291
+  },
+  {
+    "object_relative": "checkpoints/latte/Latte-1/.gitattributes",
+    "size": 1519
+  },
+  {
+    "object_relative": "checkpoints/latte/Latte-1/README.md",
+    "size": 2588
+  },
+  {
+    "object_relative": "checkpoints/latte/Latte-1/model_index.json",
+    "size": 418
+  },
+  {
+    "object_relative": "checkpoints/latte/Latte-1/t2v_v20240523.pt",
+    "size": 4231339889
+  },
+  {
+    "object_relative": "checkpoints/latte/Latte-1/scheduler/scheduler_config.json",
+    "size": 414
+  },
+  {
+    "object_relative": "checkpoints/latte/Latte-1/text_encoder/config.json",
+    "size": 780
+  },
+  {
+    "object_relative": "checkpoints/latte/Latte-1/text_encoder/model-00001-of-00004.safetensors",
+    "size": 4989319680
+  },
+  {
+    "object_relative": "checkpoints/latte/Latte-1/text_encoder/model-00002-of-00004.safetensors",
+    "size": 4999830656
+  },
+  {
+    "object_relative": "checkpoints/latte/Latte-1/text_encoder/model-00003-of-00004.safetensors",
+    "size": 4865612720
+  },
+  {
+    "object_relative": "checkpoints/latte/Latte-1/text_encoder/model-00004-of-00004.safetensors",
+    "size": 4194506688
+  },
+  {
+    "object_relative": "checkpoints/latte/Latte-1/text_encoder/model.safetensors.index.json",
+    "size": 19886
+  },
+  {
+    "object_relative": "checkpoints/latte/Latte-1/tokenizer/added_tokens.json",
+    "size": 2593
+  },
+  {
+    "object_relative": "checkpoints/latte/Latte-1/tokenizer/special_tokens_map.json",
+    "size": 2543
+  },
+  {
+    "object_relative": "checkpoints/latte/Latte-1/tokenizer/spiece.model",
+    "size": 791656
+  },
+  {
+    "object_relative": "checkpoints/latte/Latte-1/tokenizer/tokenizer_config.json",
+    "size": 20489
+  },
+  {
+    "object_relative": "checkpoints/latte/Latte-1/transformer/config.json",
+    "size": 503
+  },
+  {
+    "object_relative": "checkpoints/latte/Latte-1/transformer/diffusion_pytorch_model.safetensors",
+    "size": 4231066624
+  },
+  {
+    "object_relative": "checkpoints/latte/Latte-1/vae/config.json",
+    "size": 627
+  },
+  {
+    "object_relative": "checkpoints/latte/Latte-1/vae/diffusion_pytorch_model.safetensors",
+    "size": 334643268
+  },
+  {
+    "object_relative": "checkpoints/latte/Latte-1/vae_temporal_decoder/config.json",
+    "size": 475
+  },
+  {
+    "object_relative": "checkpoints/latte/Latte-1/vae_temporal_decoder/diffusion_pytorch_model.safetensors",
+    "size": 391017740
+  },
+  {
+    "object_relative": "checkpoints/multitalk/.gitattributes",
+    "size": 1677
+  },
+  {
+    "object_relative": "checkpoints/multitalk/README.md",
+    "size": 3692
+  },
+  {
+    "object_relative": "checkpoints/multitalk/diffusion_pytorch_model.safetensors.index.json",
+    "size": 145388
+  },
+  {
+    "object_relative": "checkpoints/multitalk/multitalk.safetensors",
+    "size": 9947889040
+  },
+  {
+    "object_relative": "checkpoints/multitalk/assets/logo.png",
+    "size": 3314336
+  },
+  {
+    "object_relative": "checkpoints/multitalk/assets/logo2.jpeg",
+    "size": 445822
+  },
+  {
+    "object_relative": "checkpoints/multitalk/assets/pipe.png",
+    "size": 1176445
+  },
+  {
+    "object_relative": "checkpoints/multitalk-kaist/FLAME_sample.ply",
+    "size": 190139
+  },
+  {
+    "object_relative": "checkpoints/multitalk-kaist/stage1.pth.tar",
+    "size": 567634587
+  },
+  {
+    "object_relative": "checkpoints/multitalk-kaist/stage2.pth.tar",
+    "size": 1703000029
+  },
+  {
+    "object_relative": "checkpoints/multitalk-kaist/templates.pkl",
+    "size": 60437
+  },
+  {
+    "object_relative": "checkpoints/musetalk/.gitattributes",
+    "size": 1519
+  },
+  {
+    "object_relative": "checkpoints/musetalk/LICENSE.txt",
+    "size": 13427
+  },
+  {
+    "object_relative": "checkpoints/musetalk/README.md",
+    "size": 11127
+  },
+  {
+    "object_relative": "checkpoints/musetalk/musetalk/musetalk.json",
+    "size": 748
+  },
+  {
+    "object_relative": "checkpoints/musetalk/musetalk/pytorch_model.bin",
+    "size": 3400076549
+  },
+  {
+    "object_relative": "checkpoints/musetalk/musetalkV15/musetalk.json",
+    "size": 748
+  },
+  {
+    "object_relative": "checkpoints/musetalk/musetalkV15/unet.pth",
+    "size": 3400074924
+  },
+  {
+    "object_relative": "checkpoints/sadtalker/.gitattributes",
+    "size": 1886
+  },
+  {
+    "object_relative": "checkpoints/sadtalker/README.md",
+    "size": 393
+  },
+  {
+    "object_relative": "checkpoints/sadtalker/auido2exp_00300-model.pth",
+    "size": 34278319
+  },
+  {
+    "object_relative": "checkpoints/sadtalker/auido2pose_00140-model.pth",
+    "size": 95916155
+  },
+  {
+    "object_relative": "checkpoints/sadtalker/epoch_20.pth",
+    "size": 288860037
+  },
+  {
+    "object_relative": "checkpoints/sadtalker/facevid2vid_00189-model.pth.tar",
+    "size": 2112619148
+  },
+  {
+    "object_relative": "checkpoints/sadtalker/mapping_00109-model.pth.tar",
+    "size": 155779231
+  },
+  {
+    "object_relative": "checkpoints/sadtalker/mapping_00229-model.pth.tar",
+    "size": 155521183
+  },
+  {
+    "object_relative": "checkpoints/sadtalker/shape_predictor_68_face_landmarks.dat",
+    "size": 99693937
+  },
+  {
+    "object_relative": "checkpoints/sadtalker/wav2lip.pth",
+    "size": 435807851
+  },
+  {
+    "object_relative": "checkpoints/sadtalker/BFM_Fitting/01_MorphableModel.mat",
+    "size": 240875364
+  },
+  {
+    "object_relative": "checkpoints/sadtalker/BFM_Fitting/BFM09_model_info.mat",
+    "size": 127170280
+  },
+  {
+    "object_relative": "checkpoints/sadtalker/BFM_Fitting/BFM_exp_idx.mat",
+    "size": 91931
+  },
+  {
+    "object_relative": "checkpoints/sadtalker/BFM_Fitting/BFM_front_idx.mat",
+    "size": 44880
+  },
+  {
+    "object_relative": "checkpoints/sadtalker/BFM_Fitting/Exp_Pca.bin",
+    "size": 51086404
+  },
+  {
+    "object_relative": "checkpoints/sadtalker/BFM_Fitting/facemodel_info.mat",
+    "size": 738861
+  },
+  {
+    "object_relative": "checkpoints/sadtalker/BFM_Fitting/select_vertex_id.mat",
+    "size": 62299
+  },
+  {
+    "object_relative": "checkpoints/sadtalker/BFM_Fitting/similarity_Lm3D_all.mat",
+    "size": 994
+  },
+  {
+    "object_relative": "checkpoints/sadtalker/BFM_Fitting/std_exp.txt",
+    "size": 615
+  },
+  {
+    "object_relative": "checkpoints/sadtalker/hub/checkpoints/2DFAN4-cd938726ad.zip",
+    "size": 96316515
+  },
+  {
+    "object_relative": "checkpoints/sadtalker/hub/checkpoints/s3fd-619a316812.pth",
+    "size": 89843225
+  },
+  {
+    "object_relative": "checkpoints/shared/chinese-wav2vec2-base/.gitattributes",
+    "size": 1173
+  },
+  {
+    "object_relative": "checkpoints/shared/chinese-wav2vec2-base/README.md",
+    "size": 1923
+  },
+  {
+    "object_relative": "checkpoints/shared/chinese-wav2vec2-base/chinese-wav2vec2-base-fairseq-ckpt.pt",
+    "size": 1140632401
+  },
+  {
+    "object_relative": "checkpoints/shared/chinese-wav2vec2-base/config.json",
+    "size": 1951
+  },
+  {
+    "object_relative": "checkpoints/shared/chinese-wav2vec2-base/model.safetensors",
+    "size": 380204696
+  },
+  {
+    "object_relative": "checkpoints/shared/chinese-wav2vec2-base/preprocessor_config.json",
+    "size": 160
+  },
+  {
+    "object_relative": "checkpoints/shared/chinese-wav2vec2-base/pytorch_model.bin",
+    "size": 380261837
+  },
+  {
+    "object_relative": "checkpoints/shared/sd-vae-ft-mse/README.md",
+    "size": 6844
+  },
+  {
+    "object_relative": "checkpoints/shared/sd-vae-ft-mse/config.json",
+    "size": 547
+  },
+  {
+    "object_relative": "checkpoints/shared/sd-vae-ft-mse/diffusion_pytorch_model.bin",
+    "size": 334707217
+  },
+  {
+    "object_relative": "checkpoints/shared/sd-vae-ft-mse/diffusion_pytorch_model.safetensors",
+    "size": 334643276
+  },
+  {
+    "object_relative": "checkpoints/shared/sd15/README.md",
+    "size": 14461
+  },
+  {
+    "object_relative": "checkpoints/shared/sd15/model_index.json",
+    "size": 541
+  },
+  {
+    "object_relative": "checkpoints/shared/sd15/feature_extractor/preprocessor_config.json",
+    "size": 342
+  },
+  {
+    "object_relative": "checkpoints/shared/sd15/scheduler/scheduler_config.json",
+    "size": 308
+  },
+  {
+    "object_relative": "checkpoints/shared/sd15/text_encoder/config.json",
+    "size": 617
+  },
+  {
+    "object_relative": "checkpoints/shared/sd15/text_encoder/pytorch_model.bin",
+    "size": 492305335
+  },
+  {
+    "object_relative": "checkpoints/shared/sd15/tokenizer/merges.txt",
+    "size": 524619
+  },
+  {
+    "object_relative": "checkpoints/shared/sd15/tokenizer/special_tokens_map.json",
+    "size": 472
+  },
+  {
+    "object_relative": "checkpoints/shared/sd15/tokenizer/tokenizer_config.json",
+    "size": 806
+  },
+  {
+    "object_relative": "checkpoints/shared/sd15/tokenizer/vocab.json",
+    "size": 1059962
+  },
+  {
+    "object_relative": "checkpoints/shared/sd15/unet/config.json",
+    "size": 743
+  },
+  {
+    "object_relative": "checkpoints/shared/sd15/unet/diffusion_pytorch_model.bin",
+    "size": 3438354725
+  },
+  {
+    "object_relative": "checkpoints/shared/sd15/vae/config.json",
+    "size": 547
+  },
+  {
+    "object_relative": "checkpoints/shared/sd15/vae/diffusion_pytorch_model.bin",
+    "size": 334707217
+  },
+  {
+    "object_relative": "checkpoints/shared/wav2vec2-base-960h/README.md",
+    "size": 4431
+  },
+  {
+    "object_relative": "checkpoints/shared/wav2vec2-base-960h/config.json",
+    "size": 1596
+  },
+  {
+    "object_relative": "checkpoints/shared/wav2vec2-base-960h/feature_extractor_config.json",
+    "size": 158
+  },
+  {
+    "object_relative": "checkpoints/shared/wav2vec2-base-960h/preprocessor_config.json",
+    "size": 159
+  },
+  {
+    "object_relative": "checkpoints/shared/wav2vec2-base-960h/pytorch_model.bin",
+    "size": 377667514
+  },
+  {
+    "object_relative": "checkpoints/shared/wav2vec2-base-960h/special_tokens_map.json",
+    "size": 85
+  },
+  {
+    "object_relative": "checkpoints/shared/wav2vec2-base-960h/tokenizer_config.json",
+    "size": 163
+  },
+  {
+    "object_relative": "checkpoints/shared/wav2vec2-base-960h/vocab.json",
+    "size": 291
+  },
+  {
+    "object_relative": "checkpoints/shared/wav2vec2-large-xlsr-53/README.md",
+    "size": 2288
+  },
+  {
+    "object_relative": "checkpoints/shared/wav2vec2-large-xlsr-53/config.json",
+    "size": 1768
+  },
+  {
+    "object_relative": "checkpoints/shared/wav2vec2-large-xlsr-53/preprocessor_config.json",
+    "size": 212
+  },
+  {
+    "object_relative": "checkpoints/shared/wav2vec2-large-xlsr-53/pytorch_model.bin",
+    "size": 1269737156
+  },
+  {
+    "object_relative": "checkpoints/sonic/.gitattributes",
+    "size": 1519
+  },
+  {
+    "object_relative": "checkpoints/sonic/README.md",
+    "size": 289
+  },
+  {
+    "object_relative": "checkpoints/sonic/yoloface_v5m.pt",
+    "size": 84574759
+  },
+  {
+    "object_relative": "checkpoints/sonic/RIFE/flownet.pkl",
+    "size": 12186817
+  },
+  {
+    "object_relative": "checkpoints/sonic/Sonic/audio2bucket.pth",
+    "size": 87050998
+  },
+  {
+    "object_relative": "checkpoints/sonic/Sonic/audio2token.pth",
+    "size": 217206084
+  },
+  {
+    "object_relative": "checkpoints/sonic/Sonic/unet.pth",
+    "size": 6303636358
+  },
+  {
+    "object_relative": "checkpoints/svd-xt/LICENSE.md",
+    "size": 11852
+  },
+  {
+    "object_relative": "checkpoints/svd-xt/README.md",
+    "size": 8156
+  },
+  {
+    "object_relative": "checkpoints/svd-xt/model_index.json",
+    "size": 496
+  },
+  {
+    "object_relative": "checkpoints/svd-xt/feature_extractor/preprocessor_config.json",
+    "size": 518
+  },
+  {
+    "object_relative": "checkpoints/svd-xt/image_encoder/config.json",
+    "size": 685
+  },
+  {
+    "object_relative": "checkpoints/svd-xt/image_encoder/model.fp16.safetensors",
+    "size": 1264217240
+  },
+  {
+    "object_relative": "checkpoints/svd-xt/scheduler/scheduler_config.json",
+    "size": 533
+  },
+  {
+    "object_relative": "checkpoints/svd-xt/unet/config.json",
+    "size": 984
+  },
+  {
+    "object_relative": "checkpoints/svd-xt/unet/diffusion_pytorch_model.fp16.safetensors",
+    "size": 3049435868
+  },
+  {
+    "object_relative": "checkpoints/svd-xt/vae/config.json",
+    "size": 607
+  },
+  {
+    "object_relative": "checkpoints/svd-xt/vae/diffusion_pytorch_model.fp16.safetensors",
+    "size": 195531910
+  },
+  {
+    "object_relative": "checkpoints/wan2.1-i2v-14b/.gitattributes",
+    "size": 2249
+  },
+  {
+    "object_relative": "checkpoints/wan2.1-i2v-14b/LICENSE.txt",
+    "size": 11357
+  },
+  {
+    "object_relative": "checkpoints/wan2.1-i2v-14b/README.md",
+    "size": 16029
+  },
+  {
+    "object_relative": "checkpoints/wan2.1-i2v-14b/Wan2.1_VAE.pth",
+    "size": 507609880
+  },
+  {
+    "object_relative": "checkpoints/wan2.1-i2v-14b/config.json",
+    "size": 250
+  },
+  {
+    "object_relative": "checkpoints/wan2.1-i2v-14b/diffusion_pytorch_model-00001-of-00007.safetensors",
+    "size": 9847223624
+  },
+  {
+    "object_relative": "checkpoints/wan2.1-i2v-14b/diffusion_pytorch_model-00002-of-00007.safetensors",
+    "size": 9797021016
+  },
+  {
+    "object_relative": "checkpoints/wan2.1-i2v-14b/diffusion_pytorch_model-00003-of-00007.safetensors",
+    "size": 9797041744
+  },
+  {
+    "object_relative": "checkpoints/wan2.1-i2v-14b/diffusion_pytorch_model-00004-of-00007.safetensors",
+    "size": 9692142864
+  },
+  {
+    "object_relative": "checkpoints/wan2.1-i2v-14b/diffusion_pytorch_model-00005-of-00007.safetensors",
+    "size": 9692142864
+  },
+  {
+    "object_relative": "checkpoints/wan2.1-i2v-14b/diffusion_pytorch_model-00006-of-00007.safetensors",
+    "size": 9692142864
+  },
+  {
+    "object_relative": "checkpoints/wan2.1-i2v-14b/diffusion_pytorch_model-00007-of-00007.safetensors",
+    "size": 7061933536
+  },
+  {
+    "object_relative": "checkpoints/wan2.1-i2v-14b/diffusion_pytorch_model.safetensors.index.json",
+    "size": 116451
+  },
+  {
+    "object_relative": "checkpoints/wan2.1-i2v-14b/models_clip_open-clip-xlm-roberta-large-vit-huge-14.pth",
+    "size": 4772359047
+  },
+  {
+    "object_relative": "checkpoints/wan2.1-i2v-14b/models_t5_umt5-xxl-enc-bf16.pth",
+    "size": 11361920418
+  },
+  {
+    "object_relative": "checkpoints/wan2.1-i2v-14b/assets/comp_effic.png",
+    "size": 1793594
+  },
+  {
+    "object_relative": "checkpoints/wan2.1-i2v-14b/assets/data_for_diff_stage.jpg",
+    "size": 528268
+  },
+  {
+    "object_relative": "checkpoints/wan2.1-i2v-14b/assets/i2v_res.png",
+    "size": 891681
+  },
+  {
+    "object_relative": "checkpoints/wan2.1-i2v-14b/assets/logo.png",
+    "size": 56322
+  },
+  {
+    "object_relative": "checkpoints/wan2.1-i2v-14b/assets/t2v_res.jpg",
+    "size": 301030
+  },
+  {
+    "object_relative": "checkpoints/wan2.1-i2v-14b/assets/vben_1.3b_vs_sota.png",
+    "size": 515765
+  },
+  {
+    "object_relative": "checkpoints/wan2.1-i2v-14b/assets/vben_vs_sota.png",
+    "size": 1552119
+  },
+  {
+    "object_relative": "checkpoints/wan2.1-i2v-14b/assets/video_dit_arch.jpg",
+    "size": 643369
+  },
+  {
+    "object_relative": "checkpoints/wan2.1-i2v-14b/assets/video_vae_res.jpg",
+    "size": 212586
+  },
+  {
+    "object_relative": "checkpoints/wan2.1-i2v-14b/examples/i2v_input.JPG",
+    "size": 250628
+  },
+  {
+    "object_relative": "checkpoints/wan2.1-i2v-14b/google/umt5-xxl/special_tokens_map.json",
+    "size": 6623
+  },
+  {
+    "object_relative": "checkpoints/wan2.1-i2v-14b/google/umt5-xxl/spiece.model",
+    "size": 4548313
+  },
+  {
+    "object_relative": "checkpoints/wan2.1-i2v-14b/google/umt5-xxl/tokenizer.json",
+    "size": 16837417
+  },
+  {
+    "object_relative": "checkpoints/wan2.1-i2v-14b/google/umt5-xxl/tokenizer_config.json",
+    "size": 61728
+  },
+  {
+    "object_relative": "checkpoints/wan2.1-i2v-14b/xlm-roberta-large/sentencepiece.bpe.model",
+    "size": 5069051
+  },
+  {
+    "object_relative": "checkpoints/wan2.1-i2v-14b/xlm-roberta-large/special_tokens_map.json",
+    "size": 280
+  },
+  {
+    "object_relative": "checkpoints/wan2.1-i2v-14b/xlm-roberta-large/tokenizer.json",
+    "size": 17082660
+  },
+  {
+    "object_relative": "checkpoints/wan2.1-i2v-14b/xlm-roberta-large/tokenizer_config.json",
+    "size": 418
+  },
+  {
+    "object_relative": "checkpoints/wan2.2-s2v-14b/.gitattributes",
+    "size": 1300
+  },
+  {
+    "object_relative": "checkpoints/wan2.2-s2v-14b/README.md",
+    "size": 18721
+  },
+  {
+    "object_relative": "checkpoints/wan2.2-s2v-14b/Wan2.1_VAE.pth",
+    "size": 507609880
+  },
+  {
+    "object_relative": "checkpoints/wan2.2-s2v-14b/config.json",
+    "size": 890
+  },
+  {
+    "object_relative": "checkpoints/wan2.2-s2v-14b/configuration.json",
+    "size": 43
+  },
+  {
+    "object_relative": "checkpoints/wan2.2-s2v-14b/diffusion_pytorch_model-00001-of-00004.safetensors",
+    "size": 9968229352
+  },
+  {
+    "object_relative": "checkpoints/wan2.2-s2v-14b/diffusion_pytorch_model-00002-of-00004.safetensors",
+    "size": 9891539248
+  },
+  {
+    "object_relative": "checkpoints/wan2.2-s2v-14b/diffusion_pytorch_model-00003-of-00004.safetensors",
+    "size": 9956985634
+  },
+  {
+    "object_relative": "checkpoints/wan2.2-s2v-14b/diffusion_pytorch_model-00004-of-00004.safetensors",
+    "size": 2774887624
+  },
+  {
+    "object_relative": "checkpoints/wan2.2-s2v-14b/diffusion_pytorch_model.safetensors.index.json",
+    "size": 113150
+  },
+  {
+    "object_relative": "checkpoints/wan2.2-s2v-14b/models_t5_umt5-xxl-enc-bf16.pth",
+    "size": 11361920418
+  },
+  {
+    "object_relative": "checkpoints/wan2.2-s2v-14b/assets/471504690-b63bfa58-d5d7-4de6-a1a2-98970b06d9a7.mp4",
+    "size": 9193286
+  },
+  {
+    "object_relative": "checkpoints/wan2.2-s2v-14b/assets/comp_effic.png",
+    "size": 202156
+  },
+  {
+    "object_relative": "checkpoints/wan2.2-s2v-14b/assets/logo.png",
+    "size": 56322
+  },
+  {
+    "object_relative": "checkpoints/wan2.2-s2v-14b/assets/moe_2.png",
+    "size": 527914
+  },
+  {
+    "object_relative": "checkpoints/wan2.2-s2v-14b/assets/moe_arch.png",
+    "size": 74900
+  },
+  {
+    "object_relative": "checkpoints/wan2.2-s2v-14b/assets/performance.png",
+    "size": 306535
+  },
+  {
+    "object_relative": "checkpoints/wan2.2-s2v-14b/assets/vae.png",
+    "size": 165486
+  },
+  {
+    "object_relative": "checkpoints/wan2.2-s2v-14b/google/umt5-xxl/special_tokens_map.json",
+    "size": 6623
+  },
+  {
+    "object_relative": "checkpoints/wan2.2-s2v-14b/google/umt5-xxl/spiece.model",
+    "size": 4548313
+  },
+  {
+    "object_relative": "checkpoints/wan2.2-s2v-14b/google/umt5-xxl/tokenizer.json",
+    "size": 16837417
+  },
+  {
+    "object_relative": "checkpoints/wan2.2-s2v-14b/google/umt5-xxl/tokenizer_config.json",
+    "size": 61728
+  },
+  {
+    "object_relative": "checkpoints/wan2.2-s2v-14b/wav2vec2-large-xlsr-53-english/.msc",
+    "size": 2328
+  },
+  {
+    "object_relative": "checkpoints/wan2.2-s2v-14b/wav2vec2-large-xlsr-53-english/.mv",
+    "size": 36
+  },
+  {
+    "object_relative": "checkpoints/wan2.2-s2v-14b/wav2vec2-large-xlsr-53-english/README.md",
+    "size": 5327
+  },
+  {
+    "object_relative": "checkpoints/wan2.2-s2v-14b/wav2vec2-large-xlsr-53-english/alphabet.json",
+    "size": 200
+  },
+  {
+    "object_relative": "checkpoints/wan2.2-s2v-14b/wav2vec2-large-xlsr-53-english/config.json",
+    "size": 1531
+  },
+  {
+    "object_relative": "checkpoints/wan2.2-s2v-14b/wav2vec2-large-xlsr-53-english/configuration.json",
+    "size": 86
+  },
+  {
+    "object_relative": "checkpoints/wan2.2-s2v-14b/wav2vec2-large-xlsr-53-english/eval.py",
+    "size": 6198
+  },
+  {
+    "object_relative": "checkpoints/wan2.2-s2v-14b/wav2vec2-large-xlsr-53-english/flax_model.msgpack",
+    "size": 1261905572
+  },
+  {
+    "object_relative": "checkpoints/wan2.2-s2v-14b/wav2vec2-large-xlsr-53-english/full_eval.sh",
+    "size": 1372
+  },
+  {
+    "object_relative": "checkpoints/wan2.2-s2v-14b/wav2vec2-large-xlsr-53-english/log_mozilla-foundation_common_voice_6_0_en_test_predictions.txt",
+    "size": 924339
+  },
+  {
+    "object_relative": "checkpoints/wan2.2-s2v-14b/wav2vec2-large-xlsr-53-english/log_mozilla-foundation_common_voice_6_0_en_test_predictions_greedy.txt",
+    "size": 925177
+  },
+  {
+    "object_relative": "checkpoints/wan2.2-s2v-14b/wav2vec2-large-xlsr-53-english/log_mozilla-foundation_common_voice_6_0_en_test_targets.txt",
+    "size": 932146
+  },
+  {
+    "object_relative": "checkpoints/wan2.2-s2v-14b/wav2vec2-large-xlsr-53-english/log_speech-recognition-community-v2_dev_data_en_validation_predictions.txt",
+    "size": 130354
+  },
+  {
+    "object_relative": "checkpoints/wan2.2-s2v-14b/wav2vec2-large-xlsr-53-english/log_speech-recognition-community-v2_dev_data_en_validation_predictions_greedy.txt",
+    "size": 130796
+  },
+  {
+    "object_relative": "checkpoints/wan2.2-s2v-14b/wav2vec2-large-xlsr-53-english/log_speech-recognition-community-v2_dev_data_en_validation_targets.txt",
+    "size": 131489
+  },
+  {
+    "object_relative": "checkpoints/wan2.2-s2v-14b/wav2vec2-large-xlsr-53-english/model.safetensors",
+    "size": 1261942732
+  },
+  {
+    "object_relative": "checkpoints/wan2.2-s2v-14b/wav2vec2-large-xlsr-53-english/mozilla-foundation_common_voice_6_0_en_test_eval_results.txt",
+    "size": 48
+  },
+  {
+    "object_relative": "checkpoints/wan2.2-s2v-14b/wav2vec2-large-xlsr-53-english/mozilla-foundation_common_voice_6_0_en_test_eval_results_greedy.txt",
+    "size": 49
+  },
+  {
+    "object_relative": "checkpoints/wan2.2-s2v-14b/wav2vec2-large-xlsr-53-english/preprocessor_config.json",
+    "size": 262
+  },
+  {
+    "object_relative": "checkpoints/wan2.2-s2v-14b/wav2vec2-large-xlsr-53-english/pytorch_model.bin",
+    "size": 1262069143
+  },
+  {
+    "object_relative": "checkpoints/wan2.2-s2v-14b/wav2vec2-large-xlsr-53-english/special_tokens_map.json",
+    "size": 85
+  },
+  {
+    "object_relative": "checkpoints/wan2.2-s2v-14b/wav2vec2-large-xlsr-53-english/speech-recognition-community-v2_dev_data_en_validation_eval_results.txt",
+    "size": 48
+  },
+  {
+    "object_relative": "checkpoints/wan2.2-s2v-14b/wav2vec2-large-xlsr-53-english/speech-recognition-community-v2_dev_data_en_validation_eval_results_greedy.txt",
+    "size": 49
+  },
+  {
+    "object_relative": "checkpoints/wan2.2-s2v-14b/wav2vec2-large-xlsr-53-english/vocab.json",
+    "size": 300
+  },
+  {
+    "object_relative": "checkpoints/wan2.2-s2v-14b/wav2vec2-large-xlsr-53-english/language_model/attrs.json",
+    "size": 78
+  },
+  {
+    "object_relative": "checkpoints/wan2.2-s2v-14b/wav2vec2-large-xlsr-53-english/language_model/lm.binary",
+    "size": 862913451
+  },
+  {
+    "object_relative": "checkpoints/wan2.2-s2v-14b/wav2vec2-large-xlsr-53-english/language_model/unigrams.txt",
+    "size": 3509871
+  },
+  {
+    "object_relative": "checkpoints/wavlm-base-plus/README.md",
+    "size": 3904
+  },
+  {
+    "object_relative": "checkpoints/wavlm-base-plus/config.json",
+    "size": 2232
+  },
+  {
+    "object_relative": "checkpoints/wavlm-base-plus/preprocessor_config.json",
+    "size": 215
+  },
+  {
+    "object_relative": "checkpoints/wavlm-base-plus/pytorch_model.bin",
+    "size": 377617425
+  },
+  {
+    "object_relative": "checkpoints/whisper-tiny/README.md",
+    "size": 19787
+  },
+  {
+    "object_relative": "checkpoints/whisper-tiny/added_tokens.json",
+    "size": 34604
+  },
+  {
+    "object_relative": "checkpoints/whisper-tiny/config.json",
+    "size": 1983
+  },
+  {
+    "object_relative": "checkpoints/whisper-tiny/generation_config.json",
+    "size": 3747
+  },
+  {
+    "object_relative": "checkpoints/whisper-tiny/merges.txt",
+    "size": 493869
+  },
+  {
+    "object_relative": "checkpoints/whisper-tiny/model.safetensors",
+    "size": 151061672
+  },
+  {
+    "object_relative": "checkpoints/whisper-tiny/normalizer.json",
+    "size": 52666
+  },
+  {
+    "object_relative": "checkpoints/whisper-tiny/preprocessor_config.json",
+    "size": 184990
+  },
+  {
+    "object_relative": "checkpoints/whisper-tiny/pytorch_model.bin",
+    "size": 151095027
+  },
+  {
+    "object_relative": "checkpoints/whisper-tiny/special_tokens_map.json",
+    "size": 2194
+  },
+  {
+    "object_relative": "checkpoints/whisper-tiny/tokenizer.json",
+    "size": 2480466
+  },
+  {
+    "object_relative": "checkpoints/whisper-tiny/tokenizer_config.json",
+    "size": 282683
+  },
+  {
+    "object_relative": "checkpoints/whisper-tiny/vocab.json",
+    "size": 835550
+  }
+]

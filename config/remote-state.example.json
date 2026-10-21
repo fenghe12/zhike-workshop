@@ -1,0 +1,9 @@
+{
+  "status": "STOPPED",
+  "endpoints": [
+    {
+      "service": "SSH",
+      "uri": "ssh://ma-user@YOUR_NOTEBOOK_HOST:YOUR_PORT"
+    }
+  ]
+}

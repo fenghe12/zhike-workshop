@@ -1,0 +1,44 @@
+[
+  {
+    "name": "CyberVerse",
+    "source": "https://github.com/Lynpoint/CyberVerse",
+    "license_url": "https://github.com/Lynpoint/CyberVerse/blob/main/LICENSE",
+    "saved": true
+  },
+  {
+    "name": "EchoMimic",
+    "source": "https://github.com/BadToBest/EchoMimic",
+    "license_url": "https://github.com/antgroup/echomimic/blob/main/LICENSE",
+    "saved": true
+  },
+  {
+    "name": "EDTalk",
+    "source": "https://github.com/tanshuai0219/EDTalk",
+    "license_url": "https://github.com/tanshuai0219/EDTalk/blob/main/LICENSE.txt",
+    "saved": true
+  },
+  {
+    "name": "Wav2Lip",
+    "source": "https://github.com/Rudrabha/Wav2Lip",
+    "license_url": "https://github.com/Rudrabha/Wav2Lip",
+    "saved": false
+  },
+  {
+    "name": "SadTalker",
+    "source": "https://github.com/OpenTalker/SadTalker",
+    "license_url": "https://github.com/OpenTalker/SadTalker/blob/main/LICENSE",
+    "saved": true
+  },
+  {
+    "name": "llama.cpp",
+    "source": "https://github.com/ggml-org/llama.cpp",
+    "license_url": "https://github.com/ggml-org/llama.cpp/blob/master/LICENSE",
+    "saved": true
+  },
+  {
+    "name": "Latte",
+    "source": "https://github.com/maxin-cn/Latte",
+    "license_url": "https://github.com/maxin-cn/Latte/blob/main/LICENSE",
+    "saved": true
+  }
+]
