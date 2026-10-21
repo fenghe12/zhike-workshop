@@ -1,0 +1,64 @@
+.register-page {
+  padding-top: 38rpx;
+}
+
+.register-intro {
+  padding: 10rpx 8rpx 30rpx;
+}
+
+.register-title {
+  margin-top: 10rpx;
+  color: #18221f;
+  font-size: 44rpx;
+  font-weight: 740;
+}
+
+.register-copy {
+  margin-top: 10rpx;
+  color: #7d868b;
+  font-size: 24rpx;
+  line-height: 1.6;
+}
+
+.register-card {
+  padding: 32rpx 28rpx;
+}
+
+.field-block {
+  margin-bottom: 26rpx;
+}
+
+.agreement-row {
+  display: flex;
+  align-items: center;
+  gap: 14rpx;
+  margin: 6rpx 0 32rpx;
+  color: #6e777d;
+  font-size: 22rpx;
+}
+
+.check-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34rpx;
+  height: 34rpx;
+  border: 2rpx solid #cbd2d5;
+  border-radius: 9rpx;
+  color: #ffffff;
+  background: #ffffff;
+  font-size: 23rpx;
+}
+
+.check-active {
+  border-color: #176b5b;
+  background: #176b5b;
+}
+
+.register-notice {
+  padding: 24rpx 20rpx;
+  color: #939b9f;
+  font-size: 21rpx;
+  line-height: 1.6;
+  text-align: center;
+}

@@ -1,0 +1,102 @@
+<view class="page create-page">
+  <view class="create-heading">
+    <view class="eyebrow">NEW GENERATION TASK</view>
+    <view class="create-title">创建课程生成任务</view>
+    <view class="create-copy">选择一种输入方式，系统将按五个阶段自动执行。</view>
+  </view>
+
+  <view class="section-heading">
+    <view class="section-title">1. 任务信息</view>
+  </view>
+  <view class="surface form-card">
+    <view class="field-block">
+      <text class="field-label field-required">任务名称</text>
+      <input class="text-input" placeholder="例如：人工智能概述多语种课程" value="{{form.name}}" bindinput="onNameInput" />
+    </view>
+
+    <view class="field-block field-last">
+      <text class="field-label field-required">任务创建方式</text>
+      <view class="mode-list">
+        <view wx:for="{{modes}}" wx:key="key" class="mode-card {{form.mode === item.key ? 'mode-active' : ''}}" data-mode="{{item.key}}" bindtap="selectMode">
+          <view class="mode-number">{{item.number}}</view>
+          <view class="mode-content">
+            <view class="mode-title">{{item.title}}</view>
+            <view class="mode-detail">{{item.detail}}</view>
+          </view>
+          <view class="radio-dot"><view class="radio-core"></view></view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="section-heading">
+    <view class="section-title">2. 课程输入</view>
+    <view class="section-note">{{form.mode === 'upload' ? '已有课件素材' : '课程主题生成'}}</view>
+  </view>
+  <view class="surface input-card">
+    <view wx:if="{{form.mode === 'upload'}}">
+      <text class="field-label field-required">PPT 课件</text>
+      <view wx:if="{{!form.ppt}}" class="upload-zone" bindtap="choosePpt">
+        <view class="upload-icon">P</view>
+        <view class="upload-title">选择 PPT 或 PPTX 文件</view>
+        <view class="upload-copy">系统将解析每页标题、要点、讲稿和布局信息</view>
+      </view>
+      <view wx:else class="selected-file">
+        <view class="file-icon">PPT</view>
+        <view class="file-info">
+          <view class="file-name">{{form.ppt.name}}</view>
+          <view class="file-size">{{form.ppt.sizeLabel}}</view>
+        </view>
+        <text class="file-remove" catchtap="removePpt">移除</text>
+      </view>
+    </view>
+
+    <view wx:else>
+      <text class="field-label field-required">课程主题</text>
+      <textarea class="textarea-input topic-input" maxlength="500" placeholder="说明课程主题及主要教学内容" value="{{form.topic}}" bindinput="onTopicInput"></textarea>
+      <view class="topic-output">
+        <view class="output-label">系统生成内容</view>
+        <view class="output-items">
+          <text>课程大纲</text><text>逐页教学内容</text><text>讲稿文本</text><text>配套 PPT</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="stage-assets-note">
+      <view class="note-mark">i</view>
+      <view>
+        <view class="note-title">后续阶段素材</view>
+        <view class="note-copy">参考音频在语音合成阶段上传；参考图片在数字人生成阶段上传。</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="section-heading">
+    <view class="section-title">3. 输出语言</view>
+    <view class="section-note">可多选</view>
+  </view>
+  <view class="surface language-card">
+    <view class="language-grid">
+      <view wx:for="{{languages}}" wx:key="code" class="language-option {{item.selected ? 'language-active' : ''}}" data-index="{{index}}" bindtap="toggleLanguage">
+        <view class="language-code">{{item.code}}</view>
+        <view class="language-name">{{item.name}}</view>
+        <view class="language-check">{{item.selected ? '✓' : ''}}</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="section-heading">
+    <view class="section-title">五阶段自动处理流程</view>
+  </view>
+  <view class="surface stage-preview">
+    <view wx:for="{{stages}}" wx:key="code" class="stage-preview-item">
+      <view class="stage-code">{{item.code}}</view>
+      <view class="stage-label">{{item.title}}</view>
+      <view wx:if="{{index < stages.length - 1}}" class="stage-connector"></view>
+    </view>
+  </view>
+
+  <button class="primary-button submit-button" loading="{{submitting}}" bindtap="submitTask">创建并启动任务</button>
+  <view class="submit-caption">任务创建后可在详情页查看各阶段进度和预览结果</view>
+  <view class="safe-bottom"></view>
+</view>

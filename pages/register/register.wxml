@@ -1,0 +1,36 @@
+<view class="page register-page">
+  <view class="register-intro">
+    <view class="eyebrow">CREATE ACCOUNT</view>
+    <view class="register-title">注册智课工坊</view>
+    <view class="register-copy">创建课程生成任务，查看多智能体处理进度与结果。</view>
+  </view>
+
+  <view class="surface register-card">
+    <view class="field-block">
+      <text class="field-label field-required">姓名</text>
+      <input class="text-input" placeholder="请输入姓名" data-key="name" value="{{form.name}}" bindinput="onInput" />
+    </view>
+    <view class="field-block">
+      <text class="field-label field-required">所属单位</text>
+      <input class="text-input" placeholder="高校或教育机构名称" data-key="institution" value="{{form.institution}}" bindinput="onInput" />
+    </view>
+    <view class="field-block">
+      <text class="field-label field-required">登录账号</text>
+      <input class="text-input" placeholder="手机号码或电子邮箱" data-key="account" value="{{form.account}}" bindinput="onInput" />
+    </view>
+    <view class="field-block">
+      <text class="field-label field-required">设置密码</text>
+      <input class="text-input" password="true" placeholder="至少 6 位" data-key="password" value="{{form.password}}" bindinput="onInput" />
+    </view>
+    <view class="field-block">
+      <text class="field-label field-required">确认密码</text>
+      <input class="text-input" password="true" placeholder="再次输入密码" data-key="confirmPassword" value="{{form.confirmPassword}}" bindinput="onInput" />
+    </view>
+
+    <view class="agreement-row" bindtap="toggleAgreement">
+      <view class="check-box {{agreed ? 'check-active' : ''}}">{{agreed ? '✓' : ''}}</view>
+      <text>已阅读并同意《用户协议》和《隐私说明》</text>
+    </view>
+    <button class="primary-button" loading="{{submitting}}" bindtap="submitRegister">完成注册</button>
+  </view>
+</view>

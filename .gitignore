@@ -31,3 +31,6 @@ id_ed25519*
 *.wav
 *.sqlite*
 .DS_Store
+
+*.partial
+**/translation_log.txt

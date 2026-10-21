@@ -1,0 +1,461 @@
+<view class="page stage-page">
+  <view wx:if="{{loading}}" class="surface stage-loading">
+    <view class="loading-mark"></view>
+    <view class="loading-lines">
+      <view></view><view></view><view></view>
+    </view>
+  </view>
+
+  <block wx:elif="{{stage && output}}">
+    <view class="stage-hero">
+      <view class="stage-hero-code">{{stage.code}}</view>
+      <view class="stage-hero-main">
+        <view class="stage-hero-title">{{stage.title}}</view>
+        <view class="stage-hero-agent">{{stage.agent}}</view>
+      </view>
+      <view class="stage-hero-status {{stage.status}}">{{stage.status === 'completed' ? '已完成' : stage.status === 'running' ? '执行中' : stage.status === 'failed' ? '失败' : '等待中'}}</view>
+    </view>
+    <view class="stage-description">{{stage.summary}}</view>
+
+    <!-- S1 课件结构化 -->
+    <block wx:if="{{stageIndex === 1}}">
+      <view class="overview-grid">
+        <view class="overview-card surface">
+          <text class="overview-value">{{output.pageCount}}</text>
+          <text class="overview-label">课件页数</text>
+        </view>
+        <view class="overview-card surface">
+          <text class="overview-value">{{output.chapterCount}}</text>
+          <text class="overview-label">课程章节</text>
+        </view>
+        <view class="overview-card surface">
+          <text class="overview-value">{{output.validPageCount}}</text>
+          <text class="overview-label">有效内容页</text>
+        </view>
+      </view>
+
+      <view class="section-heading">
+        <view>
+          <view class="section-title">结构化处理结果</view>
+          <view class="section-note">输入方式：{{output.inputMode}}</view>
+        </view>
+      </view>
+      <view class="surface extraction-grid">
+        <view wx:for="{{output.extractionItems}}" wx:key="label" class="extraction-item">
+          <view class="extraction-top">
+            <text class="extraction-label">{{item.label}}</text>
+            <text class="extraction-state">{{item.state}}</text>
+          </view>
+          <text class="extraction-value">{{item.value}}</text>
+        </view>
+      </view>
+
+      <view class="section-heading">
+        <view>
+          <view class="section-title">原始课件页面</view>
+          <view class="section-note">{{output.sourceFile}} · 第 1 页 · {{output.sourcePageResolution}}</view>
+        </view>
+      </view>
+      <view class="surface source-slide-card">
+        <image class="source-slide-image" src="{{output.sourcePageImage}}" mode="widthFix"></image>
+        <view class="source-slide-caption"><text>真实 PPT 页面</text><text>已解析标题、讲者信息与页面布局</text></view>
+      </view>
+
+      <view class="section-heading">
+        <view>
+          <view class="section-title">真实课件页面样例</view>
+          <view class="section-note">直接读取同一 PPT 中的章节页和内容页</view>
+        </view>
+      </view>
+      <view class="source-sample-grid">
+        <view wx:for="{{output.sourcePageSamples}}" wx:key="page" class="surface source-sample-card">
+          <image src="{{item.image}}" mode="widthFix"></image>
+          <view><text>第 {{item.page}} 页</text><text>{{item.title}}</text></view>
+        </view>
+      </view>
+
+      <view class="section-heading">
+        <view>
+          <view class="section-title">课程大纲</view>
+          <view class="section-note">章节结构与页面范围</view>
+        </view>
+      </view>
+      <view class="surface chapter-list">
+        <view wx:for="{{output.chapters}}" wx:key="number" class="chapter-item">
+          <view class="chapter-number">{{item.number}}</view>
+          <view class="chapter-main">
+            <view class="chapter-title">{{item.title}}</view>
+            <view class="chapter-description">{{item.description}}</view>
+          </view>
+          <text class="chapter-pages">{{item.pages}}</text>
+        </view>
+      </view>
+
+      <view class="section-heading">
+        <view>
+          <view class="section-title">逐页教学内容</view>
+          <view class="section-note">标题、要点、讲稿和页面布局</view>
+        </view>
+        <text class="section-action" bindtap="toggleAllPages">{{showAllPages ? '收起' : '展开'}}</text>
+      </view>
+      <view class="page-content-list">
+        <block wx:for="{{output.pages}}" wx:key="page">
+          <view wx:if="{{showAllPages || index < 2}}" class="surface page-content-card">
+            <view class="page-content-head">
+              <text class="page-number">第 {{item.page}} 页</text>
+              <text class="page-layout">{{item.layout}}</text>
+            </view>
+            <view class="page-content-title">{{item.title}}</view>
+            <view class="point-list">
+              <view wx:for="{{item.points}}" wx:for-item="point" wx:key="*this" class="point-item">
+                <view class="point-dot"></view><text>{{point}}</text>
+              </view>
+            </view>
+            <view class="script-block">
+              <text class="content-mini-label">讲稿</text>
+              <text>{{item.script}}</text>
+            </view>
+            <view class="image-description">配图说明：{{item.imageDescription}}</view>
+          </view>
+        </block>
+      </view>
+    </block>
+
+    <!-- S2 多语种翻译与校验 -->
+    <block wx:if="{{stageIndex === 2}}">
+      <scroll-view class="language-scroll" scroll-x="true" show-scrollbar="false">
+        <view class="language-tabs">
+          <view wx:for="{{output.languages}}" wx:key="*this" class="language-tab {{activeLanguageIndex === index ? 'language-tab-active' : ''}}" data-index="{{index}}" bindtap="switchLanguage">{{item}}</view>
+        </view>
+      </scroll-view>
+
+      <view class="translation-banner surface">
+        <view>
+          <view class="translation-route">{{output.sourceLanguage}} → {{output.languages[activeLanguageIndex]}}</view>
+          <view class="translation-copy">PPT 文本与讲稿分别翻译，并执行回译一致性校验</view>
+        </view>
+        <view class="iteration-chip">第 {{output.iteration}} / {{output.maxIterations}} 次</view>
+      </view>
+
+      <view class="section-heading">
+        <view>
+          <view class="section-title">回译一致性校验</view>
+          <view class="section-note">术语、公式、数字和专有名词准确性</view>
+        </view>
+      </view>
+      <view class="metric-grid">
+        <view wx:for="{{output.metrics}}" wx:key="key" class="metric-card surface">
+          <view class="metric-head">
+            <text class="metric-label">{{item.label}}</text>
+            <text class="metric-pass">通过</text>
+          </view>
+          <view class="metric-value">{{item.value}}</view>
+          <view class="metric-threshold">{{item.threshold}}</view>
+        </view>
+      </view>
+
+      <view class="section-heading">
+        <view>
+          <view class="section-title">各语种进度</view>
+          <view class="section-note">逐语种查看翻译与校验状态</view>
+        </view>
+      </view>
+      <view class="surface language-progress-list">
+        <view wx:for="{{output.languageProgress}}" wx:key="code" class="language-progress-item">
+          <view class="language-avatar">{{item.code}}</view>
+          <view class="language-progress-main">
+            <view class="language-progress-head"><text>{{item.name}}</text><text>{{item.state}}</text></view>
+            <view class="language-progress-track"><view style="width: {{item.progress}}%;"></view></view>
+          </view>
+          <text class="language-progress-value">{{item.progress}}%</text>
+        </view>
+      </view>
+
+      <view class="section-heading">
+        <view>
+          <view class="section-title">翻译内容预览</view>
+          <view class="section-note">原文、译文与回译文本逐项对照</view>
+        </view>
+      </view>
+      <view class="sample-list">
+        <view wx:for="{{output.samples}}" wx:key="page" class="surface translation-sample">
+          <view class="sample-page">第 {{item.page}} 页</view>
+          <view class="sample-block"><text>源语言原文</text><view>{{item.source}}</view></view>
+          <view class="sample-block translated"><text>目标语言</text><view>{{item.translated}}</view></view>
+          <view class="sample-block"><text>回译文本</text><view>{{item.backTranslated}}</view></view>
+          <view class="sample-report"><text>✓</text>{{item.report}}</view>
+        </view>
+      </view>
+
+      <view class="section-heading">
+        <view class="section-title">校验记录</view>
+      </view>
+      <view class="surface log-list">
+        <view wx:for="{{output.correctionLog}}" wx:key="phase" class="log-item">
+          <text>{{item.phase}}</text><view class="log-dot"></view><text>{{item.message}}</text>
+        </view>
+      </view>
+    </block>
+
+    <!-- S3 语音合成 -->
+    <block wx:if="{{stageIndex === 3}}">
+      <view class="section-heading">
+        <view>
+          <view class="section-title">参考音频</view>
+          <view class="section-note">用于保留讲者声线特征</view>
+        </view>
+      </view>
+      <view class="surface asset-card">
+        <view wx:if="{{task.assets.referenceAudio}}" class="asset-selected">
+          <view class="asset-icon audio-icon">声</view>
+          <view class="asset-main">
+            <view class="asset-name">{{task.assets.referenceAudio.name}}</view>
+            <view class="asset-meta">{{task.assets.referenceAudio.sizeLabel || output.referenceDuration}} · 已读取</view>
+          </view>
+          <button class="asset-change" bindtap="chooseReferenceAudio">更换</button>
+        </view>
+        <view wx:else class="asset-empty" bindtap="chooseReferenceAudio">
+          <view class="asset-empty-mark">＋</view>
+          <view><view class="asset-empty-title">上传讲者参考音频</view><view class="asset-empty-copy">支持 WAV、MP3、M4A、AAC</view></view>
+        </view>
+      </view>
+
+      <view class="section-heading">
+        <view>
+          <view class="section-title">目标语言讲解音频</view>
+          <view class="section-note">保留讲者声线并按句生成时间戳</view>
+        </view>
+      </view>
+      <view class="voice-player surface">
+        <view class="voice-player-head">
+          <view class="voice-play" bindtap="toggleAudio">{{playing ? 'Ⅱ' : '▶'}}</view>
+          <view><view class="voice-title">{{output.targetLanguage}}讲解音频 · 第1页试听</view><view class="voice-meta">{{output.previewDuration}} · {{output.previewSentenceCount}} 个句子 · 完整课程 {{output.generatedDuration}}</view></view>
+        </view>
+        <view class="waveform">
+          <view wx:for="{{output.waveBars}}" wx:key="index" class="wave-bar {{playing ? 'wave-playing' : ''}}" style="height: {{item}}%;"></view>
+        </view>
+        <view class="voice-time"><text>00:00</text><text>{{output.previewDuration}}</text></view>
+      </view>
+
+      <view class="process-flow surface">
+        <view wx:for="{{output.modelFlow}}" wx:key="*this" class="process-flow-item">
+          <view class="flow-index">{{index + 1}}</view><text>{{item}}</text><view wx:if="{{index < output.modelFlow.length - 1}}" class="flow-arrow">›</view>
+        </view>
+      </view>
+
+      <view class="overview-grid voice-stats">
+        <view class="overview-card surface"><text class="overview-value">{{output.sentenceCount}}</text><text class="overview-label">句级时间戳</text></view>
+        <view class="overview-card surface"><text class="overview-value">{{output.alignedPageCount}}</text><text class="overview-label">对齐页面</text></view>
+        <view class="overview-card surface"><text class="overview-value">{{output.generatedDuration}}</text><text class="overview-label">音频时长</text></view>
+      </view>
+
+      <view class="section-heading">
+        <view>
+          <view class="section-title">句级时间戳</view>
+          <view class="section-note">讲稿句子与音频时间位置</view>
+        </view>
+      </view>
+      <scroll-view class="table-scroll surface" scroll-x="true">
+        <view class="data-table sentence-table">
+          <view class="table-row table-head"><text>序号</text><text>PPT 页</text><text>开始</text><text>结束</text><text>讲稿文本</text></view>
+          <view wx:for="{{output.sentences}}" wx:key="index" class="table-row"><text>{{item.index}}</text><text>{{item.page}}</text><text class="mono">{{item.start}}</text><text class="mono">{{item.end}}</text><text>{{item.text}}</text></view>
+        </view>
+      </scroll-view>
+
+      <view class="section-heading">
+        <view>
+          <view class="section-title">PPT 页级时间轴</view>
+          <view class="section-note">句级时间戳自动映射至课件页面</view>
+        </view>
+      </view>
+      <view class="surface timeline-list">
+        <view wx:for="{{output.pageTimeline}}" wx:key="page" class="timeline-item">
+          <view class="timeline-page">P{{item.page}}</view>
+          <view class="timeline-main"><view class="timeline-time mono">{{item.start}} — {{item.end}}</view><view class="timeline-meta">{{item.sentences}} 个句子 · {{item.duration}}</view></view>
+          <view class="timeline-status">已对齐</view>
+        </view>
+      </view>
+    </block>
+
+    <!-- S4 数字人生成 -->
+    <block wx:if="{{stageIndex === 4}}">
+      <view class="surface avatar-capability-strip">
+        <view><text>身份保持</text><text>已完成</text></view>
+        <view><text>唇形同步</text><text>已完成</text></view>
+        <view><text>表情与头部动作</text><text>已完成</text></view>
+        <view><text>音频分段生成</text><text>{{output.generatedSegments}} 段</text></view>
+      </view>
+
+      <view class="section-heading">
+        <view>
+          <view class="section-title">参考图片</view>
+          <view class="section-note">用于生成讲解数字人</view>
+        </view>
+      </view>
+      <view class="surface image-asset-card">
+        <view class="portrait-preview">
+          <image src="{{task.assets.referenceImage && task.assets.referenceImage.path ? task.assets.referenceImage.path : '/assets/images/avatar-placeholder.svg'}}" mode="aspectFill"></image>
+        </view>
+        <view class="asset-main">
+          <view class="asset-name">{{task.assets.referenceImage ? task.assets.referenceImage.name : 'HDTF参考人像.jpg'}}</view>
+          <view class="asset-meta">{{task.assets.referenceImage ? (task.assets.referenceImage.sizeLabel || 'HDTF 图像已读取') : 'HDTF · 1024 × 1024 · 图像已读取'}}</view>
+        </view>
+        <button class="asset-change" bindtap="chooseReferenceImage">{{task.assets.referenceImage ? '更换' : '上传'}}</button>
+      </view>
+
+      <view class="section-heading">
+        <view>
+          <view class="section-title">数字人显示位置</view>
+          <view class="section-note">根据课件内容自动确定并避让重要区域</view>
+        </view>
+        <text class="page-chip">第 {{output.page}} 页</text>
+      </view>
+      <view class="slide-preview surface">
+        <image class="placement-slide-image" src="{{output.sourcePageImage}}" mode="aspectFit"></image>
+        <view class="avatar-box-real">
+          <image class="avatar-face-image" src="{{task.assets.referenceImage && task.assets.referenceImage.path ? task.assets.referenceImage.path : '/assets/images/avatar-placeholder.svg'}}" mode="aspectFill"></image>
+          <text>HDTF 数字人</text>
+        </view>
+        <view class="avoid-label">标题、讲者信息 · 已避让</view>
+      </view>
+      <view class="placement-info surface">
+        <view class="placement-main"><text class="placement-label">自动位置</text><text class="placement-value">{{output.placement}}</text></view>
+        <view class="bbox-values mono">x {{output.avatarBox.x}} · y {{output.avatarBox.y}} · {{output.avatarBox.width}} × {{output.avatarBox.height}} · α {{output.avatarBox.opacity}}</view>
+        <view class="placement-reason">{{output.reason}}</view>
+      </view>
+
+      <view class="section-heading">
+        <view>
+          <view class="section-title">内容遮挡检查</view>
+          <view class="section-note">标题、正文、图表和公式区域</view>
+        </view>
+      </view>
+      <view class="surface region-list">
+        <view wx:for="{{output.contentRegions}}" wx:key="label" class="region-item">
+          <view class="region-indicator {{item.label === '数字人' ? 'avatar-region' : ''}}"></view>
+          <text class="region-label">{{item.label}}</text><text class="region-value">{{item.value}}</text><text class="region-status">{{item.status}}</text>
+        </view>
+      </view>
+
+      <view class="section-heading">
+        <view>
+          <view class="section-title">数字人生成状态</view>
+          <view class="section-note">唇形、表情和头部动作协调生成</view>
+        </view>
+      </view>
+      <view class="avatar-metrics">
+        <view class="surface avatar-metric-card"><text>{{output.generatedSegments}} / {{output.totalSegments}}</text><view>分段视频</view></view>
+        <view class="surface avatar-metric-card"><text>{{output.identityConsistency}}</text><view>身份一致性</view></view>
+        <view class="surface avatar-metric-card"><text>{{output.lipSyncScore}}</text><view>唇形同步</view></view>
+      </view>
+      <view class="surface feature-flow-list">
+        <view wx:for="{{output.featureFlow}}" wx:key="title" class="feature-flow-item">
+          <view class="feature-index">{{index + 1}}</view><view><view class="feature-title">{{item.title}}</view><view class="feature-detail">{{item.detail}}</view></view>
+        </view>
+      </view>
+
+      <view class="section-heading">
+        <view class="section-title">分段结果预览</view>
+      </view>
+      <view class="surface segment-list">
+        <view wx:for="{{output.segments}}" wx:key="id" class="segment-item">
+          <view class="segment-play">▶</view>
+          <view class="segment-main"><view class="segment-id mono">{{item.id}} · PPT {{item.pages}}</view><view class="segment-meta">{{item.resolution}} · {{item.fps}}</view></view>
+          <text class="segment-status">{{item.status}}</text>
+        </view>
+      </view>
+    </block>
+
+    <!-- S5 视频合成 -->
+    <block wx:if="{{stageIndex === 5}}">
+      <view class="video-preview surface" bindtap="previewVideo">
+        <image class="video-preview-image" src="{{output.previewImage}}" mode="aspectFill"></image>
+        <image class="video-avatar-overlay" src="/assets/images/avatar-placeholder.svg" mode="aspectFill"></image>
+        <view class="video-play-button">▶</view>
+        <view class="video-subtitle">Let's officially enter our study of this course.</view>
+        <view class="video-time">{{output.duration}}</view>
+      </view>
+
+      <view class="video-title-row">
+        <view><view class="result-video-name">{{output.videoName}}</view><view class="result-video-meta">{{output.resolution}} · {{output.frameRate}} · {{output.duration}}</view></view>
+        <text class="tag tag-success">合成完成</text>
+      </view>
+
+      <view class="section-heading">
+        <view>
+          <view class="section-title">统一时间轴</view>
+          <view class="section-note">课件、数字人、语音和字幕同步合成</view>
+        </view>
+      </view>
+      <view class="surface track-list">
+        <view wx:for="{{output.compositionTracks}}" wx:key="name" class="track-item">
+          <view class="track-color track-{{item.color}}"></view>
+          <view class="track-main"><view>{{item.name}}</view><text>{{item.detail}}</text></view>
+          <view class="track-blocks"><view></view><view></view><view></view><view></view></view>
+        </view>
+      </view>
+
+      <view class="surface encoding-card">
+        <view class="encoding-item"><text>页面过渡</text><text>{{output.transition}}</text></view>
+        <view class="hairline"></view>
+        <view class="encoding-item"><text>视频编码</text><text>{{output.videoCodec}}</text></view>
+        <view class="hairline"></view>
+        <view class="encoding-item"><text>音频编码</text><text>{{output.audioCodec}}</text></view>
+        <view class="hairline"></view>
+        <view class="encoding-item"><text>SRT 字幕</text><text>{{output.subtitleCount}} 条</text></view>
+      </view>
+
+      <view class="section-heading">
+        <view>
+          <view class="section-title">字幕预览</view>
+          <view class="section-note">目标语言讲稿与句级时间戳</view>
+        </view>
+      </view>
+      <view class="surface subtitle-list">
+        <view wx:for="{{output.subtitlePreview}}" wx:key="index" class="subtitle-item">
+          <view class="subtitle-number">{{item.index}}</view>
+          <view><view class="subtitle-time mono">{{item.time}}</view><view class="subtitle-text">{{item.text}}</view></view>
+        </view>
+      </view>
+
+      <view class="section-heading">
+        <view>
+          <view class="section-title">结果下载</view>
+          <view class="section-note">课程视频及 SRT 字幕文件</view>
+        </view>
+      </view>
+      <view class="surface output-file-list">
+        <view wx:for="{{output.files}}" wx:key="key" class="output-file-item" data-key="{{item.key}}" bindtap="downloadOutput">
+          <view class="output-file-icon">{{item.key === 'video' ? 'MP4' : item.key === 'subtitle' ? 'SRT' : 'JSON'}}</view>
+          <view class="output-file-main"><view>{{item.name}}</view><text>{{item.type}} · {{item.size}}</text></view>
+          <text class="output-download">下载</text>
+        </view>
+      </view>
+    </block>
+
+    <view wx:if="{{stageIndex < 5 && output.files}}" class="section-heading">
+      <view>
+        <view class="section-title">阶段输出文件</view>
+        <view class="section-note">供下一阶段读取的结构化结果</view>
+      </view>
+    </view>
+    <view wx:if="{{stageIndex < 5 && output.files}}" class="surface output-file-list">
+      <view wx:for="{{output.files}}" wx:key="name" class="output-file-item" bindtap="exportStageData">
+        <view class="output-file-icon">{{stageIndex === 1 ? 'DATA' : stageIndex === 2 ? 'TEXT' : stageIndex === 3 ? 'AUDIO' : 'VIDEO'}}</view>
+        <view class="output-file-main"><view>{{item.name}}</view><text>{{item.type}} · {{item.size}}</text></view>
+        <text class="output-download">导出</text>
+      </view>
+    </view>
+
+    <view wx:if="{{stage.status === 'failed'}}" class="retry-card surface">
+      <view><view class="retry-title">该阶段执行失败</view><view class="retry-copy">修正输入或接口配置后可重新执行。</view></view>
+      <button class="danger-button" bindtap="retryStage">重新执行</button>
+    </view>
+
+    <view class="stage-navigation button-row">
+      <button class="ghost-button {{stageIndex === 1 ? 'nav-disabled' : ''}}" disabled="{{stageIndex === 1}}" bindtap="goPrevious">上一阶段</button>
+      <button class="primary-button" bindtap="goNext">{{stageIndex === 5 ? '查看结果中心' : '下一阶段'}}</button>
+    </view>
+    <view class="safe-bottom"></view>
+  </block>
+</view>

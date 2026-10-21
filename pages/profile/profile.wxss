@@ -1,0 +1,146 @@
+.profile-page {
+  padding-top: 26rpx;
+}
+
+.profile-card {
+  display: flex;
+  align-items: center;
+  padding: 28rpx 25rpx;
+}
+
+.profile-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 86rpx;
+  height: 86rpx;
+  border-radius: 25rpx;
+  color: #ffffff;
+  background: linear-gradient(145deg, #176b5b, #4b9b89);
+  font-size: 31rpx;
+  font-weight: 730;
+}
+
+.profile-main {
+  min-width: 0;
+  flex: 1;
+  margin-left: 19rpx;
+}
+
+.profile-name {
+  color: #29353b;
+  font-size: 30rpx;
+  font-weight: 700;
+}
+
+.profile-institution,
+.profile-account {
+  margin-top: 5rpx;
+  color: #848d92;
+  font-size: 20rpx;
+}
+
+.settings-card {
+  padding: 6rpx 24rpx;
+}
+
+.setting-row,
+.threshold-row,
+.connection-row,
+.action-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 94rpx;
+}
+
+.setting-title {
+  color: #354147;
+  font-size: 24rpx;
+  font-weight: 650;
+}
+
+.setting-copy {
+  margin-top: 5rpx;
+  color: #899297;
+  font-size: 19rpx;
+}
+
+.connection-row {
+  color: #747e83;
+  font-size: 22rpx;
+}
+
+.connection-state {
+  color: #176b5b;
+  font-weight: 650;
+}
+
+.backend-card {
+  padding: 25rpx;
+}
+
+.backend-actions {
+  margin-top: 23rpx;
+}
+
+.threshold-row > view {
+  flex: 1;
+}
+
+.threshold-row input {
+  width: 130rpx;
+  height: 64rpx;
+  padding: 0 15rpx;
+  border: 1rpx solid #dfe4e6;
+  border-radius: 12rpx;
+  color: #176b5b;
+  background: #f7f9f9;
+  font-size: 24rpx;
+  font-weight: 680;
+  text-align: center;
+}
+
+.threshold-save {
+  height: 72rpx;
+  margin: 17rpx 0 21rpx;
+  line-height: 72rpx;
+}
+
+.action-list {
+  padding: 5rpx 24rpx;
+}
+
+.action-row > view {
+  flex: 1;
+}
+
+.action-row > view > view {
+  color: #354147;
+  font-size: 24rpx;
+  font-weight: 640;
+}
+
+.action-row > view > text {
+  display: block;
+  margin-top: 4rpx;
+  color: #8b9499;
+  font-size: 19rpx;
+}
+
+.action-row > text {
+  color: #9ba2a6;
+  font-size: 30rpx;
+}
+
+.danger-row > view > view,
+.danger-row > text {
+  color: #a24646;
+}
+
+.version-info {
+  padding: 32rpx 20rpx 10rpx;
+  color: #a0a7aa;
+  font-size: 19rpx;
+  text-align: center;
+}

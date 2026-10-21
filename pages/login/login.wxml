@@ -1,0 +1,53 @@
+<view class="login-page">
+  <view class="ambient ambient-one"></view>
+  <view class="ambient ambient-two"></view>
+
+  <view class="status-safe"></view>
+  <view class="brand-block">
+    <view class="brand-mark">
+      <view class="mark-line mark-line-a"></view>
+      <view class="mark-line mark-line-b"></view>
+      <view class="mark-dot"></view>
+    </view>
+    <view class="brand-name">智课工坊</view>
+    <view class="brand-caption">多智能体协同 · 多语种 MOOC 自动生成</view>
+  </view>
+
+  <view class="login-card">
+    <view class="card-eyebrow">WORKSPACE ACCESS</view>
+    <view class="card-title">登录工作台</view>
+    <view class="card-copy">管理课程素材、生成任务与多语种视频结果</view>
+
+    <view class="login-field">
+      <text class="login-label">账号</text>
+      <input class="login-input" value="{{account}}" placeholder="邮箱或管理员账号" bindinput="onAccountInput" />
+    </view>
+    <view class="login-field">
+      <text class="login-label">密码</text>
+      <view class="password-box">
+        <input class="password-input" value="{{password}}" password="{{!passwordVisible}}" placeholder="请输入密码" bindinput="onPasswordInput" />
+        <text class="password-toggle" bindtap="togglePassword">{{passwordVisible ? '隐藏' : '显示'}}</text>
+      </view>
+    </view>
+
+    <button class="login-button" loading="{{submitting}}" bindtap="submitLogin">进入工作台</button>
+    <view class="register-link" bindtap="openRegister">没有账号？注册新用户</view>
+  </view>
+
+  <view class="pipeline-mini">
+    <view class="mini-item">
+      <text class="mini-code">S1</text>
+      <text>课程结构</text>
+    </view>
+    <view class="mini-line"></view>
+    <view class="mini-item">
+      <text class="mini-code">S2</text>
+      <text>翻译校验</text>
+    </view>
+    <view class="mini-line"></view>
+    <view class="mini-item">
+      <text class="mini-code">S3—S5</text>
+      <text>生成输出</text>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,76 @@
+<view class="page agents-page">
+  <view class="agents-intro">
+    <view class="eyebrow">MULTI-AGENT WORKFLOW</view>
+    <view class="agents-title">多智能体协同处理</view>
+    <view class="agents-copy">四个智能体依次处理 S1—S4，视频合成与字幕模块完成 S5。</view>
+  </view>
+
+  <view class="flow-overview surface">
+    <view class="flow-source">
+      <view class="flow-source-icon">入</view>
+      <view><view>课程输入</view><text>PPT 或课程主题</text></view>
+    </view>
+    <view class="flow-arrow-down">↓</view>
+    <view class="flow-codes">
+      <view wx:for="{{agents}}" wx:key="code" class="flow-code flow-{{item.color}}">
+        <text>{{item.code}}</text><view>{{item.stage}}</view>
+      </view>
+      <view class="flow-code flow-{{compose.color}}">
+        <text>{{compose.code}}</text><view>{{compose.stage}}</view>
+      </view>
+    </view>
+    <view class="flow-arrow-down">↓</view>
+    <view class="flow-output">
+      <view class="flow-source-icon output-icon">出</view>
+      <view><view>课程结果</view><text>视频及 SRT 字幕</text></view>
+    </view>
+  </view>
+
+  <view class="section-heading">
+    <view>
+      <view class="section-title">智能体职责</view>
+      <view class="section-note">输入、处理内容和输出数据</view>
+    </view>
+  </view>
+  <view class="agent-list">
+    <view wx:for="{{agents}}" wx:key="code" class="surface agent-card">
+      <view class="agent-head">
+        <view class="agent-code agent-{{item.color}}">{{item.code}}</view>
+        <view class="agent-heading"><view>{{item.title}}</view><text>{{item.stage}}</text></view>
+      </view>
+      <view class="io-row"><text class="io-label">输入</text><text class="io-value">{{item.input}}</text></view>
+      <view class="agent-actions">
+        <view wx:for="{{item.actions}}" wx:for-item="action" wx:key="*this"><view class="action-dot"></view><text>{{action}}</text></view>
+      </view>
+      <view class="io-row output-row"><text class="io-label">输出</text><text class="io-value">{{item.output}}</text></view>
+    </view>
+  </view>
+
+  <view class="section-heading">
+    <view>
+      <view class="section-title">视频合成</view>
+      <view class="section-note">统一时间轴调度最终输出</view>
+    </view>
+  </view>
+  <view class="surface compose-card">
+    <view class="compose-head"><text>{{compose.stage}}</text><view>{{compose.title}}</view></view>
+    <view class="compose-inputs">
+      <view wx:for="{{compose.inputs}}" wx:key="*this">{{item}}</view>
+    </view>
+    <view class="compose-timeline">
+      <view class="timeline-line"></view>
+      <view class="timeline-node node-a"></view><view class="timeline-node node-b"></view><view class="timeline-node node-c"></view><view class="timeline-node node-d"></view>
+    </view>
+    <view class="compose-outputs">
+      <view wx:for="{{compose.outputs}}" wx:key="*this"><text>✓</text>{{item}}</view>
+    </view>
+  </view>
+
+  <view class="surface data-contract-card">
+    <view class="contract-title">阶段数据关系</view>
+    <view class="contract-copy">任务编号贯穿全部阶段。课件结构、翻译结果、句级时间戳、页级时间轴、数字人位置及输出文件均在任务详情中统一查询。</view>
+    <view class="contract-fields">
+      <text>task_id</text><text>stage</text><text>status</text><text>progress</text><text>outputs</text>
+    </view>
+  </view>
+</view>

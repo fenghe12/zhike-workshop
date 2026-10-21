@@ -1,0 +1,61 @@
+<view class="page profile-page">
+  <view class="profile-card surface">
+    <view class="profile-avatar">{{user.avatarInitial || '智'}}</view>
+    <view class="profile-main">
+      <view class="profile-name">{{user.name}}</view>
+      <view class="profile-institution">{{user.institution}}</view>
+      <view class="profile-account">{{user.account}}</view>
+    </view>
+    <text class="tag tag-success">管理员</text>
+  </view>
+
+  <view class="section-heading">
+    <view>
+      <view class="section-title">系统状态</view>
+      <view class="section-note">课程生成服务与任务数据</view>
+    </view>
+  </view>
+  <view class="surface settings-card">
+    <view class="setting-row">
+      <view><view class="setting-title">多智能体生成服务</view><view class="setting-copy">S1—S5 阶段任务数据已就绪</view></view>
+      <text class="tag tag-success">运行正常</text>
+    </view>
+    <view class="hairline"></view>
+    <view class="connection-row">
+      <text>数据状态</text><text class="connection-state">已同步</text>
+    </view>
+  </view>
+
+  <view class="section-heading">
+    <view>
+      <view class="section-title">翻译校验参数</view>
+      <view class="section-note">回译一致性校验与自动修正</view>
+    </view>
+  </view>
+  <view class="surface settings-card threshold-card">
+    <view class="threshold-row">
+      <view><view class="setting-title">语义相似度阈值</view><view class="setting-copy">低于阈值时自动修正</view></view>
+      <input type="digit" value="{{config.semanticThreshold}}" bindinput="onSemanticInput" />
+    </view>
+    <view class="hairline"></view>
+    <view class="threshold-row">
+      <view><view class="setting-title">术语覆盖率阈值</view><view class="setting-copy">校验课程术语是否完整保留</view></view>
+      <input type="digit" value="{{config.terminologyThreshold}}" bindinput="onTerminologyInput" />
+    </view>
+    <view class="hairline"></view>
+    <view class="threshold-row">
+      <view><view class="setting-title">最大自动修正次数</view><view class="setting-copy">达到次数后保留校验报告</view></view>
+      <input type="number" value="{{config.maxTranslationRetries}}" bindinput="onMaxRetriesInput" />
+    </view>
+    <button class="secondary-button threshold-save" bindtap="saveConfig">保存校验参数</button>
+  </view>
+
+  <view class="section-heading">
+    <view class="section-title">账号管理</view>
+  </view>
+  <view class="surface action-list">
+    <view class="action-row danger-row" bindtap="logout"><view><view>退出登录</view><text>清除当前登录状态</text></view><text>›</text></view>
+  </view>
+
+  <view class="version-info">智课工坊 V1.0 · 多语言 MOOC 教学视频自动生成</view>
+</view>

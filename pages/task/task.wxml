@@ -1,0 +1,134 @@
+<view class="page task-page">
+  <view wx:if="{{loading}}" class="surface task-loading">
+    <view class="skeleton skeleton-wide"></view>
+    <view class="skeleton skeleton-mid"></view>
+    <view class="skeleton skeleton-small"></view>
+  </view>
+
+  <block wx:elif="{{task}}">
+    <view class="task-hero {{task.statusClass}}">
+      <view class="task-hero-grid"></view>
+      <view class="task-hero-top">
+        <view class="task-type">{{task.mode === 'upload' ? 'PPT 课件解析' : '课程主题生成'}}</view>
+        <view class="hero-actions">
+          <text class="manage-link" bindtap="manageTask">管理</text>
+        </view>
+      </view>
+      <view class="task-title">{{task.name}}</view>
+      <view class="task-language">{{task.sourceLanguage}} → {{task.languageSummary}}</view>
+      <view class="overall-row">
+        <text>{{task.statusLabel}}</text>
+        <text>{{task.overallProgress}}%</text>
+      </view>
+      <view class="overall-track">
+        <view class="overall-fill" style="width: {{task.overallProgress}}%;"></view>
+      </view>
+      <view class="task-time">最近更新：{{task.updatedLabel}}</view>
+    </view>
+
+    <view class="section-heading">
+      <view>
+        <view class="section-title">课程输入</view>
+        <view class="section-note">任务创建时提交的原始内容</view>
+      </view>
+    </view>
+    <view class="surface input-summary">
+      <view class="summary-row">
+        <text class="summary-label">创建方式</text>
+        <text class="summary-value">{{task.modeLabel}}</text>
+      </view>
+      <view class="hairline"></view>
+      <view wx:if="{{task.mode === 'upload'}}" class="summary-row">
+        <text class="summary-label">PPT 课件</text>
+        <view class="summary-value file-value">
+          <text>{{task.inputs.ppt.name}}</text>
+          <text class="summary-sub">{{task.pptSizeLabel}}</text>
+        </view>
+      </view>
+      <view wx:else class="summary-row summary-column">
+        <text class="summary-label">课程主题</text>
+        <text class="topic-value">{{task.inputs.topic}}</text>
+      </view>
+      <view class="hairline"></view>
+      <view class="summary-row">
+        <text class="summary-label">输出语言</text>
+        <view class="summary-languages">
+          <text wx:for="{{task.targetLanguages}}" wx:key="*this">{{item}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="section-heading">
+      <view>
+        <view class="section-title">五阶段处理进度</view>
+        <view class="section-note">点击阶段查看过程数据和预览结果</view>
+      </view>
+      <text class="agent-link" bindtap="openAgents">协同关系</text>
+    </view>
+
+    <view class="pipeline-list">
+      <view wx:for="{{task.stages}}" wx:key="key" class="stage-card surface {{item.statusClass}}" data-stage="{{item.index}}" bindtap="openStage">
+        <view class="stage-rail">
+          <view class="stage-node">{{item.statusMark || item.index}}</view>
+          <view wx:if="{{index < task.stages.length - 1}}" class="stage-line"></view>
+        </view>
+        <view class="stage-main">
+          <view class="stage-head">
+            <view>
+              <text class="stage-code-text">{{item.code}}</text>
+              <text class="stage-title-text">{{item.title}}</text>
+            </view>
+            <text class="stage-status">{{item.statusLabel}}</text>
+          </view>
+          <view class="stage-agent">{{item.agent}}</view>
+          <view class="stage-summary">{{item.summary}}</view>
+          <view wx:if="{{item.status === 'running' || item.status === 'failed'}}" class="stage-progress-row">
+            <view class="stage-progress-track">
+              <view class="stage-progress-fill" style="width: {{item.progress}}%;"></view>
+            </view>
+            <text>{{item.progress}}%</text>
+          </view>
+          <view wx:if="{{item.status === 'completed'}}" class="stage-result-link">查看阶段结果与预览 ›</view>
+          <view wx:if="{{item.status === 'failed'}}" class="stage-error-row">
+            <text>阶段执行中断，可重新执行。</text>
+            <text class="retry-link" catchtap="retryCurrentStage">重新执行</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="surface task-meta">
+      <view class="meta-item">
+        <text>任务编号</text>
+        <text class="mono">{{task.id}}</text>
+      </view>
+      <view class="hairline"></view>
+      <view class="meta-item">
+        <text>创建时间</text>
+        <text>{{task.createdLabel}}</text>
+      </view>
+    </view>
+
+    <view class="section-heading task-management-heading">
+      <view>
+        <view class="section-title">任务管理</view>
+        <view class="section-note">根据任务状态提供名称修改、取消、重新执行和删除操作</view>
+      </view>
+    </view>
+    <view class="surface task-management-card">
+      <button class="management-button" bindtap="renameTask">
+        <text>修改任务名称</text><text>可用</text>
+      </button>
+      <button class="management-button" disabled="{{task.status !== 'processing'}}" bindtap="cancelTask">
+        <text>取消生成任务</text><text>{{task.status === 'processing' ? '可用' : '仅生成中可用'}}</text>
+      </button>
+      <button class="management-button" disabled="{{task.status !== 'failed'}}" bindtap="retryCurrentStage">
+        <text>重新执行当前阶段</text><text>{{task.status === 'failed' ? '可用' : '仅执行失败时可用'}}</text>
+      </button>
+      <button class="management-button management-danger" bindtap="deleteTask">
+        <text>删除任务</text><text>需二次确认</text>
+      </button>
+      <view class="management-note">当前任务已完成，因此取消和重新执行按钮按状态停用；对应操作在生成中或阶段失败时自动启用。</view>
+    </view>
+  </block>
+</view>
