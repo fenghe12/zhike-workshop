@@ -42,7 +42,7 @@
     "original_prefix": "npu-migration/20261021-094243/",
     "qwen_runtime_prefix": "npu-migration/runs/20261021-1023/",
     "native_cann_archive": "npu-migration/runs/20261021-1023/npu-correction-1h/npu-correction-runtime-and-latte.tar.gz",
-    "latest_code_and_reports": "npu-migration/runs/20261021-1502-acceptance/acceptance-final-source-and-reports.tar.gz",
+    "latest_code_and_reports": "npu-migration/runs/20261021-1502-acceptance/acceptance-final-code-and-reports.tar.gz",
     "original_code_archive": "npu-migration/20261021-094243/code-and-recovery.tar.gz"
   }
 }
