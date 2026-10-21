@@ -1,39 +1,41 @@
-# 持久化恢复
+# Recovery with persistent storage
 
-## 本地应用
+English | [简体中文](RECOVERY.zh-CN.md) · [Project home](../README.md)
 
-1. 克隆仓库，复制 `.env.example` 为 `.env`，将运行目录设置到可写的持久化磁盘。
-2. 安装 Python 3.13、Node.js、FFmpeg 和 LibreOffice。执行 `bash scripts/setup-local.sh`。
-3. 设置参考音频、参考照片、Whisper small 模型及 CJK 字体路径。参考素材由使用者提供，公开仓库不含个人素材。
-4. 执行 `bash scripts/start-local.sh`，浏览器访问 `http://127.0.0.1:18770`。应用数据、产物和日志均保存在运行目录。
+## Local application
 
-## 华为云 Ascend 910B
+1. Clone the repository, copy `.env.example` to `.env`, and select a writable runtime directory on persistent storage.
+2. Install Python 3.13, Node.js, FFmpeg, and LibreOffice. Run `bash scripts/setup-local.sh`.
+3. Configure the reference audio, reference image, Whisper small model, and CJK font paths. Supply your own reference media. Personal reference media is excluded from the public repository.
+4. Run `bash scripts/start-local.sh` and open `http://127.0.0.1:18770`. Application data, outputs, and logs are stored in the runtime directory.
 
-当前验证组合为 PyTorch 2.7.1 / torch_npu 2.7.1、Python 3.11、CANN 8.3 RC1、ARM64。云镜像：`pytorch_2.7.1-cann_8.3.rc1-py_3.11-hce_2.0.2509-aarch64-snt9b`。
+## Huawei Cloud Ascend 910B
 
-先确认 `/home/ma-user/work` 的 EVS 实际挂载且可写，再在其下恢复 `npu-migration` 和 `smartcourse`。模型、Python 环境、CANN、缓存、临时目录、编译目录和日志均放在该卷。
+The validated configuration uses PyTorch 2.7.1 / torch_npu 2.7.1, Python 3.11, CANN 8.3 RC1, and ARM64. The cloud image is `pytorch_2.7.1-cann_8.3.rc1-py_3.11-hce_2.0.2509-aarch64-snt9b`.
 
-私有 OBS 中已有原始代码存档、模型和可工作的 CANN 运行档案。对象位置见 `recovery/models.json`。桶名称及访问凭据由使用者通过本机环境提供，公开仓库不保存访问凭据。
+Confirm that the EVS volume is mounted at `/home/ma-user/work` and writable before restoring `npu-migration` and `smartcourse` beneath it. Store models, Python environments, CANN, caches, temporary files, build directories, and logs on that volume.
 
-使用 `scripts/restore-obs.py` 下载 `--group code` 或 `--group qwen`。代码档案中还保留其他 baseline 的源代码，目录清单见 `recovery/catalogs`。该清单代表已恢复的来源，不表示每个 baseline 已完成当前硬件推理。
+The private OBS backup contains the original source archive, models, and a working CANN runtime archive. Object locations are listed in `recovery/models.json`. Supply the bucket name and access credentials through your local environment. Access credentials are excluded from the public repository.
 
-原始代码档案恢复至 `npu-migration` 后，将 `recovery/npu-overlay` 覆盖至相同目录结构。原始第三方许可证必须保留。最新 NPU 兼容文件也已单独保存在此仓库中。
+Use `scripts/restore-obs.py` with `--group code` or `--group qwen` to download the corresponding files. The source archive also contains other baseline implementations listed in `recovery/catalogs`. Those catalogs record restored sources. They do not indicate that every baseline has completed inference on the current hardware.
 
-CosyVoice 和 FlashHead 使用独立依赖目录。CosyVoice 的 transformers 必须为 4.51.3、tokenizers 为 0.21.1；FlashHead 使用 4.57.3 / 0.22.1。详细已用版本见 `recovery/environment-versions.json`。不要将旧合并依赖表直接用于两个模型。
+After restoring the original source archive into `npu-migration`, apply `recovery/npu-overlay` to the matching directory structure. Preserve the original third-party licenses. The current NPU adaptations are also stored separately in this repository.
 
-Qwen 主模型使用 NPU，视觉投影模块使用 CPU。`recovery/huawei/start_qwen36_npu.sh` 为已验证的启动参数。CANN 8.3 需要移除未使用的 recurrent gated delta rule 头文件引用，设置 OPP 的数据链接，并预加载对应 ARM64 `liboptiling.so`。保留的源代码修改及构建脚本位于 `recovery/huawei`。
+CosyVoice and FlashHead use separate dependency directories. The tested CosyVoice configuration requires transformers 4.51.3 and tokenizers 0.21.1. FlashHead uses 4.57.3 and 0.22.1, respectively. Recorded versions are available in `recovery/environment-versions.json`. Do not install the legacy combined dependency list into both model environments.
 
-Notebook 每次启动后 SSH 端口可能变化。将最新地址填写至运行目录的 `remote-state.json`，结构见 `config/remote-state.example.json`。只在平台确实显示运行时填写 RUNNING。
+The Qwen language model runs on the NPU, while its vision projection module runs on the CPU. `recovery/huawei/start_qwen36_npu.sh` contains the validated launch parameters. CANN 8.3 requires removing an unused recurrent gated delta rule header reference, setting up the OPP data link, and preloading the matching ARM64 `liboptiling.so`. The preserved source modifications and build scripts are in `recovery/huawei`.
 
-建立 SSH 转发，将云端 7812 转发到本机 17813，使用 `.env` 中的本地 Qwen 地址。远端 CosyVoice / FlashHead 路径由 `.env` 配置。应用使用逻辑设备 npu:0，物理卡分配由本次 Notebook 环境决定。
+The Notebook SSH port may change after a restart. Update `remote-state.json` in the runtime directory with the current endpoint, following `config/remote-state.example.json`. Set the status to `RUNNING` only when the platform confirms that the instance is running.
 
-## 费用与数据
+Forward cloud port 7812 to local port 17813 over SSH and use the local Qwen endpoint configured in `.env`. Configure the remote CosyVoice and FlashHead paths there as well. The application uses logical device `npu:0`. The Notebook environment determines the physical device assignment for each session.
 
-停止 Notebook 计算后，保留的 EVS 和 OBS 仍可能计费。2026-10-21 验收结束时 CPU 与 NPU 均已停止。仓库脚本不会自动创建、启动或删除云资源。
+## Costs and retained data
 
-GitHub 保存代码和恢复配方，私有 OBS 保存大模型、运行档案和生成产物。重新租用同一镜像后仍需安装或恢复依赖；当前没有在全新空白实例上再次完成整套恢复验收。
+EVS volumes and OBS storage may continue to incur charges after Notebook compute is stopped. Both CPU and NPU instances were stopped at the end of the October 21, 2026 acceptance session. The repository scripts do not automatically create, start, or delete cloud resources.
 
-恢复下载示例（先 source scripts/persistent-env.sh，安装 requirements/recovery.txt）：
+GitHub stores the code and recovery instructions. Private OBS stores large models, runtime archives, and generated outputs. Reusing the same cloud image still requires installing or restoring dependencies. The complete recovery process has not been validated again on a new, empty instance.
+
+For the following download examples, first source `scripts/persistent-env.sh` and install `requirements/recovery.txt`:
 
 ```bash
 python scripts/restore-obs.py --group code --destination /path/to/persistent/archives
@@ -42,4 +44,4 @@ python scripts/restore-obs.py --group qwen --destination /home/ma-user/work/npu-
 python scripts/configure-npu.py
 ```
 
-下载工具只下载文件。解压前使用 tar -tzf 查看目录结构，将原始代码恢复到对应目录，先解压原始档案，再解压较新的运行档案。环境目录未包含在原始代码备份中，需要从匹配镜像复制到 EVS，并安装已记录的依赖。
+The download tool only downloads files. Before extraction, inspect the archive layout with `tar -tzf`. Restore the original archive into the appropriate directories, then extract the newer runtime archives. The original code backup excludes environment directories. Copy the matching base environment from the cloud image to EVS and install the recorded dependencies before configuring or starting the model services.

@@ -1,46 +1,48 @@
-# 智课工坊 · Smartcourse
+# Smartcourse
 
-课程生成与多语言数字人视频系统，包含 Vue 工作台、Python 后端、微信小程序源码、Ascend NPU 兼容修改和恢复工具。
+English | [简体中文](README.zh-CN.md)
 
-主要流程：课件与讲稿 → 翻译 → 语音 → 带时间信息的字幕 → 数字人 → 课程视频。课程资料、任务状态、结果下载和知识库功能也在源码中。
+A course generation and multilingual avatar video system, with a Vue workbench, Python backend, WeChat Mini Program source, Ascend NPU adaptations, and recovery tools.
 
-## 启动
+The main pipeline turns slides and lecture notes into translated content, speech, timed subtitles, avatars, and course videos. The source also includes course material management, task tracking, result downloads, and knowledge base features.
+
+## Getting started
 
 ```bash
 git clone https://github.com/fenghe12/zhike-workshop.git
 cd zhike-workshop
 cp .env.example .env
-# 编辑 .env，将运行目录和模型路径指向持久化磁盘
+# Edit .env to point the runtime directory and model paths to persistent storage.
 bash scripts/setup-local.sh
 bash scripts/start-local.sh
 ```
 
-工作台地址为 `http://127.0.0.1:18770`。完整生成需要配置模型和媒体服务。安装与恢复步骤见 [恢复说明](docs/RECOVERY.md)。
+Open `http://127.0.0.1:18770` to access the workbench. Full generation requires configured models and media services. See the [setup and recovery guide](docs/RECOVERY.md) for details.
 
-## 目录
+## Repository structure
 
-| 位置 | 内容 |
+| Path | Contents |
 | --- | --- |
-| `backend/smartcourse` | 后端 API、五阶段课程处理、翻译、语音、字幕、视频和相关测试 |
-| `vue-app` | Vue 3 / TypeScript 工作台及锁定的 npm 依赖 |
-| `pages`、`services`、`utils` | 微信小程序源码 |
-| `ui-adapter` | 课件预览与前后端适配 |
-| `scripts` | 持久化环境、安装、启动和模型/OBS 下载工具 |
-| `recovery` | 模型目录、依赖版本、NPU 兼容文件、构建和启动脚本 |
+| `backend/smartcourse` | Backend API, five-stage course pipeline, translation, speech, subtitles, video, and related tests |
+| `vue-app` | Vue 3 / TypeScript workbench and npm dependency lockfile |
+| `pages`, `services`, `utils` | WeChat Mini Program source |
+| `ui-adapter` | Slide previews and frontend/backend integration |
+| `scripts` | Persistent environment setup, installation, startup, and model/OBS downloads |
+| `recovery` | Model inventory, dependency versions, NPU adaptations, build scripts, and launchers |
 
-## 当前验证状态
+## Validation status
 
-2026-10-21 已完成中文、英语、日语、韩语、德语、法语六种单页短课的实际生成，检查了翻译标题、数值、字幕覆盖、字幕时间和视频音轨。结果记录见 [验收记录](docs/acceptance-20261021.json)。完整长课程尚未在此次验收中复测。
+On October 21, 2026, six single-slide short courses were generated in Chinese, English, Japanese, Korean, German, and French. Checks covered translated titles, numeric values, subtitle coverage and timing, and video audio tracks. Results are recorded in the [acceptance report](docs/acceptance-20261021.json). Full-length courses were not retested in that session.
 
-Qwen3.6 主模型、CosyVoice3 和 FlashHeadLite 使用 Ascend 910B。FFmpeg 合成和 Whisper 字幕对齐在本机执行。当前计算资源已停止，数据盘和 OBS 备份保留。
+The Qwen3.6 language model, CosyVoice3, and FlashHeadLite use Ascend 910B. FFmpeg composition and Whisper subtitle alignment run locally. Cloud compute was stopped after validation, with persistent disks and OBS backups retained.
 
-模型权重、Python 环境、生成视频、登录数据和个人参考素材不进入 Git。大文件下载来源和私有 OBS 对象位置保存在 `recovery/models.json`。
+Model weights, Python environments, generated videos, login data, and personal reference media are excluded from Git. Large-file download sources and private OBS object locations are listed in `recovery/models.json`.
 
-## 权利说明
+## Rights and licenses
 
-本仓库暂未授予统一的开源许可证。第三方代码和模型遵循各自许可证，原始许可证应随恢复的来源代码保留。公开可读取不等同于授予任意再分发权限。
+No repository-wide open-source license has been granted at this time. Third-party code and models remain subject to their respective licenses. Preserve the original licenses when restoring their source. Public access does not grant unrestricted redistribution rights.
 
-## 开发检查
+## Development checks
 
 ```bash
 cd backend/smartcourse
@@ -49,4 +51,4 @@ cd ../../vue-app
 npm run build
 ```
 
-2026-10-21：上述 20 项后端检查与前端构建通过。新机器仍需按恢复说明准备依赖与模型。
+As of October 21, 2026, these 20 backend tests and the frontend build passed. A new machine still requires the dependencies and models described in the recovery guide.
