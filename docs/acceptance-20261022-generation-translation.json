@@ -1,0 +1,169 @@
+{
+  "completed_at": "2026-10-23T00:07:21.903064+08:00",
+  "workflow": "Generate one Chinese source presentation, review it, then translate that same presentation into six target languages.",
+  "engine": "Qwen3.6-35B-A3B on one Ascend 910B",
+  "generator": "Existing CourseStructureAgent, editable title-and-content template",
+  "source_pages": 8,
+  "source_language": "zh-CN",
+  "target_languages": [
+    "en-US",
+    "ja-JP",
+    "ko-KR",
+    "de-DE",
+    "fr-FR",
+    "ru-RU"
+  ],
+  "generated_source_decks": 1,
+  "translated_decks": 6,
+  "identical_source_input_by_language": {
+    "en-US": true,
+    "ja-JP": true,
+    "ko-KR": true,
+    "de-DE": true,
+    "fr-FR": true,
+    "ru-RU": true
+  },
+  "decks": [
+    {
+      "language": "zh-CN",
+      "pages": 8,
+      "scalar_example_matches": true,
+      "AND_truth_table_matches": true,
+      "threshold_includes_equality": true,
+      "untranslated_source_text": [],
+      "translation_review_required": false,
+      "rendered_text_complete": true,
+      "incomplete_rendered_paragraphs": [],
+      "missing_glyphs": [],
+      "formula_review_required": false
+    },
+    {
+      "language": "en-US",
+      "pages": 8,
+      "scalar_example_matches": true,
+      "AND_truth_table_matches": true,
+      "threshold_includes_equality": true,
+      "untranslated_source_text": [],
+      "translation_review_required": false,
+      "rendered_text_complete": true,
+      "incomplete_rendered_paragraphs": [],
+      "missing_glyphs": [],
+      "formula_review_required": false
+    },
+    {
+      "language": "ja-JP",
+      "pages": 8,
+      "scalar_example_matches": true,
+      "AND_truth_table_matches": true,
+      "threshold_includes_equality": true,
+      "untranslated_source_text": [],
+      "translation_review_required": false,
+      "rendered_text_complete": true,
+      "incomplete_rendered_paragraphs": [],
+      "missing_glyphs": [],
+      "formula_review_required": false
+    },
+    {
+      "language": "ko-KR",
+      "pages": 8,
+      "scalar_example_matches": true,
+      "AND_truth_table_matches": true,
+      "threshold_includes_equality": true,
+      "untranslated_source_text": [],
+      "translation_review_required": false,
+      "rendered_text_complete": true,
+      "incomplete_rendered_paragraphs": [],
+      "missing_glyphs": [],
+      "formula_review_required": false
+    },
+    {
+      "language": "de-DE",
+      "pages": 8,
+      "scalar_example_matches": true,
+      "AND_truth_table_matches": true,
+      "threshold_includes_equality": true,
+      "untranslated_source_text": [],
+      "translation_review_required": false,
+      "rendered_text_complete": true,
+      "incomplete_rendered_paragraphs": [],
+      "missing_glyphs": [],
+      "formula_review_required": false
+    },
+    {
+      "language": "fr-FR",
+      "pages": 8,
+      "scalar_example_matches": true,
+      "AND_truth_table_matches": true,
+      "threshold_includes_equality": true,
+      "untranslated_source_text": [],
+      "translation_review_required": false,
+      "rendered_text_complete": true,
+      "incomplete_rendered_paragraphs": [],
+      "missing_glyphs": [],
+      "formula_review_required": false
+    },
+    {
+      "language": "ru-RU",
+      "pages": 8,
+      "scalar_example_matches": true,
+      "AND_truth_table_matches": true,
+      "threshold_includes_equality": true,
+      "untranslated_source_text": [],
+      "translation_review_required": false,
+      "rendered_text_complete": true,
+      "incomplete_rendered_paragraphs": [],
+      "missing_glyphs": [],
+      "formula_review_required": false
+    }
+  ],
+  "total_slides_across_versions": 56,
+  "manual_layout_review": {
+    "zh-CN": {
+      "pages": 8,
+      "review": "Source definitions, scalar example, truth table and page layout inspected."
+    },
+    "en-US": {
+      "pages": 8,
+      "review": "Revised typography and all page layouts inspected after refitting."
+    },
+    "ja-JP": {
+      "pages": 8,
+      "review": "All page layouts inspected after refitting; scalar, truth-table and threshold checks passed."
+    },
+    "ko-KR": {
+      "pages": 8,
+      "review": "All Korean page layouts inspected after refitting."
+    },
+    "de-DE": {
+      "pages": 8,
+      "review": "All pages inspected after correcting three mixed-language paragraphs and the clipped summary page; complete rendered text verified."
+    },
+    "fr-FR": {
+      "pages": 8,
+      "review": "All French page layouts inspected; complete rendered paragraphs verified."
+    },
+    "ru-RU": {
+      "pages": 8,
+      "review": "All pages inspected after fitting the clipped summary page; complete rendered text verified."
+    }
+  },
+  "scope": "One eight-slide CS lesson. Content review and corrections were performed. Audio, avatar and browser UI generation were outside this test.",
+  "compute_status": "Both notebooks STOPPED; persistent disks and OBS retained.",
+  "content_review": {
+    "source_conceptual_sections_corrected": 3,
+    "model_revision_alone_sufficient": false,
+    "native_german_paragraphs_corrected": 3
+  },
+  "code_changes": [
+    "Explicit Qwen generation with source-language selection independent of target order",
+    "Reuse generated page notes instead of requiring the optional PPTAgent runtime",
+    "Reject remaining Chinese text in non-CJK translations except protected personal names",
+    "Use text-frame dimensions and original font sizes for translated text fitting",
+    "Measure clipped text on a taller canvas before resizing"
+  ],
+  "backend_tests": {
+    "passed": 27,
+    "frontend_changed": false,
+    "frontend_last_build": "2026-10-21"
+  }
+}

@@ -473,6 +473,8 @@ Generate exactly {total_pages} PPT pages in {language}. Each page must contain a
 Each teaching script must be suitable for approximately 45 to 75 seconds of speech:
 120 to 220 Chinese characters for Chinese, or 90 to 150 words for alphabetic languages.
 End the script with a complete sentence and do not repeat the key points verbatim.
+Keep definitions and worked examples internally consistent. When discussing learning systems,
+distinguish input data, model parameters, fixed decision settings, prediction, and training.
 Return JSON only:
 {{"course_outline":["..."],"pages":[{{"page_id":1,"title":"...","key_points":["..."],
 "script_text":"...","image_description":"..."}}]}}"""

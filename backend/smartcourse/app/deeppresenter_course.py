@@ -1,4 +1,4 @@
-"""Invoke the existing Huawei DeepPresenter course generator."""
+"""Generate a course with the explicitly configured model backend."""
 from __future__ import annotations
 
 import json
@@ -12,6 +12,32 @@ def generate_course(topic: str, destination: Path, *, pages: int, audience: str,
                     minutes: int, language: str, requirements: str = "", source_material=None) -> dict:
     if not topic.strip() or not 1 <= pages <= 30:
         raise ValueError("课程主题不能为空，生成页数须为 1 至 30")
+    if os.environ.get('SMARTCOURSE_PPT_GENERATOR', 'deeppresenter') == 'qwen':
+        from .config import Settings
+        from .gateway import ResponsesGateway
+        from .course_agent import CourseStructureAgent
+        from .pptx_notes import write_speaker_notes
+        from .pptx_fonts import apply_language_font
+        settings = Settings.from_env()
+        prompt_topic = topic + '\nTeaching requirements:\n' + requirements
+        if source_material is not None:
+            prompt_topic += '\nUse the supplied source material:\n' + json.dumps(source_material, ensure_ascii=False)
+        structure = CourseStructureAgent(ResponsesGateway(settings)).from_topic(
+            prompt_topic, destination.parent.name, destination,
+            total_pages=pages, language=language, target_learners=audience, duration_minutes=minutes)
+        structure['course_topic'] = topic
+        write_speaker_notes(destination, structure['pages'])
+        codes = {'Simplified Chinese': 'zh-CN', 'Chinese': 'zh-CN', 'English': 'en-US',
+                 'Japanese': 'ja-JP', 'Korean': 'ko-KR', 'German': 'de-DE', 'French': 'fr-FR', 'Russian': 'ru-RU'}
+        apply_language_font(destination, destination, codes.get(language, 'zh-CN'))
+        structure_path = destination.parent / 'generated-course-structure.json'
+        structure_path.write_text(json.dumps(structure, ensure_ascii=False, indent=2), encoding='utf-8')
+        manifest = {'engine': settings.gateway_model, 'generator': 'CourseStructureAgent',
+                    'generated_pptx': str(destination), 'course_structure': str(structure_path),
+                    'source_language': language, 'pages': pages}
+        manifest_path = destination.parent / 'generation-manifest.json'
+        manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding='utf-8')
+        return {**manifest, 'manifest': str(manifest_path)}
     if os.environ.get('SMARTCOURSE_REMOTE_MEDIA') == '1':
         from .remote_deeppresenter import generate_remote_course
         options = dict(pages=pages, audience=audience, minutes=minutes, language=language, requirements=requirements)

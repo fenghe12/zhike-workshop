@@ -4,6 +4,8 @@
 
 ## 本地应用
 
+示例环境选择 `SMARTCOURSE_PPT_GENERATOR=qwen`，使用现有 CourseStructureAgent 调用配置的 Qwen 接口，生成可编辑的标题与正文型课件及逐页讲稿，再翻译该源课件。生成内容和排版需要审阅。可选的 `deeppresenter` 设置依赖单独的 PPTAgent 运行目录，该目录在 10 月 22 日的重建实例中缺失，本次测试使用 Qwen 生成入口。
+
 1. 克隆仓库，复制 `.env.example` 为 `.env`，将运行目录设置到可写的持久化磁盘。
 2. 安装 Python 3.13、Node.js、FFmpeg 和 LibreOffice。执行 `bash scripts/setup-local.sh`。
 3. 设置参考音频、参考照片、Whisper small 模型及 CJK 字体路径。参考素材由使用者提供，公开仓库不含个人素材。

@@ -1,4 +1,4 @@
-"""Fit translated text to the area occupied by the original rendered text."""
+"""Fit translated text within the original text frames."""
 import math
 import os
 import posixpath
@@ -64,6 +64,8 @@ def dominant_font_size(page, value):
 
 
 def fit_from_pdfs(source, target, source_pdf, target_pdf):
+    from pptx import Presentation
+    presentation = Presentation(source)
     with zipfile.ZipFile(source) as z:
         before = {n:z.read(n) for n in z.namelist()}
     with zipfile.ZipFile(target) as z:
@@ -71,6 +73,16 @@ def fit_from_pdfs(source, target, source_pdf, target_pdf):
     changes = []
     with pymupdf.open(source_pdf) as original, pymupdf.open(target_pdf) as translated:
         for index, part in enumerate(slide_parts(before)):
+            frame_bounds = {}
+            for item in presentation.slides[index].shapes:
+                if item.has_text_frame:
+                    frame = item.text_frame
+                    frame_bounds[str(item.shape_id)] = (
+                        (item.left + frame.margin_left) / 12700,
+                        (item.top + frame.margin_top) / 12700,
+                        (item.left + item.width - frame.margin_right) / 12700,
+                        (item.top + item.height - frame.margin_bottom) / 12700,
+                    )
             source_root, target_root = E.fromstring(before[part]), E.fromstring(after[part])
             source_shapes = source_root.findall('.//p:sp', NS)
             target_shapes = target_root.findall('.//p:sp', NS)
@@ -89,9 +101,18 @@ def fit_from_pdfs(source, target, source_pdf, target_pdf):
                 old_box, new_box = text_bounds(original[index],old_text), text_bounds(translated[index],new_text)
                 if not old_box or not new_box:
                     continue
-                height_ratio = (old_box[3]-old_box[1])/max(1,new_box[3]-new_box[1])
-                width_ratio = (old_box[2]-old_box[0])/max(1,new_box[2]-new_box[0])
-                scale = min(1, math.sqrt(height_ratio), width_ratio)
+                available = frame_bounds.get(identifier)
+                if available:
+                    if (new_box[0] >= available[0]-2 and new_box[1] >= available[1]-2
+                            and new_box[2] <= available[2]+2 and new_box[3] <= available[3]+2):
+                        continue
+                    height_ratio = (available[3]-available[1])/max(1,new_box[3]-new_box[1])
+                    width_ratio = (available[2]-available[0])/max(1,new_box[2]-new_box[0])
+                    scale = min(1, height_ratio, width_ratio)
+                else:
+                    height_ratio = (old_box[3]-old_box[1])/max(1,new_box[3]-new_box[1])
+                    width_ratio = (old_box[2]-old_box[0])/max(1,new_box[2]-new_box[0])
+                    scale = min(1, math.sqrt(height_ratio), width_ratio)
                 if scale > .995:
                     continue
                 scale = max(.5, scale*.98)
@@ -100,7 +121,9 @@ def fit_from_pdfs(source, target, source_pdf, target_pdf):
                     continue
                 current = source_shape.find('p:txBody/a:bodyPr/a:normAutofit',NS)
                 previous_scale = int(current.get('fontScale','100000'))/100000 if current is not None else 1
-                font_size = dominant_font_size(translated[index], new_text)
+                font_size = dominant_font_size(original[index], old_text)
+                if font_size is None:
+                    font_size = dominant_font_size(translated[index], new_text)
                 if font_size is None:
                     continue
                 # Explicit sizes also work in viewers that ignore placeholder fontScale.
@@ -126,7 +149,7 @@ def fit_from_pdfs(source, target, source_pdf, target_pdf):
                         body.remove(child)
                 E.SubElement(body,'{'+A+'}noAutofit')
                 changes.append({'page':index+1,'shape':identifier,'fontScale':round(previous_scale*scale,4),
-                                'sourceBounds':old_box,'translatedBoundsBefore':new_box})
+                                'sourceBounds':old_box,'translatedBoundsBefore':new_box,'availableBounds':available})
             after[part] = E.tostring(target_root,encoding='UTF-8',xml_declaration=True)
     temporary = Path(target).with_suffix('.fit-pending.pptx')
     with zipfile.ZipFile(temporary,'w',zipfile.ZIP_DEFLATED) as z:
@@ -145,10 +168,23 @@ def fit_translated_text(source, target):
         pdfs=[]
         for index,path in enumerate([source,target]):
             folder=root/str(index);folder.mkdir()
+            render_path = Path(path).resolve()
+            if index == 1:
+                # A taller measurement canvas exposes text clipped by the slide edge.
+                render_path = folder / 'measurement.pptx'
+                with zipfile.ZipFile(path) as original, zipfile.ZipFile(render_path, 'w', zipfile.ZIP_DEFLATED) as expanded:
+                    for name in original.namelist():
+                        content = original.read(name)
+                        if name == 'ppt/presentation.xml':
+                            tree = E.fromstring(content)
+                            size = tree.find('{'+P+'}sldSz')
+                            size.set('cy', str(min(51206400, int(size.get('cy')) * 4)))
+                            content = E.tostring(tree, encoding='UTF-8', xml_declaration=True)
+                        expanded.writestr(name, content)
             subprocess.run([office,'-env:UserInstallation='+(folder/'profile').as_uri(),
-                            '--headless','--convert-to','pdf','--outdir',str(folder),str(Path(path).resolve())],
+                            '--headless','--convert-to','pdf','--outdir',str(folder),str(render_path)],
                            check=True,capture_output=True,timeout=180)
-            pdfs.append(folder/(Path(path).stem+'.pdf'))
+            pdfs.append(folder/(render_path.stem+'.pdf'))
         return fit_from_pdfs(source,target,*pdfs)
 
 

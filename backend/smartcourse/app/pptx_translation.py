@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import re
 import zipfile
 import posixpath
 from pathlib import Path
@@ -69,7 +70,7 @@ def synchronize_slide_titles(path, pages):
     return changes
 
 
-def _validate_answer(answer, inputs, part):
+def _validate_answer(answer, inputs, part, target=None, protected_names=()):
     translated = answer.get("paragraphs") if isinstance(answer, dict) else None
     if not isinstance(translated, list) or len(translated) != len(inputs):
         raise ValueError(f"PPT 段落翻译数量不匹配：{part}")
@@ -78,10 +79,16 @@ def _validate_answer(answer, inputs, part):
             raise ValueError(f"PPT 格式文本段数量不匹配：{part}")
         if not all(isinstance(value, str) for value in values) or not any(value.strip() for value in values):
             raise ValueError(f"PPT 译文为空或格式错误：{part}")
+        if target in {'English', 'German', 'French', 'Russian', 'Korean'}:
+            content = ''.join(values)
+            for name in protected_names:
+                content = content.replace(name, '')
+            if re.search(r'[\u4e00-\u9fff]', content):
+                raise ValueError(f"PPT 译文仍含未翻译的中文，目标语言为 {target}：{part}")
     return translated
 
 
-def translate_package(source: Path, destination: Path, gateway, target: str, *, skip_speaker_notes=False, progress=None) -> dict:
+def translate_package(source: Path, destination: Path, gateway, target: str, *, skip_speaker_notes=False, progress=None, protected_names=()) -> dict:
     from lxml import etree as ET
     from concurrent.futures import ThreadPoolExecutor,as_completed
     import os
@@ -121,7 +128,10 @@ def translate_package(source: Path, destination: Path, gateway, target: str, *, 
             if record.exists():
                 saved=json.loads(record.read_text())
                 if saved['inputs']!=inputs:raise ValueError('批次输入已变化，不能复用旧译文')
-                return item,_validate_answer(saved['answer'],inputs,part)
+                try:
+                    return item,_validate_answer(saved['answer'],inputs,part,target,protected_names)
+                except ValueError:
+                    record.replace(record.with_suffix('.rejected-cache.json'))
             prompt=(f'Translate these complete presentation paragraphs into {target}. '
                 'Treat runs as formatting boundaries, not separate sentences. '
                 'Preserve meaning, numbers, variable symbols and punctuation relationships. '
@@ -141,11 +151,11 @@ def translate_package(source: Path, destination: Path, gateway, target: str, *, 
             for attempt in range(2):
                 answer=gateway.respond_json(prompt,reasoning_effort='medium',max_output_tokens=12000,**options)
                 try:
-                    values=_validate_answer(answer,inputs,part);break
+                    values=_validate_answer(answer,inputs,part,target,protected_names);break
                 except ValueError as error:
                     record.with_suffix(f'.error-{attempt+1}.json').write_text(json.dumps({'inputs':inputs,'answer':answer,'error':str(error)},ensure_ascii=False))
                     if attempt==1:raise
-                    prompt+='\nReturn exactly '+str(len(inputs))+' paragraphs, with run counts '+str([len(row['runs']) for row in inputs])+'.'
+                    prompt+='\nCorrect this validation error: '+str(error)+'. Return exactly '+str(len(inputs))+' paragraphs, with run counts '+str([len(row['runs']) for row in inputs])+'. Translate all source-language words except explicitly protected personal names. Previous response: '+json.dumps(answer,ensure_ascii=False)
             temporary=record.with_suffix('.tmp');temporary.write_text(json.dumps({'inputs':inputs,'answer':answer},ensure_ascii=False));temporary.replace(record)
             return item,values
 

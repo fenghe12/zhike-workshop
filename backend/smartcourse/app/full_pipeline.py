@@ -400,10 +400,9 @@ class FullPipelineRunner:
             requirements = str(task.get('inputs', {}).get('requirements', ''))
             if task.get('inputs', {}).get('answerSourceContext') is not None:
                 requirements = reviewed_generation_requirements(output_dir, requirements)
-            progress(1, "running", 20, {"step": "DeepPresenter 正在生成课程课件"})
-            target_languages = task.get("targetLanguages") or ["zh-CN"]
-            first_lang = str(target_languages[0])
-            language = LANGUAGE_NAMES.get(first_lang[:2].lower(), "Simplified Chinese")
+            progress(1, "running", 20, {"step": "正在生成课程课件"})
+            source_code = _language_code(task.get("sourceLanguage", "中文"))
+            language = LANGUAGE_MODEL_NAMES[source_code]
             generation = generate_course(
                 topic, output_pptx, pages=pages,
                 language=language,
@@ -420,6 +419,9 @@ class FullPipelineRunner:
             if generation_manifest.is_file():
                 generation['reviewStatus'] = json.loads(generation_manifest.read_text(encoding='utf-8')).get('status')
             structure = agent.from_pptx(output_pptx, task["id"])
+            generated_structure = None
+            if generation.get('course_structure'):
+                generated_structure = json.loads(Path(generation['course_structure']).read_text(encoding='utf-8'))
             source_context = task.get('inputs',{}).get('answerSourceContext')
             if source_context is not None:
                 from pptx import Presentation
@@ -434,13 +436,17 @@ class FullPipelineRunner:
                 if not review['passed']:
                     raise ValueError('回答课件未满足原课程资料约束，未启动媒体生成')
             from .topic_lecture import generate_topic_lecture
-            lecture = generate_topic_lecture(
-                [{'page_id': p['page_id'], 'title': p['title'], 'key_points': p['key_points'],
-                  'formulas': p['formulas']} for p in structure['pages']],
-                audience=str(task.get('inputs', {}).get('targetLearners', '高校本科生')),
-                minutes=int(task.get('inputs', {}).get('durationMinutes', 10)),
-                output=output_dir / 'topic_lecture.json',
-                endpoint=os.environ.get('SMARTCOURSE_DEEPPRESENTER_ENDPOINT', 'http://127.0.0.1:7811/v1/chat/completions'))
+            if generated_structure is not None:
+                lecture = [{'page_id': p['page_id'], 'script_text': p['script_text'],
+                            'script_source': p['script_source']} for p in generated_structure['pages']]
+            else:
+                lecture = generate_topic_lecture(
+                    [{'page_id': p['page_id'], 'title': p['title'], 'key_points': p['key_points'],
+                      'formulas': p['formulas']} for p in structure['pages']],
+                    audience=str(task.get('inputs', {}).get('targetLearners', '高校本科生')),
+                    minutes=int(task.get('inputs', {}).get('durationMinutes', 10)),
+                    output=output_dir / 'topic_lecture.json',
+                    endpoint=os.environ.get('SMARTCOURSE_DEEPPRESENTER_ENDPOINT', 'http://127.0.0.1:7811/v1/chat/completions'))
             for page, narration in zip(structure['pages'], lecture):
                 page.update(narration)
             from .pptx_notes import write_speaker_notes
@@ -865,7 +871,7 @@ Source page:
             else:
                 from .pptx_translation import translate_package
                 package_report = translate_package(original_pptx, pptx_path, self.gateway, target_name,
-                    skip_speaker_notes=True,progress=lambda done,total:progress(2,'running',min(99,round(completed_units*100/total_units)),
+                    skip_speaker_notes=True,protected_names=protected_names,progress=lambda done,total:progress(2,'running',min(99,round(completed_units*100/total_units)),
                     {'language':code,'processed':done,'total':total,'step':'课件 XML 文本翻译'}))
                 package_report["protectedNameFields"] = restore_person_fields(original_pptx, pptx_path, protected_names,target_name)
                 from .pptx_translation import synchronize_slide_titles

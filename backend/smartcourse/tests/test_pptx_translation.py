@@ -15,6 +15,39 @@ def presentation_parts(package, count=1):
 
 
 class TranslationPackageTests(unittest.TestCase):
+    def test_protected_personal_name_can_remain_in_source_script(self):
+        class Translator:
+            def respond_json(self, *args, **kwargs):
+                return {'paragraphs': [['潘梓正, Software Engineering']]}
+        with tempfile.TemporaryDirectory() as temporary:
+            source, output = Path(temporary)/'input.pptx', Path(temporary)/'output.pptx'
+            with zipfile.ZipFile(source, 'w') as package:
+                presentation_parts(package)
+                package.writestr('ppt/slides/slide1.xml', '<a:p xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"><a:r><a:t>潘梓正，软件工程</a:t></a:r></a:p>')
+            translate_package(source, output, Translator(), 'English', protected_names=['潘梓正'])
+            with zipfile.ZipFile(output) as package:
+                self.assertIn('潘梓正', package.read('ppt/slides/slide1.xml').decode())
+
+    def test_source_language_residue_is_retried(self):
+        class Translator:
+            calls = 0
+            def respond_json(self, *args, **kwargs):
+                self.calls += 1
+                text = 'Perzeptron实现了二分类' if self.calls == 1 else 'Das Perzeptron klassifiziert zwei Klassen.'
+                return {'paragraphs': [[text]]}
+        with tempfile.TemporaryDirectory() as temporary:
+            source, output = Path(temporary)/'input.pptx', Path(temporary)/'output.pptx'
+            with zipfile.ZipFile(source, 'w') as package:
+                presentation_parts(package)
+                package.writestr('ppt/slides/slide1.xml', '<a:p xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"><a:r><a:t>感知机实现二分类</a:t></a:r></a:p>')
+            translator = Translator()
+            translate_package(source, output, translator, 'German')
+            self.assertEqual(translator.calls, 2)
+            with zipfile.ZipFile(output) as package:
+                text = package.read('ppt/slides/slide1.xml').decode()
+                self.assertIn('Das Perzeptron', text)
+                self.assertNotIn('实现', text)
+
     def test_unselected_slide_is_not_translated(self):
         class Translator:
             calls = 0

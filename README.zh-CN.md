@@ -38,6 +38,8 @@ bash scripts/start-local.sh
 
 Qwen3.6 主模型、CosyVoice3 和 FlashHeadLite 使用 Ascend 910B。FFmpeg 合成和 Whisper 字幕对齐在本机执行。当前计算资源已停止，数据盘和 OBS 备份保留。
 
+2026-10-22 至 23 日，Qwen3.6 生成了一份 8 页中文课件，经内容审阅后，将同一份源课件翻译为英语、日语、韩语、德语、法语和俄语。已检查算例、AND 真值表、阈值等号条件、中文残留、缺字、正文完整显示和逐页排版。具体修改和测试范围见[生成与翻译记录](docs/acceptance-20261022-generation-translation.json)。本次使用可编辑的标题与正文模板，未测试音视频生成及网页交互。
+
 模型权重、Python 环境、生成视频、登录数据和个人参考素材不进入 Git。大文件下载来源和私有 OBS 对象位置保存在 `recovery/models.json`。
 
 ## 权利说明
@@ -48,9 +50,9 @@ Qwen3.6 主模型、CosyVoice3 和 FlashHeadLite 使用 Ascend 910B。FFmpeg 合
 
 ```bash
 cd backend/smartcourse
-python -m unittest tests.test_course_api tests.test_remote_media_status tests.test_translation_policy tests.test_speech_timing tests.test_pptx_translation
+python -m unittest tests.test_course_api tests.test_remote_media_status tests.test_translation_policy tests.test_speech_timing tests.test_pptx_translation tests.test_deeppresenter_course tests.test_topic_source_language
 cd ../../vue-app
 npm run build
 ```
 
-2026-10-21：上述 20 项后端检查与前端构建通过。新机器仍需按恢复说明准备依赖与模型。
+2026-10-23：上述 27 项后端检查通过；前端代码未修改，最近一次构建检查于 10 月 21 日通过。新机器仍需按恢复说明准备依赖与模型。

@@ -4,6 +4,8 @@ English | [简体中文](RECOVERY.zh-CN.md) · [Project home](../README.md)
 
 ## Local application
 
+The supplied environment selects `SMARTCOURSE_PPT_GENERATOR=qwen`. This uses the existing CourseStructureAgent with the configured Qwen endpoint to generate an editable title-and-content deck and page notes, then translates that source deck. It requires content and layout review. The optional `deeppresenter` setting requires the separate PPTAgent runtime; those runtime files were absent from the rebuilt instance during the October 22 generation test.
+
 1. Clone the repository, copy `.env.example` to `.env`, and select a writable runtime directory on persistent storage.
 2. Install Python 3.13, Node.js, FFmpeg, and LibreOffice. Run `bash scripts/setup-local.sh`.
 3. Configure the reference audio, reference image, Whisper small model, and CJK font paths. Supply your own reference media. Personal reference media is excluded from the public repository.

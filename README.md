@@ -38,6 +38,8 @@ On October 22, a complete 12-slide Japanese opening lesson was generated from th
 
 The Qwen3.6 language model, CosyVoice3, and FlashHeadLite use Ascend 910B. FFmpeg composition and Whisper subtitle alignment run locally. Cloud compute was stopped after validation, with persistent disks and OBS backups retained.
 
+On October 22–23, Qwen3.6 generated one eight-slide Chinese lesson, which was reviewed and then translated into English, Japanese, Korean, German, French, and Russian. All six translations used the same source deck. Checks covered the numeric example, AND truth table, threshold equality, remaining Chinese text, missing glyphs, complete rendered paragraphs, and page layouts. The [generation and translation record](docs/acceptance-20261022-generation-translation.json) lists the corrections and scope. This test used an editable title-and-content template and did not test audio, video, or browser interaction.
+
 Model weights, Python environments, generated videos, login data, and personal reference media are excluded from Git. Large-file download sources and private OBS object locations are listed in `recovery/models.json`.
 
 ## Rights and licenses
@@ -48,9 +50,9 @@ No repository-wide open-source license has been granted at this time. Third-part
 
 ```bash
 cd backend/smartcourse
-python -m unittest tests.test_course_api tests.test_remote_media_status tests.test_translation_policy tests.test_speech_timing tests.test_pptx_translation
+python -m unittest tests.test_course_api tests.test_remote_media_status tests.test_translation_policy tests.test_speech_timing tests.test_pptx_translation tests.test_deeppresenter_course tests.test_topic_source_language
 cd ../../vue-app
 npm run build
 ```
 
-As of October 21, 2026, these 20 backend tests and the frontend build passed. A new machine still requires the dependencies and models described in the recovery guide.
+On October 23, 2026, these 27 backend tests passed. The unchanged frontend last passed its build on October 21. A new machine still requires the dependencies and models described in the recovery guide.
