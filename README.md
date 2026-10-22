@@ -34,6 +34,8 @@ Open `http://127.0.0.1:18770` to access the workbench. Full generation requires 
 
 On October 21, 2026, six single-slide short courses were generated in Chinese, English, Japanese, Korean, German, and French. Checks covered translated titles, numeric values, subtitle coverage and timing, and video audio tracks. Results are recorded in the [acceptance report](docs/acceptance-20261021.json). Full-length courses were not retested in that session.
 
+On October 22, a complete 12-slide Japanese opening lesson was generated from the source presentation, including translated slides, narration, 86 timed subtitles, avatar video, and final composition. The video lasts 10 minutes 4.8 seconds at 1920 × 1080. See the [course validation record](docs/acceptance-20261022.json). This covers the opening lesson, not the entire chapter or semester course.
+
 The Qwen3.6 language model, CosyVoice3, and FlashHeadLite use Ascend 910B. FFmpeg composition and Whisper subtitle alignment run locally. Cloud compute was stopped after validation, with persistent disks and OBS backups retained.
 
 Model weights, Python environments, generated videos, login data, and personal reference media are excluded from Git. Large-file download sources and private OBS object locations are listed in `recovery/models.json`.

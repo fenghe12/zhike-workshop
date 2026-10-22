@@ -27,6 +27,8 @@ The Qwen language model runs on the NPU, while its vision projection module runs
 
 The longer course workflow uses a 16,384-token context and schema-constrained output for PPT text segments. Uploaded presentations retain their original picture positions. The CosyVoice overlay reconstructs the waveform with CPU ISTFT to avoid an NPU operator failure on longer utterances. Its neural inference still runs on the NPU.
 
+The local launcher defaults to one translation worker and one avatar worker, matching the single-NPU course run. The source narration and selected captions received manual review before final delivery. The validation record describes the tested scope and does not claim unattended processing of arbitrary course materials.
+
 The Notebook SSH port may change after a restart. Update `remote-state.json` in the runtime directory with the current endpoint, following `config/remote-state.example.json`. Set the status to `RUNNING` only when the platform confirms that the instance is running.
 
 Forward cloud port 7812 to local port 17813 over SSH and use the local Qwen endpoint configured in `.env`. Configure the remote CosyVoice and FlashHead paths there as well. The application uses logical device `npu:0`. The Notebook environment determines the physical device assignment for each session.

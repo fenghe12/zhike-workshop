@@ -27,6 +27,8 @@ Qwen 主模型使用 NPU，视觉投影模块使用 CPU。`recovery/huawei/start
 
 较长课程使用 16,384 个词元的上下文，并约束 PPT 文字段的输出结构。上传课件保留原始图片位置。CosyVoice 兼容文件使用 CPU ISTFT 重建波形，避免较长语音触发 NPU 算子错误，神经网络推理仍使用 NPU。
 
+本地启动器默认使用一个翻译工作进程和一个数字人工作进程，与本次单卡课程运行配置一致。源讲稿和部分图片说明经过人工审阅，验证记录仅说明本次实际处理范围，不代表任意课件都已通过无人干预运行验证。
+
 Notebook 每次启动后 SSH 端口可能变化。将最新地址填写至运行目录的 `remote-state.json`，结构见 `config/remote-state.example.json`。只在平台确实显示运行时填写 RUNNING。
 
 建立 SSH 转发，将云端 7812 转发到本机 17813，使用 `.env` 中的本地 Qwen 地址。远端 CosyVoice / FlashHead 路径由 `.env` 配置。应用使用逻辑设备 npu:0，物理卡分配由本次 Notebook 环境决定。

@@ -1,0 +1,29 @@
+{
+  "date": "2026-10-22",
+  "scope": "Complete opening lesson using original slides 1–12 from Su Tonghua's Chapter 1 Overview of Artificial Intelligence. The remainder of the chapter and the semester course were not processed.",
+  "source_language": "en-US",
+  "target_language": "ja-JP",
+  "pages": 12,
+  "completed_stages": ["source parsing", "translation", "speech and subtitle alignment", "avatar generation", "video composition"],
+  "duration_seconds": 604.8,
+  "video": {"codec": "h264", "width": 1920, "height": 1080, "fps": 25},
+  "audio": {"codec": "aac", "duration_seconds": 604.8},
+  "subtitles": {"entries": 86, "text_complete": true, "timestamps_valid": true},
+  "manual_review": {
+    "video_pages_inspected": 12,
+    "narration": "Prepared from source slides and reviewed; not a transcript of the original teacher.",
+    "translation": "Selected captions and numeric units were reviewed and corrected.",
+    "layout": "Original picture positions were restored and a duplicate caption was removed.",
+    "reference_media": "Previously configured reference voice and avatar image."
+  },
+  "inference": {
+    "accelerator_count": 1,
+    "accelerator_family": "Ascend 910B",
+    "language_model": "Qwen3.6-35B-A3B",
+    "speech_model": "CosyVoice3",
+    "avatar_model": "FlashHeadLite",
+    "cpu_operations": ["vision projection", "ISTFT waveform reconstruction", "Whisper alignment", "video composition"]
+  },
+  "backend_tests_passed": 20,
+  "compute_after_completion": "Both Notebook instances stopped; persistent disks and OBS retained."
+}
