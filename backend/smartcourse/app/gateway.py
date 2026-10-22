@@ -136,6 +136,7 @@ class ResponsesGateway:
         image_urls: Iterable[str] = (),
         reasoning_effort: str = "medium",
         max_output_tokens: int | None = None,
+        response_schema: dict[str, Any] | None = None,
         retries: int = 4,
     ) -> str:
         token = self.settings.gateway_token or _embedded_kimi_key()
@@ -161,6 +162,8 @@ class ResponsesGateway:
                 # Keep enough room for the final content even for short checks.
                 "max_tokens": max(512, max_output_tokens or 8192),
             }
+            if response_schema is not None:
+                body["response_format"] = {"type": "json_object", "schema": response_schema}
             encoded = json.dumps(body, ensure_ascii=False).encode("utf-8")
             headers = {
                 "Content-Type": "application/json",

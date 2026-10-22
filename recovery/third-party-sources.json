@@ -40,5 +40,11 @@
     "source": "https://github.com/maxin-cn/Latte",
     "license_url": "https://github.com/maxin-cn/Latte/blob/main/LICENSE",
     "saved": true
+  },
+  {
+    "name": "CosyVoice",
+    "source": "https://github.com/FunAudioLLM/CosyVoice",
+    "license_url": "https://github.com/FunAudioLLM/CosyVoice/blob/main/LICENSE",
+    "saved": true
   }
 ]

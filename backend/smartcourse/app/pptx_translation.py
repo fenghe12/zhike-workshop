@@ -127,9 +127,19 @@ def translate_package(source: Path, destination: Path, gateway, target: str, *, 
                 'Preserve meaning, numbers, variable symbols and punctuation relationships. '
                 'Math appearing in context is an existing separate object: do not duplicate it. '
                 'Return JSON {"paragraphs":[["translated run"]]}; preserve both array lengths. '
-                'Do not summarize, introduce explanations, or return dictionaries as text.\n'+json.dumps(inputs,ensure_ascii=False))
+                'Do not summarize, introduce explanations, or return dictionaries as text. '
+                'Required output shape (replace strings while retaining every array position): ' + json.dumps(
+                    {'paragraphs': [['' for _ in row['runs']] for row in inputs]}) + '\n'+json.dumps(inputs,ensure_ascii=False))
+            options = {}
+            from urllib.parse import urlparse
+            if urlparse(getattr(getattr(gateway, 'settings', None), 'gateway_url', '')).hostname in {'127.0.0.1', 'localhost', '::1'}:
+                options['response_schema'] = {
+                    'type': 'object', 'required': ['paragraphs'], 'additionalProperties': False,
+                    'properties': {'paragraphs': {'type': 'array', 'minItems': len(inputs), 'maxItems': len(inputs),
+                        'prefixItems': [{'type': 'array', 'items': {'type': 'string'},
+                                         'minItems': len(row['runs']), 'maxItems': len(row['runs'])} for row in inputs]}}}
             for attempt in range(2):
-                answer=gateway.respond_json(prompt,reasoning_effort='medium',max_output_tokens=12000)
+                answer=gateway.respond_json(prompt,reasoning_effort='medium',max_output_tokens=12000,**options)
                 try:
                     values=_validate_answer(answer,inputs,part);break
                 except ValueError as error:

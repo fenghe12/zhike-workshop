@@ -25,6 +25,8 @@ CosyVoice 和 FlashHead 使用独立依赖目录。CosyVoice 的 transformers �
 
 Qwen 主模型使用 NPU，视觉投影模块使用 CPU。`recovery/huawei/start_qwen36_npu.sh` 为已验证的启动参数。CANN 8.3 需要移除未使用的 recurrent gated delta rule 头文件引用，设置 OPP 的数据链接，并预加载对应 ARM64 `liboptiling.so`。保留的源代码修改及构建脚本位于 `recovery/huawei`。
 
+较长课程使用 16,384 个词元的上下文，并约束 PPT 文字段的输出结构。上传课件保留原始图片位置。CosyVoice 兼容文件使用 CPU ISTFT 重建波形，避免较长语音触发 NPU 算子错误，神经网络推理仍使用 NPU。
+
 Notebook 每次启动后 SSH 端口可能变化。将最新地址填写至运行目录的 `remote-state.json`，结构见 `config/remote-state.example.json`。只在平台确实显示运行时填写 RUNNING。
 
 建立 SSH 转发，将云端 7812 转发到本机 17813，使用 `.env` 中的本地 Qwen 地址。远端 CosyVoice / FlashHead 路径由 `.env` 配置。应用使用逻辑设备 npu:0，物理卡分配由本次 Notebook 环境决定。

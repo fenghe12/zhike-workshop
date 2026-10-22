@@ -25,6 +25,8 @@ CosyVoice and FlashHead use separate dependency directories. The tested CosyVoic
 
 The Qwen language model runs on the NPU, while its vision projection module runs on the CPU. `recovery/huawei/start_qwen36_npu.sh` contains the validated launch parameters. CANN 8.3 requires removing an unused recurrent gated delta rule header reference, setting up the OPP data link, and preloading the matching ARM64 `liboptiling.so`. The preserved source modifications and build scripts are in `recovery/huawei`.
 
+The longer course workflow uses a 16,384-token context and schema-constrained output for PPT text segments. Uploaded presentations retain their original picture positions. The CosyVoice overlay reconstructs the waveform with CPU ISTFT to avoid an NPU operator failure on longer utterances. Its neural inference still runs on the NPU.
+
 The Notebook SSH port may change after a restart. Update `remote-state.json` in the runtime directory with the current endpoint, following `config/remote-state.example.json`. Set the status to `RUNNING` only when the platform confirms that the instance is running.
 
 Forward cloud port 7812 to local port 17813 over SSH and use the local Qwen endpoint configured in `.env`. Configure the remote CosyVoice and FlashHead paths there as well. The application uses logical device `npu:0`. The Notebook environment determines the physical device assignment for each session.

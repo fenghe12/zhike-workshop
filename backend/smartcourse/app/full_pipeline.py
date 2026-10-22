@@ -80,7 +80,7 @@ def _safe_task_component(value: str) -> str:
 
 def _exact_token_accuracy(source: str, translated: str) -> float:
     tokens = re.findall(
-        r"(?:\d+(?:[.,]\d+)*%?)|(?:[A-Z]{2,}[A-Z0-9_-]*)|(?:https?://\S+)",
+        r"(?:\d+(?:[.,]\d+)*%?)|(?:[A-Z]{2,}(?:[A-Z0-9]|[_-](?=[A-Z0-9]))*)|(?:https?://\S+)",
         source,
     )
     if not tokens:
@@ -932,7 +932,8 @@ Source page:
             from .pptx_render import render_pptx
             previews = render_pptx(pptx_path, directory / "preview", pdf_name="translated.pdf")
             from .pptx_text_fit import fit_visual_collisions
-            collision_fit = fit_visual_collisions(pptx_path, directory / "preview" / "translated.pdf")
+            collision_fit = [] if task.get("mode") == "upload" else fit_visual_collisions(
+                pptx_path, directory / "preview" / "translated.pdf")
             if collision_fit:
                 previews = render_pptx(pptx_path, directory / "preview", pdf_name="translated.pdf")
             package_report["visualCollisionsFixed"] = len(collision_fit)

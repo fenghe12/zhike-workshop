@@ -12,6 +12,6 @@ exec "$R/repos/llama.cpp/build-cann/bin/llama-server" \
  --model "$MODEL/Qwen3.6-35B-A3B-Q8_0.gguf" \
  --mmproj "$MODEL/mmproj-Qwen3.6-35B-A3B-Q8_0.gguf" --no-mmproj-offload \
  --alias Qwen3.6-35B-A3B --host 127.0.0.1 --port 7812 \
- --ctx-size 8192 --parallel 1 --threads 12 --threads-batch 12 \
+ --ctx-size 16384 --parallel 1 --threads 12 --threads-batch 12 \
  --n-gpu-layers 99 --batch-size 128 --ubatch-size 128 \
  --jinja --chat-template-kwargs '{"enable_thinking":false}' --reasoning-budget 0
