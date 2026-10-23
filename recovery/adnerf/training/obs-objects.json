@@ -1,0 +1,10 @@
+[
+  {
+    "key": "npu-migration/runs/20261023-adnerf-training/adnerf-training-data.tar.gz",
+    "destination": "adnerf-training-data.tar.gz"
+  },
+  {
+    "key": "npu-migration/runs/20261023-adnerf-training/adnerf-training-code-and-results.tar.gz",
+    "destination": "adnerf-training-code-and-results.tar.gz"
+  }
+]

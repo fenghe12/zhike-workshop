@@ -8,6 +8,8 @@ Audio is processed by the official DeepSpeech 0.1.0 frozen model and feature ext
 
 `patch_npu.py` updates device placement, a legacy tensor constructor and deprecated NumPy scalar aliases. It also requires head and torso checkpoints to exist and records their loaded training steps. Both official checkpoints belong in `dataset/Obama/logs/Obama_com`, as required by the combined renderer configuration. Model architecture, ray sampling and frame count are retained.
 
+The [short training tools](training/README.md) add full-frame training data preparation, gradient/update recording and checkpoint continuation. Actual completed training scope is recorded separately from pretrained inference.
+
 ## Restore the validated environment
 
 Use the persistent root `/home/ma-user/work/npu-migration`, after confirming its volume is mounted and writable. The base Python 3.11, PyTorch 2.7.1, torch_npu 2.7.1, CANN and `npu-shims` are part of the existing [recovery instructions](../../docs/RECOVERY.md). Configure private OBS access using that guide, then:

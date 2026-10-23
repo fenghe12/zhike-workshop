@@ -1,0 +1,209 @@
+{
+  "completed_at": "2026-10-23T16:53:53.868994+08:00",
+  "source": "https://github.com/YudongGuo/AD-NeRF",
+  "hardware": "One Ascend 910B2, logical npu:0",
+  "region": "cn-southwest-2",
+  "scope": "Bounded real training and checkpoint-continuation trial; not converged reproduction",
+  "data": {
+    "completed_at": "2026-10-23T16:22:20.078062+08:00",
+    "video_frames": 8000,
+    "training_frames": 7272,
+    "validation_frames": 728,
+    "native_size": [
+      450,
+      450
+    ],
+    "face_parser": "Official complete BiSeNet checkpoint",
+    "image_generation": "Unchanged official process_data.py step 5",
+    "poses_and_audio": "Official pretrained camera poses and verified full DeepSpeech features reused",
+    "elapsed_seconds": 1234.72
+  },
+  "configuration": {
+    "size": [
+      450,
+      450
+    ],
+    "rays_per_update": {
+      "head": 2048,
+      "torso": 1024
+    },
+    "N_samples": 64,
+    "N_importance": 128,
+    "netdepth": 8,
+    "netwidth": 256,
+    "seed": 0,
+    "full_prepared_frames": 8000,
+    "training_frames": 7272
+  },
+  "head": {
+    "initialization": "Random; no pretrained weights loaded",
+    "initial_updates": 200,
+    "continued_updates": 20,
+    "total_optimizer_updates": 220,
+    "checkpoints": [
+      {
+        "file": "checkpoints/trial_head/000200_head.tar",
+        "completed_iterations": 200,
+        "optimizer_updates": 200.0,
+        "model_parameter_tensors": 28
+      },
+      {
+        "file": "checkpoints/trial_head/000220_head.tar",
+        "completed_iterations": 220,
+        "optimizer_updates": 220.0,
+        "model_parameter_tensors": 28
+      }
+    ]
+  },
+  "torso": {
+    "initialization": "New torso network with the head trained in this trial",
+    "initial_updates": 100,
+    "continued_updates": 20,
+    "total_optimizer_updates": 120,
+    "checkpoints": [
+      {
+        "file": "checkpoints/trial_com/000100_body.tar",
+        "completed_iterations": 100,
+        "optimizer_updates": 100.0,
+        "model_parameter_tensors": 28
+      },
+      {
+        "file": "checkpoints/trial_com/000120_body.tar",
+        "completed_iterations": 120,
+        "optimizer_updates": 120.0,
+        "model_parameter_tensors": 28
+      }
+    ]
+  },
+  "training_audit": {
+    "head_initial": {
+      "audited_updates": 11,
+      "first_audited_loss": 0.026871882379055023,
+      "last_audited_loss": 0.016045719385147095,
+      "initial_audit_window_mean_loss": 0.02191067710518837,
+      "final_audit_window_mean_loss": 0.016398678347468377,
+      "finite_gradients": true,
+      "nonzero_gradients": true,
+      "parameter_updates_observed": true,
+      "median_audited_step_seconds": 0.447415,
+      "last_optimizer_updates": [
+        200.0,
+        200.0,
+        0
+      ],
+      "timing_note": "Audited steps include gradient and parameter recording; CANN warm-up is excluded from the median."
+    },
+    "head_resumed": {
+      "audited_updates": 2,
+      "first_audited_loss": 0.01686215028166771,
+      "last_audited_loss": 0.01637730374932289,
+      "initial_audit_window_mean_loss": 0.0166197270154953,
+      "final_audit_window_mean_loss": 0.0166197270154953,
+      "finite_gradients": true,
+      "nonzero_gradients": true,
+      "parameter_updates_observed": true,
+      "median_audited_step_seconds": 0.46012,
+      "last_optimizer_updates": [
+        220.0,
+        220.0,
+        0
+      ],
+      "timing_note": "Audited steps include gradient and parameter recording; CANN warm-up is excluded from the median."
+    },
+    "torso_initial": {
+      "audited_updates": 6,
+      "first_audited_loss": 0.04193514585494995,
+      "last_audited_loss": 0.02707858942449093,
+      "initial_audit_window_mean_loss": 0.0326610129326582,
+      "final_audit_window_mean_loss": 0.02968970164656639,
+      "finite_gradients": true,
+      "nonzero_gradients": true,
+      "parameter_updates_observed": true,
+      "median_audited_step_seconds": 0.46945,
+      "last_optimizer_updates": [
+        100.0
+      ],
+      "timing_note": "Audited steps include gradient and parameter recording; CANN warm-up is excluded from the median."
+    },
+    "torso_resumed": {
+      "audited_updates": 2,
+      "first_audited_loss": 0.02773418463766575,
+      "last_audited_loss": 0.021194567903876305,
+      "initial_audit_window_mean_loss": 0.024464376270771027,
+      "final_audit_window_mean_loss": 0.024464376270771027,
+      "finite_gradients": true,
+      "nonzero_gradients": true,
+      "parameter_updates_observed": true,
+      "median_audited_step_seconds": 0.47952,
+      "last_optimizer_updates": [
+        120.0
+      ],
+      "timing_note": "Audited steps include gradient and parameter recording; CANN warm-up is excluded from the median."
+    }
+  },
+  "checkpoint_continuation": "Model and optimizer states restored; update counters checked at 200\u2192220 and 100\u2192120.",
+  "preview": {
+    "head_optimizer_updates": 220,
+    "validation_frames": [
+      {
+        "image_id": 7272,
+        "mse": 0.0015528566436842084,
+        "psnr_db": 28.088686355339053
+      },
+      {
+        "image_id": 7636,
+        "mse": 0.0016305709723383188,
+        "psnr_db": 27.87660293316724
+      },
+      {
+        "image_id": 7999,
+        "mse": 0.0016258173855021596,
+        "psnr_db": 27.889282366771226
+      }
+    ],
+    "image_ids": [
+      7272,
+      7636,
+      7999
+    ],
+    "size": [
+      450,
+      450
+    ],
+    "N_samples": 64,
+    "N_importance": 128,
+    "scope": "Three held-out camera poses; early head-only training preview, not a converged quality assessment."
+  },
+  "visual_review": "Three native-resolution held-out head frames were compared with their prepared references. Face structure remains substantially blurred after 220 updates; no convergence or final quality acceptance is claimed.",
+  "preserved_model_parameters": [
+    "Eight MLP layers with width 256",
+    "2048 head rays and 1024 torso rays per optimizer update",
+    "64 coarse and 128 importance samples",
+    "450 x 450 input images",
+    "Original learning-rate decay and losses"
+  ],
+  "trial_controls": [
+    "Training stop iterations selected for this bounded test",
+    "Checkpoint and log intervals shortened to retain recoverable progress",
+    "completed_iterations stored for correct continuation labels",
+    "Audio-attention optimizer state key corrected on loading"
+  ],
+  "limitations": [
+    "The default head audio-smoothing transition at iteration 200000 was not reached.",
+    "Official full training defaults are 400000 iterations for each stage and were not completed.",
+    "No novel-identity or novel-audio quality evaluation was performed."
+  ],
+  "backups": {
+    "all_required_objects_verified": true,
+    "objects": 2,
+    "bytes": 1243842896,
+    "persistent_disks_retained": true,
+    "obs_retained": true
+  },
+  "compute": {
+    "all_notebooks_stopped": true,
+    "verified_at": "2026-10-23T16:53:20.437945+08:00",
+    "started_at": "2026-10-23T15:58:00.965217+08:00",
+    "deadline": "2026-10-23T16:58:00.965217+08:00"
+  }
+}

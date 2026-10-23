@@ -8,6 +8,8 @@
 
 `patch_npu.py` 修改设备位置、旧版张量构造方法和 NumPy 已移除的类型别名，并要求头部、躯干检查点存在，记录实际加载的训练步数。两个检查点均放在组合渲染配置要求的 `dataset/Obama/logs/Obama_com` 目录。网络结构、光线采样参数和帧数保持不变。
 
+[短程训练工具](training/README.zh-CN.md)提供完整训练图像生成、梯度与参数更新记录、检查点续训功能。实际完成的训练范围与预训练模型推理分别记录。
+
 ## 恢复已验证的环境
 
 确认 `/home/ma-user/work/npu-migration` 所在持久卷已挂载且可写。基础 Python 3.11、PyTorch 2.7.1、torch_npu 2.7.1、CANN 和 `npu-shims` 按[恢复说明](../../docs/RECOVERY.zh-CN.md)准备。按该说明配置私有 OBS 访问后执行：

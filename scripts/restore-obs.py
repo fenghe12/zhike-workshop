@@ -10,7 +10,7 @@ from pathlib import Path
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--group', choices=['code', 'qwen', 'course-models', 'all-models', 'sensenova-agenthoi', 'extra-runtime', 'adnerf'], required=True)
+    parser.add_argument('--group', choices=['code', 'qwen', 'course-models', 'all-models', 'sensenova-agenthoi', 'extra-runtime', 'adnerf', 'adnerf-training'], required=True)
     parser.add_argument('--destination', required=True, help='Existing persistent disk location')
     args = parser.parse_args()
     destination = Path(args.destination).expanduser().resolve()
@@ -43,6 +43,9 @@ def main():
         objects = [(prefix + item['path'], item['path']) for item in extra]
     elif args.group == 'adnerf':
         extra = json.loads((root / 'recovery/adnerf/obs-objects.json').read_text())
+        objects = [(item['key'], item['destination']) for item in extra]
+    elif args.group == 'adnerf-training':
+        extra = json.loads((root / 'recovery/adnerf/training/obs-objects.json').read_text())
         objects = [(item['key'], item['destination']) for item in extra]
     elif args.group == 'extra-runtime':
         name = 'sensenova-agenthoi-code-and-env.tar.gz'
