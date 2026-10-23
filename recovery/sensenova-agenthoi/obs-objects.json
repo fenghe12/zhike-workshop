@@ -1,0 +1,266 @@
+[
+  {
+    "path": "checkpoints/sensenova-u1.5-8b-mot/README.md",
+    "size": 9018
+  },
+  {
+    "path": "checkpoints/sensenova-u1.5-8b-mot/README_CN.md",
+    "size": 6742
+  },
+  {
+    "path": "checkpoints/sensenova-u1.5-8b-mot/added_tokens.json",
+    "size": 8005
+  },
+  {
+    "path": "checkpoints/sensenova-u1.5-8b-mot/config.json",
+    "size": 2631
+  },
+  {
+    "path": "checkpoints/sensenova-u1.5-8b-mot/merges.txt",
+    "size": 1670344
+  },
+  {
+    "path": "checkpoints/sensenova-u1.5-8b-mot/model-00001-of-00008.safetensors",
+    "size": 4966078840
+  },
+  {
+    "path": "checkpoints/sensenova-u1.5-8b-mot/model-00002-of-00008.safetensors",
+    "size": 4932742056
+  },
+  {
+    "path": "checkpoints/sensenova-u1.5-8b-mot/model-00003-of-00008.safetensors",
+    "size": 4983075328
+  },
+  {
+    "path": "checkpoints/sensenova-u1.5-8b-mot/model-00004-of-00008.safetensors",
+    "size": 4949521032
+  },
+  {
+    "path": "checkpoints/sensenova-u1.5-8b-mot/model-00005-of-00008.safetensors",
+    "size": 4932725616
+  },
+  {
+    "path": "checkpoints/sensenova-u1.5-8b-mot/model-00006-of-00008.safetensors",
+    "size": 4999870800
+  },
+  {
+    "path": "checkpoints/sensenova-u1.5-8b-mot/model-00007-of-00008.safetensors",
+    "size": 4932725608
+  },
+  {
+    "path": "checkpoints/sensenova-u1.5-8b-mot/model-00008-of-00008.safetensors",
+    "size": 369118856
+  },
+  {
+    "path": "checkpoints/sensenova-u1.5-8b-mot/model.safetensors.index.json",
+    "size": 113453
+  },
+  {
+    "path": "checkpoints/sensenova-u1.5-8b-mot/special_tokens_map.json",
+    "size": 39951
+  },
+  {
+    "path": "checkpoints/sensenova-u1.5-8b-mot/tokenizer_config.json",
+    "size": 63546
+  },
+  {
+    "path": "checkpoints/sensenova-u1.5-8b-mot/vocab.json",
+    "size": 3383407
+  },
+  {
+    "path": "checkpoints/agenthoi/t2v/checkpoint-9500/config.json",
+    "size": 629
+  },
+  {
+    "path": "checkpoints/agenthoi/t2v/checkpoint-9500/diffusion_pytorch_model-00001-of-00013.safetensors",
+    "size": 2632839016
+  },
+  {
+    "path": "checkpoints/agenthoi/t2v/checkpoint-9500/diffusion_pytorch_model-00002-of-00013.safetensors",
+    "size": 2669504808
+  },
+  {
+    "path": "checkpoints/agenthoi/t2v/checkpoint-9500/diffusion_pytorch_model-00003-of-00013.safetensors",
+    "size": 2669590304
+  },
+  {
+    "path": "checkpoints/agenthoi/t2v/checkpoint-9500/diffusion_pytorch_model-00004-of-00013.safetensors",
+    "size": 2632828720
+  },
+  {
+    "path": "checkpoints/agenthoi/t2v/checkpoint-9500/diffusion_pytorch_model-00005-of-00013.safetensors",
+    "size": 2632815104
+  },
+  {
+    "path": "checkpoints/agenthoi/t2v/checkpoint-9500/diffusion_pytorch_model-00006-of-00013.safetensors",
+    "size": 2564608912
+  },
+  {
+    "path": "checkpoints/agenthoi/t2v/checkpoint-9500/diffusion_pytorch_model-00007-of-00013.safetensors",
+    "size": 2669590304
+  },
+  {
+    "path": "checkpoints/agenthoi/t2v/checkpoint-9500/diffusion_pytorch_model-00008-of-00013.safetensors",
+    "size": 2632828720
+  },
+  {
+    "path": "checkpoints/agenthoi/t2v/checkpoint-9500/diffusion_pytorch_model-00009-of-00013.safetensors",
+    "size": 2632815104
+  },
+  {
+    "path": "checkpoints/agenthoi/t2v/checkpoint-9500/diffusion_pytorch_model-00010-of-00013.safetensors",
+    "size": 2564608912
+  },
+  {
+    "path": "checkpoints/agenthoi/t2v/checkpoint-9500/diffusion_pytorch_model-00011-of-00013.safetensors",
+    "size": 2669590248
+  },
+  {
+    "path": "checkpoints/agenthoi/t2v/checkpoint-9500/diffusion_pytorch_model-00012-of-00013.safetensors",
+    "size": 2632828640
+  },
+  {
+    "path": "checkpoints/agenthoi/t2v/checkpoint-9500/diffusion_pytorch_model-00013-of-00013.safetensors",
+    "size": 1502948872
+  },
+  {
+    "path": "checkpoints/agenthoi/t2v/checkpoint-9500/diffusion_pytorch_model.safetensors.index.json",
+    "size": 124766
+  },
+  {
+    "path": "checkpoints/internvl3_5-38b/README.md",
+    "size": 53705
+  },
+  {
+    "path": "checkpoints/internvl3_5-38b/added_tokens.json",
+    "size": 892
+  },
+  {
+    "path": "checkpoints/internvl3_5-38b/config.json",
+    "size": 2566
+  },
+  {
+    "path": "checkpoints/internvl3_5-38b/configuration_intern_vit.py",
+    "size": 5546
+  },
+  {
+    "path": "checkpoints/internvl3_5-38b/configuration_internvl_chat.py",
+    "size": 4700
+  },
+  {
+    "path": "checkpoints/internvl3_5-38b/conversation.py",
+    "size": 15309
+  },
+  {
+    "path": "checkpoints/internvl3_5-38b/generation_config.json",
+    "size": 69
+  },
+  {
+    "path": "checkpoints/internvl3_5-38b/merges.txt",
+    "size": 1671853
+  },
+  {
+    "path": "checkpoints/internvl3_5-38b/model-00001-of-00016.safetensors",
+    "size": 4765391304
+  },
+  {
+    "path": "checkpoints/internvl3_5-38b/model-00002-of-00016.safetensors",
+    "size": 4860390192
+  },
+  {
+    "path": "checkpoints/internvl3_5-38b/model-00003-of-00016.safetensors",
+    "size": 4949244048
+  },
+  {
+    "path": "checkpoints/internvl3_5-38b/model-00004-of-00016.safetensors",
+    "size": 4967461704
+  },
+  {
+    "path": "checkpoints/internvl3_5-38b/model-00005-of-00016.safetensors",
+    "size": 4936943928
+  },
+  {
+    "path": "checkpoints/internvl3_5-38b/model-00006-of-00016.safetensors",
+    "size": 4994947960
+  },
+  {
+    "path": "checkpoints/internvl3_5-38b/model-00007-of-00016.safetensors",
+    "size": 4955889424
+  },
+  {
+    "path": "checkpoints/internvl3_5-38b/model-00008-of-00016.safetensors",
+    "size": 4998053016
+  },
+  {
+    "path": "checkpoints/internvl3_5-38b/model-00009-of-00016.safetensors",
+    "size": 4923356400
+  },
+  {
+    "path": "checkpoints/internvl3_5-38b/model-00010-of-00016.safetensors",
+    "size": 4973045792
+  },
+  {
+    "path": "checkpoints/internvl3_5-38b/model-00011-of-00016.safetensors",
+    "size": 4879385632
+  },
+  {
+    "path": "checkpoints/internvl3_5-38b/model-00012-of-00016.safetensors",
+    "size": 4935866376
+  },
+  {
+    "path": "checkpoints/internvl3_5-38b/model-00013-of-00016.safetensors",
+    "size": 4801943048
+  },
+  {
+    "path": "checkpoints/internvl3_5-38b/model-00014-of-00016.safetensors",
+    "size": 4944732744
+  },
+  {
+    "path": "checkpoints/internvl3_5-38b/model-00015-of-00016.safetensors",
+    "size": 4780017736
+  },
+  {
+    "path": "checkpoints/internvl3_5-38b/model-00016-of-00016.safetensors",
+    "size": 3114304920
+  },
+  {
+    "path": "checkpoints/internvl3_5-38b/model.safetensors.index.json",
+    "size": 120698
+  },
+  {
+    "path": "checkpoints/internvl3_5-38b/modeling_intern_vit.py",
+    "size": 18151
+  },
+  {
+    "path": "checkpoints/internvl3_5-38b/modeling_internvl_chat.py",
+    "size": 16518
+  },
+  {
+    "path": "checkpoints/internvl3_5-38b/preprocessor_config.json",
+    "size": 666
+  },
+  {
+    "path": "checkpoints/internvl3_5-38b/processor_config.json",
+    "size": 72
+  },
+  {
+    "path": "checkpoints/internvl3_5-38b/special_tokens_map.json",
+    "size": 744
+  },
+  {
+    "path": "checkpoints/internvl3_5-38b/tokenizer.json",
+    "size": 11424300
+  },
+  {
+    "path": "checkpoints/internvl3_5-38b/tokenizer_config.json",
+    "size": 7164
+  },
+  {
+    "path": "checkpoints/internvl3_5-38b/video_preprocessor_config.json",
+    "size": 1345
+  },
+  {
+    "path": "checkpoints/internvl3_5-38b/vocab.json",
+    "size": 2776833
+  }
+]

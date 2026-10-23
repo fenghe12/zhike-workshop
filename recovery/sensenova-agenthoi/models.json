@@ -1,0 +1,27 @@
+{
+  "source_repositories": {
+    "SenseNova-U1.5": "https://github.com/OpenSenseNova/SenseNova-U1",
+    "AgentHOI": "https://github.com/bone-11/agenthoi"
+  },
+  "models": [
+    {
+      "repository": "sensenova/SenseNova-U1.5-8B-MoT",
+      "destination": "checkpoints/sensenova-u1.5-8b-mot",
+      "dtype": "BF16; official weights"
+    },
+    {
+      "repository": "ProAudience/agenthoi",
+      "include": "t2v/checkpoint-9500/*",
+      "destination": "checkpoints/agenthoi",
+      "dtype": "Published F32 tensors converted to BF16; official video inference uses BF16"
+    },
+    {
+      "repository": "OpenGVLab/InternVL3_5-38B",
+      "destination": "checkpoints/internvl3_5-38b",
+      "dtype": "BF16; official weights"
+    }
+  ],
+  "existing_backbone": "checkpoints/wan2.1-i2v-14b",
+  "private_obs_prefix": "npu-migration/runs/20261023-sensenova-agenthoi/",
+  "sampling": "Keep official inputs and default sampling parameters. Only single-device placement, CPU offload and NPU compatibility are configured."
+}

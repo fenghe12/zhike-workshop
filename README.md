@@ -42,6 +42,8 @@ On October 22–23, Qwen3.6 generated one eight-slide Chinese lesson, which was 
 
 Model weights, Python environments, generated videos, login data, and personal reference media are excluded from Git. Large-file download sources and private OBS object locations are listed in `recovery/models.json`.
 
+Additional [SenseNova U1.5 and AgentHOI recovery tools](recovery/sensenova-agenthoi/README.md) preserve the official inference cases and sampling defaults, with single-device Ascend compatibility changes and separate OBS model/runtime backups.
+
 ## Rights and licenses
 
 No repository-wide open-source license has been granted at this time. Third-party code and models remain subject to their respective licenses. Preserve the original licenses when restoring their source. Public access does not grant unrestricted redistribution rights.

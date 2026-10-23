@@ -1,0 +1,22 @@
+# SenseNova U1.5 and AgentHOI on Ascend
+
+English | [简体中文](README.zh-CN.md)
+
+These launchers reuse the persistent Python 3.11, PyTorch 2.7.1, torch_npu 2.7.1 and CANN installation under `/home/ma-user/work/npu-migration`. Model locations are listed in `models.json`. Weights and credentials are excluded from Git.
+
+Use the official [SenseNova-U1](https://github.com/OpenSenseNova/SenseNova-U1) and [AgentHOI](https://github.com/bone-11/agenthoi) sources. The SenseNova checkpoint is the full **SenseNova-U1.5-8B-MoT** release. AgentHOI uses InternVL3.5-38B, the original Wan2.1-I2V backbone and its trained `t2v/checkpoint-9500` model.
+
+The changes address NPU attention, real-valued rotary multiplication, device placement, dependency imports and Transformers compatibility. They do not remove model layers or shorten official prompts, images, frames or sampling steps. The published AgentHOI F32 checkpoint is stored as BF16, matching the dtype used by official video inference. Single-device CPU offload is required on the available 64 GB device.
+
+For the official SenseNova README text-to-image case, retain the script defaults: 2048 × 2048, 50 steps, CFG 4.0, timestep shift 3.0 and seed 42. For AgentHOI, retain both bundled inputs, 81 frames, 40 steps, the original image resolution, 1024 tokens per agent turn and 12 image tiles. Process counts are set to one as documented for single-device operation.
+
+With OBS credentials configured as described in the main recovery guide:
+
+```bash
+python scripts/restore-obs.py --group sensenova-agenthoi --destination /home/ma-user/work/npu-migration
+python scripts/restore-obs.py --group extra-runtime --destination /home/ma-user/work/npu-migration
+```
+
+The runtime archive contains source, compatibility changes, dependency overlays and launchers. Restore it into the same persistent root. The base interpreter, CANN and original Wan backbone are covered by the earlier recovery archives. Configure all temporary and cache directories on the persistent volume before running either model.
+
+Sampling configuration is separate from validation status. Loading the AgentHOI VLM does not establish that its complete reasoning and video pipeline has finished; consult the [dated deployment record](../../docs/deployment-20261023-sensenova-agenthoi.json).

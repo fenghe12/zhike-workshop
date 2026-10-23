@@ -1,0 +1,73 @@
+{
+  "completed_at": "2026-10-23T11:35:22.971264+08:00",
+  "region": "cn-southwest-2",
+  "hardware": "One Ascend 910B1, 64 GB; physical device 7, logical device 0.",
+  "authorized_seconds": 3600,
+  "compute_started_at": "2026-10-23T10:33:06.754685+08:00",
+  "compute_stopped_verified_at": "2026-10-23T11:31:12.247789+08:00",
+  "compute_status": "Both notebooks STOPPED",
+  "models_downloaded": 66,
+  "new_model_storage_gib": 135.02,
+  "compatibility_changes": [
+    "Device-local SenseNova attention-mask constants",
+    "Transformers 4.x decorator compatibility",
+    "NPU SDPA attention",
+    "Single-device CPU offload without automatic tensor parallel initialization",
+    "Real arithmetic for equivalent rotary multiplication; CPU numerical comparison passed",
+    "Training-only readers imported only when used"
+  ],
+  "sensenova": {
+    "model": "sensenova/SenseNova-U1.5-8B-MoT",
+    "release": "Official full U1.5 release",
+    "source": "https://github.com/OpenSenseNova/SenseNova-U1",
+    "official_case": "README text-to-image quick-start portrait",
+    "image_review": "2048 x 2048 output opened and inspected; not a quality benchmark.",
+    "validation": {
+      "status": "completed",
+      "returncode": 0,
+      "elapsed_seconds": 124.29,
+      "steps": 50,
+      "resolution": [
+        2048,
+        2048
+      ],
+      "cfg_scale": 4.0,
+      "timestep_shift": 3.0,
+      "scope": "Official U1.5 README quick-start case with unmodified sampling defaults.",
+      "completed_at": "2026-10-23T11:01:27.068275+08:00"
+    }
+  },
+  "agenthoi": {
+    "source": "https://github.com/bone-11/agenthoi",
+    "model": "ProAudience/agenthoi/t2v/checkpoint-9500",
+    "reasoning_model": "OpenGVLab/InternVL3_5-38B",
+    "backbone": "Wan-AI/Wan2.1-I2V-14B-480P",
+    "deployment": "Official source, all inference weights, dependency overlays and single-device NPU launchers persisted.",
+    "module_imports": "Reasoning backend and full video inference module imported successfully.",
+    "vlm_loading": "Official 38B VLM loaded with CPU offload.",
+    "official_configuration": {
+      "cases": [
+        "case_a",
+        "case_b"
+      ],
+      "size": "832*480",
+      "frames": 81,
+      "steps": 40,
+      "cfg": 5.0,
+      "shift": 5.0,
+      "seed": 42,
+      "max_new_tokens": 1024,
+      "image_tiles": 12,
+      "processes_per_stage": 1
+    },
+    "full_pipeline_completion_verified": false,
+    "final_status": "Official end-to-end completion was not verified before compute stopped; the last retrieved runtime record was still in VLM reasoning.",
+    "sampling_policy": "Official prompts, images, two cases, frame count and step count retained.",
+    "checkpoint_storage": "Published F32 tensors converted to BF16, matching the official inference dtype; no parameters removed."
+  },
+  "backup": {
+    "models_objects_verified": 66,
+    "runtime_objects_verified": 1,
+    "persistent_disks_retained": true
+  }
+}
