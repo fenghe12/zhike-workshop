@@ -19,6 +19,10 @@ python scripts/restore-obs.py --group extra-runtime --destination /home/ma-user/
 
 运行环境档案包含源码、兼容修改、依赖目录和启动器，应解压至相同的持久化根目录。基础解释器、CANN 和原始 Wan 模型保存在此前的恢复档案中。启动前将临时目录和全部缓存设置在持久化数据卷上。
 
-推理参数与完成状态分别记录。AgentHOI 的 VLM 加载成功不代表完整推理及视频生成已经完成，实际完成情况见[部署记录](../../docs/deployment-20261023-sensenova-agenthoi.json)。
+推理参数与完成状态分别记录。[初始部署记录](../../docs/deployment-20261023-sensenova-agenthoi.json)保存此前的模型加载情况。[10 月 23 日完整推理尝试](../../docs/agenthoi-full-20261023.json)中，两例原始输入均完成图像描述及全部四个推理阶段。case_a 完成 40 步采样，生成 81 帧、624 × 624、16 FPS 的视频。case_b 视频因达到获准使用时间而中断，尚未完成两例视频生成。结果和推理状态已备份至私有 OBS，两台实例均已确认停止。
+
+NPU 视频推理启动前，执行 `patch_video_storage.py --repo /home/ma-user/work/npu-migration/repos/AgentHOI`。该修改将计算块内的线性层参数保存为与原生 AMP 一致的 BF16，时间、归一化、调制及输出头的小型参数仍为 FP32。实际加载没有缺失推理模型权重；96 个未使用的键来自仅用于训练的 TRD 投影器。官方 `832*480` 设置指定最大面积，输出尺寸由参考图像的宽高比决定。
 
 `agenthoi_runtime_records.py` 记录生成进度和已完成的推理轮次，保留原始提示词、模型、图像分块和生成 token 上限。中断后可通过保存的对话状态恢复已完成轮次。使用 `patch_progress.py` 前，将 `AGENTHOI_RUN_RECORDS` 配置为持久化卷上的可写目录。
+
+后续重试视频生成时，先检查保存的 `agent_refined/refined_merged.json` 中两例均包含全部四个阶段的输出，再通过官方 `SKIP_AGENT=1 DATASET_PATH=...` 参数复用已完成的推理，保留原始视频生成配置。

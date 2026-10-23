@@ -1,0 +1,147 @@
+{
+  "checked_at": "2026-10-23T19:49:28.341553+08:00",
+  "source": "https://github.com/bone-11/agenthoi",
+  "region": "cn-southwest-2",
+  "hardware": "One Ascend 910B1, 64 GB, logical npu:0",
+  "status": "incomplete",
+  "full_pipeline_completion_verified": false,
+  "configuration": {
+    "cases": [
+      "case_a",
+      "case_b"
+    ],
+    "size": "832*480",
+    "frames": 81,
+    "steps": 40,
+    "cfg": 5.0,
+    "shift": 5.0,
+    "seed": 42,
+    "max_new_tokens": 1024,
+    "image_tiles_limit": 12,
+    "agent_processes": 1,
+    "video_processes": 1,
+    "skip_agent": false
+  },
+  "completed_reasoning_turns": [
+    {
+      "case": "case_a",
+      "turn": "image_description",
+      "generated_tokens": 211,
+      "status": "completed",
+      "completed_at": "2026-10-23T17:48:49.865091+08:00"
+    },
+    {
+      "case": "case_a",
+      "turn": "visual_perception",
+      "generated_tokens": 196,
+      "status": "completed",
+      "completed_at": "2026-10-23T17:54:04.987542+08:00"
+    },
+    {
+      "case": "case_a",
+      "turn": "interaction_analysis",
+      "generated_tokens": 331,
+      "status": "completed",
+      "completed_at": "2026-10-23T18:02:49.586070+08:00"
+    },
+    {
+      "case": "case_a",
+      "turn": "motion_planner",
+      "generated_tokens": 340,
+      "status": "completed",
+      "completed_at": "2026-10-23T18:12:11.771532+08:00"
+    },
+    {
+      "case": "case_a",
+      "turn": "clipping_refiner",
+      "generated_tokens": 352,
+      "status": "completed",
+      "completed_at": "2026-10-23T18:22:01.704139+08:00"
+    },
+    {
+      "case": "case_b",
+      "turn": "image_description",
+      "generated_tokens": 149,
+      "status": "completed",
+      "completed_at": "2026-10-23T18:26:08.687844+08:00"
+    },
+    {
+      "case": "case_b",
+      "turn": "visual_perception",
+      "generated_tokens": 191,
+      "status": "completed",
+      "completed_at": "2026-10-23T18:31:25.532640+08:00"
+    },
+    {
+      "case": "case_b",
+      "turn": "interaction_analysis",
+      "generated_tokens": 344,
+      "status": "completed",
+      "completed_at": "2026-10-23T18:40:47.556074+08:00"
+    },
+    {
+      "case": "case_b",
+      "turn": "motion_planner",
+      "generated_tokens": 369,
+      "status": "completed",
+      "completed_at": "2026-10-23T18:50:52.629997+08:00"
+    },
+    {
+      "case": "case_b",
+      "turn": "clipping_refiner",
+      "generated_tokens": 360,
+      "status": "completed",
+      "completed_at": "2026-10-23T19:01:07.525837+08:00"
+    }
+  ],
+  "all_four_agents_verified_for_each_case": true,
+  "videos": [
+    {
+      "case": "case_a",
+      "bytes": 2193131,
+      "media": {
+        "codec_type": "video",
+        "width": 624,
+        "height": 624,
+        "r_frame_rate": "16/1",
+        "duration": "5.062500",
+        "nb_read_frames": "81"
+      }
+    }
+  ],
+  "last_reasoning_progress": {
+    "stage": "reasoning",
+    "case": "case_b",
+    "status": "all_four_agents_completed",
+    "updated_at": "2026-10-23T19:01:07.527158+08:00"
+  },
+  "compute": {
+    "all_notebooks_stopped": true,
+    "verified_at": "2026-10-23T19:35:08.934600+08:00",
+    "started_at": "2026-10-23T17:35:13.774391+08:00",
+    "deadline": "2026-10-23T19:35:00+08:00",
+    "stop_requested_at": "2026-10-23T19:33:55.455357+08:00"
+  },
+  "backup": {
+    "objects_verified": 3,
+    "all_sizes_verified": true,
+    "persistent_disk_retained": true,
+    "obs_retained": true
+  },
+  "compatibility_scope": [
+    "Previously deployed full official weights and single-device CPU offload retained.",
+    "Persistent per-turn conversation snapshots and token progress records added.",
+    "Official prompts, original inputs, four agents, token budget, image tiling and video sampling preserved.",
+    "NPU block linear parameters stored in BF16, matching native BF16 AMP; small time, normalization, modulation and output-head parameters kept FP32."
+  ],
+  "video_checkpoint_load": {
+    "missing_keys": [],
+    "unexpected_key_count": 96,
+    "unexpected_key_prefixes": [
+      "projectors",
+      "t2m_projectors"
+    ],
+    "unexpected_scope": "TRD-loss projectors are unused by the official inference model."
+  },
+  "limitation": "Full official two-case completion was not verified before compute stopped at the authorized time limit. Completed reasoning states are retained for resuming video inference."
+}
