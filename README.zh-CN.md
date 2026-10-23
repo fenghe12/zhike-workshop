@@ -44,6 +44,8 @@ Qwen3.6 主模型、CosyVoice3 和 FlashHeadLite 使用 Ascend 910B。FFmpeg 合
 
 另有 [SenseNova U1.5 与 AgentHOI 恢复工具](recovery/sensenova-agenthoi/README.zh-CN.md)，保留官方推理案例及默认采样参数，包含昇腾单卡兼容修改和独立的 OBS 模型、运行环境备份位置。
 
+[AD-NeRF 恢复工具](recovery/adnerf/README.zh-CN.md)使用官方 Obama 预训练模型、原始 DeepSpeech 音频特征和 300 帧重建配置，在单张昇腾卡上执行。
+
 ## 权利说明
 
 本仓库暂未授予统一的开源许可证。第三方代码和模型遵循各自许可证，原始许可证应随恢复的来源代码保留。公开可读取不等同于授予任意再分发权限。

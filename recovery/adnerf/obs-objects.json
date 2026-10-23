@@ -1,0 +1,12 @@
+[
+  {
+    "key": "npu-migration/runs/20261023-adnerf/runtime/adnerf-code-models-and-env.tar.gz",
+    "destination": "adnerf-code-models-and-env.tar.gz",
+    "contents": "Official source, model assets, input data, prepared background, dependency overlays and launchers"
+  },
+  {
+    "key": "npu-migration/runs/20261023-adnerf/models/deepspeech-0.1.0.pb",
+    "destination": "recovery/adnerf-official-20261023/models/deepspeech-0.1.0.pb",
+    "bytes": 490979273
+  }
+]

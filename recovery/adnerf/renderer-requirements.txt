@@ -1,0 +1,5 @@
+configargparse==1.7.1
+natsort==8.4.0
+scikit-learn==1.6.1
+joblib==1.4.2
+threadpoolctl==3.6.0

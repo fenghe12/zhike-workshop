@@ -1,0 +1,138 @@
+{
+  "completed_at": "2026-10-23T15:41:59.054875+08:00",
+  "source": "https://github.com/YudongGuo/AD-NeRF",
+  "case": "Official pretrained Obama reconstruction",
+  "training_performed": false,
+  "hardware": "One Ascend 910B2, logical npu:0, 64 GB",
+  "region": "cn-southwest-2",
+  "configuration": {
+    "frames": 300,
+    "size": [
+      450,
+      450
+    ],
+    "fps": 25,
+    "N_samples": 64,
+    "N_importance": 128,
+    "render_factor": 0
+  },
+  "result": {
+    "frames": 300,
+    "duration_seconds": 12,
+    "size": [
+      450,
+      450
+    ],
+    "fps": 25,
+    "has_audio": true,
+    "status": "completed",
+    "file": "adnerf-obama-official-300frames.mp4"
+  },
+  "checkpoints": {
+    "head": {
+      "file": "300000_head.tar",
+      "loaded_global_step": 299999
+    },
+    "torso": {
+      "file": "600000_body.tar",
+      "loaded_global_step": 599999
+    }
+  },
+  "audio": {
+    "completed_at": "2026-10-23T14:29:02.465905+08:00",
+    "source": "Official AD-NeRF DeepSpeech feature extractor",
+    "speech_model": "DeepSpeech 0.1.0 frozen model used by the official extractor",
+    "shape": [
+      7999,
+      16,
+      29
+    ],
+    "dtype": "float64",
+    "finite": true,
+    "nonconstant_first_300_frames": true,
+    "tensorflow_version": "2.16.2",
+    "elapsed_seconds": 250.16,
+    "compatibility_change": "Removed NumPy deprecated scalar alias only; official audio windows and interpolation retained."
+  },
+  "background": {
+    "completed": true,
+    "native_size": [
+      450,
+      450
+    ],
+    "background_frames": 400,
+    "method": "Official face parser and unchanged step-4 background routine; provided pretrained valid poses used.",
+    "elapsed_seconds": 379.66
+  },
+  "stages": {
+    "background": {
+      "status": "completed",
+      "started_at": "2026-10-23T14:40:34.807170+08:00",
+      "returncode": 0,
+      "completed_at": "2026-10-23T14:47:37.022698+08:00"
+    },
+    "render": {
+      "status": "completed",
+      "started_at": "2026-10-23T14:47:37.023486+08:00",
+      "returncode": 0,
+      "completed_at": "2026-10-23T15:39:01.848372+08:00"
+    },
+    "mux": {
+      "status": "completed",
+      "started_at": "2026-10-23T15:39:01.849444+08:00",
+      "returncode": 0,
+      "completed_at": "2026-10-23T15:39:03.492461+08:00"
+    }
+  },
+  "changes": [
+    "Official DeepSpeech neural features replace the previous standalone MFCC features.",
+    "The official background algorithm replaces a single-frame background.",
+    "Both head and torso checkpoints are placed in the combined renderer directory and required before inference.",
+    "Device placement, legacy tensor constructor and deprecated NumPy aliases are adapted for the persistent Ascend runtime."
+  ],
+  "visual_review": "Frames 0, 50 and 100 were opened at native resolution and show changing mouth shapes. Final sampled frames and the 300-frame media metadata were checked. No perceptual-quality or lip-sync benchmark was computed.",
+  "backup": {
+    "runtime_archive_bytes": 654860852,
+    "speech_model_bytes": 490979273,
+    "native_frames_archived": 300,
+    "result_objects_verified": 6,
+    "persistent_disks_retained": true,
+    "obs_retained": true
+  },
+  "compute": {
+    "all_notebooks_stopped": true,
+    "verified_at": "2026-10-23T15:41:42.844977+08:00",
+    "authorized_deadline": "2026-10-23T15:50:00+08:00",
+    "original_started_at": "2026-10-23T14:33:17.434857+08:00"
+  },
+  "scope": "Full official 300-frame pretrained reconstruction; no new-person training, novel-speech benchmark or full training-set metric evaluation.",
+  "cloud_audio": {
+    "completed_at": "2026-10-23T15:33:24.540004+08:00",
+    "source": "Official AD-NeRF DeepSpeech feature extractor",
+    "speech_model": "DeepSpeech 0.1.0 frozen model used by the official extractor",
+    "shape": [
+      7999,
+      16,
+      29
+    ],
+    "dtype": "float64",
+    "finite": true,
+    "nonconstant_first_300_frames": true,
+    "tensorflow_version": "2.16.2",
+    "elapsed_seconds": 1749.01,
+    "compatibility_change": "Removed NumPy deprecated scalar alias only; official audio windows and interpolation retained."
+  },
+  "feature_agreement": {
+    "shape": [
+      7999,
+      16,
+      29
+    ],
+    "finite": true,
+    "nonconstant_first_300_frames": true,
+    "maximum_absolute_difference_from_local": 9.870529174804688e-05,
+    "mean_absolute_difference_from_local": 1.4152874292816559e-06,
+    "local_and_cloud_equal_within_1e_4": true,
+    "note": "Independent TensorFlow CPU inference on x86/ARM can differ numerically; the rendered input was the full official feature array prepared locally."
+  }
+}
