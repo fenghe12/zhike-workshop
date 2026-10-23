@@ -20,3 +20,5 @@ python scripts/restore-obs.py --group extra-runtime --destination /home/ma-user/
 The runtime archive contains source, compatibility changes, dependency overlays and launchers. Restore it into the same persistent root. The base interpreter, CANN and original Wan backbone are covered by the earlier recovery archives. Configure all temporary and cache directories on the persistent volume before running either model.
 
 Sampling configuration is separate from validation status. Loading the AgentHOI VLM does not establish that its complete reasoning and video pipeline has finished; consult the [dated deployment record](../../docs/deployment-20261023-sensenova-agenthoi.json).
+
+The `agenthoi_runtime_records.py` helper records token progress and completed reasoning turns without changing the prompts, model, image tiling or generation budget. Its saved conversation state can restore completed turns after an interrupted run. Set `AGENTHOI_RUN_RECORDS` to a writable directory on the persistent volume before applying `patch_progress.py`.

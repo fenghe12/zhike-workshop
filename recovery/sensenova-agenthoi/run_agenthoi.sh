@@ -7,6 +7,7 @@ export WAN_BASE_PATH="$NPU_ROOT/checkpoints/wan2.1-i2v-14b"
 export TRANSFORMER_PATH="$NPU_ROOT/checkpoints/agenthoi/t2v/checkpoint-9500"
 export INTERNVL_PATH="$NPU_ROOT/checkpoints/internvl3_5-38b"
 export AGENT_WORLD_SIZE=1 NPROC_PER_NODE=1
+export AGENTHOI_RUN_RECORDS="${AGENTHOI_RUN_RECORDS:-$NPU_ROOT/recovery/agenthoi-runs/default}"
 export OUTPUT_DIR="${OUTPUT_DIR:-$NPU_ROOT/workspace/agenthoi-20261023}"
 cd "$NPU_ROOT/repos/AgentHOI"
 exec bash run_inference.sh "$@"

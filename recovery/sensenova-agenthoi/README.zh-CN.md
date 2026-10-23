@@ -20,3 +20,5 @@ python scripts/restore-obs.py --group extra-runtime --destination /home/ma-user/
 运行环境档案包含源码、兼容修改、依赖目录和启动器，应解压至相同的持久化根目录。基础解释器、CANN 和原始 Wan 模型保存在此前的恢复档案中。启动前将临时目录和全部缓存设置在持久化数据卷上。
 
 推理参数与完成状态分别记录。AgentHOI 的 VLM 加载成功不代表完整推理及视频生成已经完成，实际完成情况见[部署记录](../../docs/deployment-20261023-sensenova-agenthoi.json)。
+
+`agenthoi_runtime_records.py` 记录生成进度和已完成的推理轮次，保留原始提示词、模型、图像分块和生成 token 上限。中断后可通过保存的对话状态恢复已完成轮次。使用 `patch_progress.py` 前，将 `AGENTHOI_RUN_RECORDS` 配置为持久化卷上的可写目录。
