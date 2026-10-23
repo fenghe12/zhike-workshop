@@ -44,6 +44,8 @@ Model weights, Python environments, generated videos, login data, and personal r
 
 Additional [SenseNova U1.5 and AgentHOI recovery tools](recovery/sensenova-agenthoi/README.md) preserve the official inference cases and sampling defaults, with single-device Ascend compatibility changes and separate OBS model/runtime backups.
 
+[Offline report video previews](recovery/reporting/README.md) keep videos and preview images embedded in one HTML file and preserve the original video data.
+
 The [AD-NeRF recovery tools](recovery/adnerf/README.md) use the official pretrained Obama models, native DeepSpeech features and the original 300-frame reconstruction configuration on one Ascend device.
 
 ## Rights and licenses
