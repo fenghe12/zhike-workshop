@@ -1,0 +1,512 @@
+{
+  "date": "2026-10-24",
+  "scope": "Bounded real training compatibility, not converged reproduction or a generalization/performance benchmark",
+  "hardware": {
+    "device_name": "Ascend910B2",
+    "device_count": 1,
+    "torch": "2.7.1+cpu",
+    "torch_npu": "2.7.1",
+    "cgroup_limit_bytes": 206158430208,
+    "packages": {
+      "diffusers": "0.35.2",
+      "transformers": "4.53.1",
+      "accelerate": "1.12.0",
+      "safetensors": "0.4.5"
+    }
+  },
+  "data": {
+    "source": "https://github.com/Wan-Video/Wan2.2/blob/main/examples/wan_animate/animate/video.mp4",
+    "training_clips": 2,
+    "held_out_clips": 1,
+    "frames_per_clip": 16,
+    "resolution": [
+      256,
+      256
+    ],
+    "clip_offsets_seconds": [
+      0,
+      1.15,
+      2.3
+    ],
+    "condition_encoders_frozen": true,
+    "easyanimate_text_encoder": "Existing Latte T5-XXL with matching architecture; exact independently downloaded original V3 text-encoder file set not claimed",
+    "wan_initial_motion_history": "Reference-frame repetition; original 73-frame history and FramePack computation retained",
+    "model_layers_removed": false
+  },
+  "ascendbridge": {
+    "source": "https://gitcode.com/SLAI/SLAI-AscendBridge2",
+    "source_readme_version": "2.5",
+    "workflow": "ascend-torch-cpt with native project adapters",
+    "framework_cli_initialization_and_registration_executed": true,
+    "source_availability_probe_executed": true,
+    "autonomous_multiagent_migration_executed": false,
+    "generic_template_unchanged_compatibility": false
+  },
+  "runs": [
+    {
+      "run": "EasyAnimateV3-cpt",
+      "model": "alibaba-pai/EasyAnimateV3-XL-2-InP-512x512",
+      "parameter_count": 1538364704,
+      "steps": 3,
+      "learning_rate": 1e-05,
+      "optimizer": "AdamW, all original backbone parameters",
+      "all_parameters_receive_gradients": true,
+      "held_out_before": 0.024571139365434647,
+      "held_out_after": 0.015461215749382973,
+      "mean_step_seconds": 2.236320191218207,
+      "mean_forward_seconds": 0.6132415956817567,
+      "mean_backward_seconds": 1.0121249879399936,
+      "mean_optimizer_seconds": 0.5194684256178638,
+      "peak_allocated_gib": 24.547661781311035,
+      "loading_missing_keys": 0,
+      "loading_unexpected_keys": 0,
+      "steps_detail": [
+        {
+          "step": 1,
+          "loss": 0.02624971605837345,
+          "loss_components": {
+            "vb": 0.00022072835417930037,
+            "mse": 0.026028987020254135,
+            "loss": 0.02624971605837345
+          },
+          "forward_seconds": 0.370963835157454,
+          "backward_seconds": 1.7581443660892546,
+          "optimizer_seconds": 0.9727203450165689,
+          "total_seconds": 3.236368694808334,
+          "gradient_norm_before_clip": 1.012457013130188,
+          "parameters_with_gradients": 1538364704,
+          "parameter_tensors_with_gradients": 1361,
+          "sampled_parameter_max_changes": {
+            "transformer_blocks.0.attn1.to_q.weight": 9.994953870773315e-06,
+            "transformer_blocks.0.attn2.to_q.weight": 9.991694241762161e-06,
+            "transformer_blocks.0.attn_temporal.temporal_transformer.proj_out.weight": 1.0001473128795624e-05
+          },
+          "peak_allocated_bytes": 26357851136,
+          "peak_reserved_bytes": 26786922496
+        },
+        {
+          "step": 2,
+          "loss": 0.03893829882144928,
+          "loss_components": {
+            "vb": 0.000321833707857877,
+            "mse": 0.03861646354198456,
+            "loss": 0.03893829882144928
+          },
+          "forward_seconds": 0.349140624050051,
+          "backward_seconds": 0.6422639829106629,
+          "optimizer_seconds": 0.2933772811666131,
+          "total_seconds": 1.3556059296242893,
+          "gradient_norm_before_clip": 0.8573755621910095,
+          "parameters_with_gradients": 1538364704,
+          "parameter_tensors_with_gradients": 1361,
+          "sampled_parameter_max_changes": {
+            "transformer_blocks.0.attn1.to_q.weight": 9.945593774318695e-06,
+            "transformer_blocks.0.attn2.to_q.weight": 9.74070280790329e-06,
+            "transformer_blocks.0.attn_temporal.temporal_transformer.proj_out.weight": 1.0012183338403702e-05
+          },
+          "peak_allocated_bytes": 26357851136,
+          "peak_reserved_bytes": 27126661120
+        },
+        {
+          "step": 3,
+          "loss": 0.020666616037487984,
+          "loss_components": {
+            "vb": 0.00017766414384823292,
+            "mse": 0.020488951355218887,
+            "loss": 0.020666616037487984
+          },
+          "forward_seconds": 1.1196203278377652,
+          "backward_seconds": 0.6359666148200631,
+          "optimizer_seconds": 0.2923076506704092,
+          "total_seconds": 2.1169859492219985,
+          "gradient_norm_before_clip": 0.34718310832977295,
+          "parameters_with_gradients": 1538364704,
+          "parameter_tensors_with_gradients": 1361,
+          "sampled_parameter_max_changes": {
+            "transformer_blocks.0.attn1.to_q.weight": 9.822659194469452e-06,
+            "transformer_blocks.0.attn2.to_q.weight": 8.806819096207619e-06,
+            "transformer_blocks.0.attn_temporal.temporal_transformer.proj_out.weight": 1.0027550160884857e-05
+          },
+          "peak_allocated_bytes": 26357851136,
+          "peak_reserved_bytes": 27126661120
+        }
+      ],
+      "checkpoint": {
+        "bytes": 19519010342,
+        "private_obs": true,
+        "size_verified": true
+      },
+      "gradient_storage": "NPU resident gradients",
+      "checkpoint_inspection": {
+        "step": 3,
+        "model_tensors": 1417,
+        "optimizer_states": 1361,
+        "metadata_downloaded_bytes": 1129300,
+        "checkpoint_structure_readable": true,
+        "sample_tensor": "transformer_blocks.0.attn1.to_q.weight",
+        "recovered_tensor_elements": 4096,
+        "recovered_tensor_finite": true,
+        "recovered_parameter_max_change": 2.9571354389190674e-05,
+        "model_state_elements": 1802605856
+      }
+    },
+    {
+      "run": "Wan2.2-S2V-cpt",
+      "model": "Wan-AI/Wan2.2-S2V-14B",
+      "parameter_count": 16295755609,
+      "steps": 3,
+      "learning_rate": 0.0001,
+      "optimizer": "Adafactor without first moment, all original S2V parameters",
+      "all_parameters_receive_gradients": true,
+      "held_out_before": 0.04039234295487404,
+      "held_out_after": 0.7837293148040771,
+      "mean_step_seconds": 13.803628870596489,
+      "mean_forward_seconds": 0.6656645024195313,
+      "mean_backward_seconds": 8.341501297584424,
+      "mean_optimizer_seconds": 4.778188428841531,
+      "peak_allocated_gib": 34.402281284332275,
+      "loading_missing_keys": 0,
+      "loading_unexpected_keys": 0,
+      "steps_detail": [
+        {
+          "step": 1,
+          "loss": 0.053127169609069824,
+          "loss_components": {
+            "flow_matching_velocity_mse": 0.053127169609069824
+          },
+          "forward_seconds": 0.4789064172655344,
+          "backward_seconds": 10.63097258284688,
+          "optimizer_seconds": 4.873257417231798,
+          "total_seconds": 16.01363749895245,
+          "gradient_norm_before_clip": 0.38831010460853577,
+          "parameters_with_gradients": 16295755609,
+          "parameter_tensors_with_gradients": 1260,
+          "sampled_parameter_max_changes": {
+            "patch_embedding.weight": 0.000732421875,
+            "blocks.0.self_attn.q.weight": 0.00048828125,
+            "audio_injector.injector.0.q.weight": 0.0001220703125,
+            "frame_packer.proj.weight": 0.00048828125,
+            "head.head.weight": 0.00022315140813589096
+          },
+          "peak_allocated_bytes": 36775597056,
+          "peak_reserved_bytes": 37100716032
+        },
+        {
+          "step": 2,
+          "loss": 0.7385128736495972,
+          "loss_components": {
+            "flow_matching_velocity_mse": 0.7385128736495972
+          },
+          "forward_seconds": 0.39616339607164264,
+          "backward_seconds": 7.197267674840987,
+          "optimizer_seconds": 4.753751017153263,
+          "total_seconds": 12.359725252725184,
+          "gradient_norm_before_clip": 7.071980953216553,
+          "parameters_with_gradients": 16295755609,
+          "parameter_tensors_with_gradients": 1260,
+          "sampled_parameter_max_changes": {
+            "patch_embedding.weight": 0.0003662109375,
+            "blocks.0.self_attn.q.weight": 0.000247955322265625,
+            "audio_injector.injector.0.q.weight": 0.0001220703125,
+            "frame_packer.proj.weight": 0.000244140625,
+            "head.head.weight": 0.00011734268628060818
+          },
+          "peak_allocated_bytes": 36939168256,
+          "peak_reserved_bytes": 37209767936
+        },
+        {
+          "step": 3,
+          "loss": 0.33038586378097534,
+          "loss_components": {
+            "flow_matching_velocity_mse": 0.33038586378097534
+          },
+          "forward_seconds": 1.121923693921417,
+          "backward_seconds": 7.196263635065407,
+          "optimizer_seconds": 4.707556852139533,
+          "total_seconds": 13.037523860111833,
+          "gradient_norm_before_clip": 2.0049965381622314,
+          "parameters_with_gradients": 16295755609,
+          "parameter_tensors_with_gradients": 1260,
+          "sampled_parameter_max_changes": {
+            "patch_embedding.weight": 0.000244140625,
+            "blocks.0.self_attn.q.weight": 0.0003662109375,
+            "audio_injector.injector.0.q.weight": 0.00018310546875,
+            "frame_packer.proj.weight": 0.000244140625,
+            "head.head.weight": 0.00015603145584464073
+          },
+          "peak_allocated_bytes": 36939168256,
+          "peak_reserved_bytes": 37209767936
+        }
+      ],
+      "checkpoint": {
+        "bytes": 33125180398,
+        "private_obs": true,
+        "size_verified": true
+      },
+      "gradient_storage": "CPU tensor storage between backward and update; forward, backward, gradient norm and optimizer arithmetic stay on NPU",
+      "checkpoint_inspection": {
+        "step": 3,
+        "model_tensors": 1260,
+        "optimizer_states": 1260,
+        "model_parameter_count": 16295755609,
+        "model_state_elements": 16295755609,
+        "metadata_downloaded_bytes": 851033,
+        "checkpoint_structure_readable": true,
+        "sample_tensor": "blocks.0.self_attn.q.weight",
+        "recovered_tensor_elements": 4096,
+        "recovered_tensor_finite": true,
+        "recovered_parameter_max_change": 0.000732421875
+      },
+      "rotary_comparison": {
+        "forward_max_abs": 2.384185791015625e-07,
+        "input_gradient_max_abs": 4.76837158203125e-07
+      }
+    },
+    {
+      "run": "Wan2.2-S2V-cpt-lr5e-6",
+      "model": "Wan-AI/Wan2.2-S2V-14B",
+      "parameter_count": 16295755609,
+      "steps": 3,
+      "learning_rate": 5e-06,
+      "optimizer": "Adafactor without first moment, all original S2V parameters",
+      "all_parameters_receive_gradients": true,
+      "held_out_before": 0.04039234295487404,
+      "held_out_after": 0.03705613315105438,
+      "mean_step_seconds": 13.609449410034964,
+      "mean_forward_seconds": 0.6667984630912542,
+      "mean_backward_seconds": 8.379522420310726,
+      "mean_optimizer_seconds": 4.546530643478036,
+      "peak_allocated_gib": 34.402281284332275,
+      "loading_missing_keys": 0,
+      "loading_unexpected_keys": 0,
+      "steps_detail": [
+        {
+          "step": 1,
+          "loss": 0.053127169609069824,
+          "loss_components": {
+            "flow_matching_velocity_mse": 0.053127169609069824
+          },
+          "forward_seconds": 0.4850045032799244,
+          "backward_seconds": 10.759651647880673,
+          "optimizer_seconds": 4.644254299346358,
+          "total_seconds": 15.914606356993318,
+          "gradient_norm_before_clip": 0.3881785571575165,
+          "parameters_with_gradients": 16295755609,
+          "parameter_tensors_with_gradients": 1260,
+          "sampled_parameter_max_changes": {
+            "patch_embedding.weight": 6.103515625e-05,
+            "blocks.0.self_attn.q.weight": 3.0517578125e-05,
+            "audio_injector.injector.0.q.weight": 7.62939453125e-06,
+            "frame_packer.proj.weight": 7.62939453125e-06,
+            "head.head.weight": 1.115771010518074e-05
+          },
+          "peak_allocated_bytes": 36775597056,
+          "peak_reserved_bytes": 37100716032
+        },
+        {
+          "step": 2,
+          "loss": 0.04342495650053024,
+          "loss_components": {
+            "flow_matching_velocity_mse": 0.04342495650053024
+          },
+          "forward_seconds": 0.3935237620025873,
+          "backward_seconds": 7.170166993979365,
+          "optimizer_seconds": 4.503416053019464,
+          "total_seconds": 12.07941295299679,
+          "gradient_norm_before_clip": 0.3034587502479553,
+          "parameters_with_gradients": 16295755609,
+          "parameter_tensors_with_gradients": 1260,
+          "sampled_parameter_max_changes": {
+            "patch_embedding.weight": 3.0517578125e-05,
+            "blocks.0.self_attn.q.weight": 3.0517578125e-05,
+            "audio_injector.injector.0.q.weight": 1.52587890625e-05,
+            "frame_packer.proj.weight": 2.288818359375e-05,
+            "head.head.weight": 1.3558659702539444e-05
+          },
+          "peak_allocated_bytes": 36939168256,
+          "peak_reserved_bytes": 37209767936
+        },
+        {
+          "step": 3,
+          "loss": 0.04507815092802048,
+          "loss_components": {
+            "flow_matching_velocity_mse": 0.04507815092802048
+          },
+          "forward_seconds": 1.121867123991251,
+          "backward_seconds": 7.208748619072139,
+          "optimizer_seconds": 4.491921578068286,
+          "total_seconds": 12.834328920114785,
+          "gradient_norm_before_clip": 0.34251168370246887,
+          "parameters_with_gradients": 16295755609,
+          "parameter_tensors_with_gradients": 1260,
+          "sampled_parameter_max_changes": {
+            "patch_embedding.weight": 3.0517578125e-05,
+            "blocks.0.self_attn.q.weight": 3.0517578125e-05,
+            "audio_injector.injector.0.q.weight": 1.52587890625e-05,
+            "frame_packer.proj.weight": 1.52587890625e-05,
+            "head.head.weight": 1.2122094631195068e-05
+          },
+          "peak_allocated_bytes": 36939168256,
+          "peak_reserved_bytes": 37209767936
+        }
+      ],
+      "checkpoint": {
+        "bytes": 33125180462,
+        "private_obs": true,
+        "size_verified": true
+      },
+      "gradient_storage": "CPU tensor storage between backward and update; forward, backward, gradient norm and optimizer arithmetic stay on NPU",
+      "checkpoint_inspection": {
+        "step": 3,
+        "model_tensors": 1260,
+        "optimizer_states": 1260,
+        "model_parameter_count": 16295755609,
+        "model_state_elements": 16295755609,
+        "metadata_downloaded_bytes": 851072,
+        "checkpoint_structure_readable": true,
+        "sample_tensor": "blocks.0.self_attn.q.weight",
+        "recovered_tensor_elements": 4096,
+        "recovered_tensor_finite": true,
+        "recovered_parameter_max_change": 4.57763671875e-05
+      },
+      "rotary_comparison": {
+        "forward_max_abs": 2.384185791015625e-07,
+        "input_gradient_max_abs": 4.76837158203125e-07
+      }
+    }
+  ],
+  "issues": [
+    {
+      "kind": "framework_api",
+      "status": "fixed",
+      "description": "EasyAnimate V3 legacy gradient checkpoint setter is incompatible with the newer diffusers enable signature; original native flag used."
+    },
+    {
+      "kind": "static_training_entry",
+      "status": "adapted",
+      "description": "Original V3 training entry supplies encoder_attention_mask, while native forward expects text_embedding_mask; native learned-variance sigma loss retained."
+    },
+    {
+      "kind": "observed_operator_dtype",
+      "status": "fixed",
+      "description": "CANN replication_pad1d rejects BF16 in the S2V causal audio branch; differentiable NPU expansion and concatenation preserve replicate semantics."
+    },
+    {
+      "kind": "adapter_contract",
+      "status": "fixed",
+      "description": "The first custom SDPA mask used a broadcast query dimension unsupported by this CANN version; unnecessary all-valid masks are omitted and partial masks use explicit query dimensions."
+    },
+    {
+      "kind": "memory_strategy",
+      "status": "implemented",
+      "description": "Full S2V model uses CPU gradient storage and sequential NPU Adafactor updates after backward; this is not the original large-scale training recipe."
+    }
+  ],
+  "isolated_operator_checks": [
+    {
+      "operator": "complex-rotation",
+      "device": "Ascend910B2",
+      "status": "passed",
+      "output_device": "npu:0",
+      "fallback_warnings": []
+    },
+    {
+      "operator": "replicate-bf16",
+      "device": "Ascend910B2",
+      "status": "failed",
+      "error_type": "RuntimeError",
+      "error": "replication_pad1d:build/CMakeFiles/torch_npu.dir/compiler_depend.ts:2768 NPU function error: call aclnnReplicationPad1d failed, error code is 161002"
+    },
+    {
+      "operator": "replicate-equivalent",
+      "device": "Ascend910B2",
+      "forward_matches_cpu": true,
+      "input_gradient_matches_cpu": true,
+      "status": "passed",
+      "output_device": "npu:0",
+      "fallback_warnings": []
+    },
+    {
+      "operator": "sdpa-backward",
+      "device": "Ascend910B2",
+      "all_qkv_gradients_finite": true,
+      "status": "passed",
+      "output_device": "npu:0",
+      "fallback_warnings": []
+    }
+  ],
+  "limitations": [
+    "Two training clips and one held-out clip from the same source video do not establish generalization.",
+    "Only three optimizer steps per trial were executed.",
+    "Video shape is reduced for compatibility checks; model layers and parameter counts are preserved.",
+    "S2V timings include CPU gradient transfers and sequential optimizer updates.",
+    "The higher-learning-rate S2V trial worsened held-out loss and is retained as a failed hyperparameter setting.",
+    "Custom research modules beyond the released native model paths were not assessed.",
+    "Device memory values are PyTorch peak allocated memory; additional runtime-resident memory and peak CPU gradient-cache memory are not included."
+  ],
+  "compute": {
+    "all_notebooks_stopped": true,
+    "verified_stopped_at": "2026-10-24T21:54:35.236272+08:00",
+    "authorized_seconds": 10800,
+    "started_at": "2026-10-24T20:56:13.776914+08:00",
+    "persistent_disks_and_obs_retained": true,
+    "session_upper_bound_seconds": 3501.459358
+  },
+  "timing": {
+    "stages": [
+      {
+        "phase": "路径核对",
+        "estimated_minutes": 3,
+        "actual_seconds": null
+      },
+      {
+        "phase": "环境检查",
+        "estimated_minutes": 5,
+        "actual_seconds": null
+      },
+      {
+        "phase": "模型获取",
+        "estimated_minutes": 25,
+        "actual_seconds": 66,
+        "note": "仅模型下载，源码获取未单独计时"
+      },
+      {
+        "phase": "数据与条件编码",
+        "estimated_minutes": 15,
+        "actual_seconds": 210,
+        "note": "两个预处理程序日志整数合计"
+      },
+      {
+        "phase": "训练方式选择",
+        "estimated_minutes": 5,
+        "actual_seconds": null
+      },
+      {
+        "phase": "训练参数选择",
+        "estimated_minutes": 3,
+        "actual_seconds": null
+      },
+      {
+        "phase": "适配与短程检查",
+        "estimated_minutes": 35,
+        "actual_seconds": null
+      },
+      {
+        "phase": "训练及检查点",
+        "estimated_minutes": 50,
+        "actual_seconds": 871.3436495838687,
+        "note": "实测步耗时及上传时间合计；不含模型加载"
+      },
+      {
+        "phase": "验证与报告",
+        "estimated_minutes": 15,
+        "actual_seconds": null
+      }
+    ],
+    "estimated_total_minutes": 156,
+    "session_upper_bound_seconds": 3501.459358,
+    "training_steps_total_seconds": 88.94819541554898,
+    "checkpoint_upload_total_seconds": 782.3954541683197,
+    "note": "部分准备与检查未分别计时，且存在并行工作。会话总时长使用启动和停止确认时间，不能将各阶段数值简单相加。预估为兼容性排查预留了较多时间，实际仅执行短程训练。"
+  }
+}

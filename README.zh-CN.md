@@ -48,6 +48,8 @@ Qwen3.6 主模型、CosyVoice3 和 FlashHeadLite 使用 Ascend 910B。FFmpeg 合
 
 [AD-NeRF 恢复工具](recovery/adnerf/README.zh-CN.md)使用官方 Obama 预训练模型、原始 DeepSpeech 音频特征和 300 帧重建配置，在单张昇腾卡上执行。
 
+[视频训练适配文件](recovery/video-training/README.zh-CN.md)记录了昇腾单卡上的 EasyAnimate V3 与 Wan2.2 S2V 短程训练，包含反向传播、实际参数更新、原有条件分支及私有检查点恢复。
+
 ## 权利说明
 
 本仓库暂未授予统一的开源许可证。第三方代码和模型遵循各自许可证，原始许可证应随恢复的来源代码保留。公开可读取不等同于授予任意再分发权限。

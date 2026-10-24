@@ -1,0 +1,6 @@
+*.private.json
+*.pt
+training-ws/
+logs/
+outputs/
+__pycache__/
