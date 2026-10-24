@@ -1,0 +1,567 @@
+{
+  "date": "2026-10-24",
+  "model": "AgentHOI, official case_a and saved four-agent reasoning",
+  "configuration": {
+    "case": "case_a",
+    "frames": 81,
+    "steps": 40,
+    "cfg": 5,
+    "shift": 5,
+    "seed": 42,
+    "expected_resolution": [
+      624,
+      624
+    ],
+    "native_size_argument": "832*480"
+  },
+  "hardware": "One Ascend 910B1 with 64 GB device memory",
+  "software": {
+    "torch": "2.7.1+cpu",
+    "torch_npu": "2.7.1"
+  },
+  "status": "completed",
+  "fused_attention": {
+    "observed": true,
+    "device_kernel": "aclnnFlashAttentionScore_FlashAttentionScore_FlashAttentionScore",
+    "kernel_calls_in_sampled_step": 240,
+    "core_kernel_total_ms": 12228.006882,
+    "including_internal_transpose_total_ms": 12277.779695999998
+  },
+  "mean_uninstrumented_step_seconds": 24.519574350716237,
+  "uninstrumented_step_count": 36,
+  "layer_event_sample_step": 3,
+  "operator_trace_step": 4,
+  "detail_event_sample_step": 5,
+  "layer_times_include_two_cfg_passes": true,
+  "layer_mean_ms": 606.8147796630859,
+  "layer_min_ms": 601.16943359375,
+  "layer_max_ms": 611.2765808105469,
+  "inclusive_category_totals_ms": {
+    "self_attn": 17660.15562438965,
+    "cross_attn": 2731.6894035339355,
+    "ffn": 2779.0296669006348,
+    "rotary_position_encoding": 2644.8635234832764,
+    "sdpa": 12277.851434707642
+  },
+  "layers": [
+    {
+      "layer": 0,
+      "block_ms": 607.1864013671875,
+      "self_attention_ms": 438.33587646484375,
+      "cross_attention_ms": 68.32684326171875,
+      "ffn_ms": 69.06184005737305,
+      "other_ms": 31.461841583251953,
+      "rotary_ms_included_in_self_attention": 67.66768074035645,
+      "sdpa_ms_included_in_attention": 300.50324273109436
+    },
+    {
+      "layer": 1,
+      "block_ms": 608.1203002929688,
+      "self_attention_ms": 443.6704406738281,
+      "cross_attention_ms": 68.3504409790039,
+      "ffn_ms": 68.67623901367188,
+      "other_ms": 27.423179626464844,
+      "rotary_ms_included_in_self_attention": 75.64011859893799,
+      "sdpa_ms_included_in_attention": 304.9133713245392
+    },
+    {
+      "layer": 2,
+      "block_ms": 606.9411010742188,
+      "self_attention_ms": 443.95811462402344,
+      "cross_attention_ms": 68.28620147705078,
+      "ffn_ms": 67.26397705078125,
+      "other_ms": 27.43280792236328,
+      "rotary_ms_included_in_self_attention": 68.89154052734375,
+      "sdpa_ms_included_in_attention": 306.61315846443176
+    },
+    {
+      "layer": 3,
+      "block_ms": 611.2765808105469,
+      "self_attention_ms": 444.41026306152344,
+      "cross_attention_ms": 68.32389831542969,
+      "ffn_ms": 71.09754180908203,
+      "other_ms": 27.44487762451172,
+      "rotary_ms_included_in_self_attention": 63.78766059875488,
+      "sdpa_ms_included_in_attention": 306.48236656188965
+    },
+    {
+      "layer": 4,
+      "block_ms": 605.559326171875,
+      "self_attention_ms": 441.6237487792969,
+      "cross_attention_ms": 68.26596069335938,
+      "ffn_ms": 68.22603988647461,
+      "other_ms": 27.44357681274414,
+      "rotary_ms_included_in_self_attention": 71.01573944091797,
+      "sdpa_ms_included_in_attention": 304.59490299224854
+    },
+    {
+      "layer": 5,
+      "block_ms": 605.641357421875,
+      "self_attention_ms": 441.83531188964844,
+      "cross_attention_ms": 68.27999877929688,
+      "ffn_ms": 68.0835189819336,
+      "other_ms": 27.442527770996094,
+      "rotary_ms_included_in_self_attention": 64.6507215499878,
+      "sdpa_ms_included_in_attention": 307.36241149902344
+    },
+    {
+      "layer": 6,
+      "block_ms": 605.6854858398438,
+      "self_attention_ms": 441.4088592529297,
+      "cross_attention_ms": 68.25236129760742,
+      "ffn_ms": 68.58641815185547,
+      "other_ms": 27.437847137451172,
+      "rotary_ms_included_in_self_attention": 63.33138179779053,
+      "sdpa_ms_included_in_attention": 307.4224576950073
+    },
+    {
+      "layer": 7,
+      "block_ms": 606.1560668945312,
+      "self_attention_ms": 441.76177978515625,
+      "cross_attention_ms": 68.27560043334961,
+      "ffn_ms": 68.65687942504883,
+      "other_ms": 27.461807250976562,
+      "rotary_ms_included_in_self_attention": 64.43470001220703,
+      "sdpa_ms_included_in_attention": 308.63533878326416
+    },
+    {
+      "layer": 8,
+      "block_ms": 606.5276489257812,
+      "self_attention_ms": 439.9507598876953,
+      "cross_attention_ms": 68.33689880371094,
+      "ffn_ms": 70.81351852416992,
+      "other_ms": 27.426471710205078,
+      "rotary_ms_included_in_self_attention": 63.61514091491699,
+      "sdpa_ms_included_in_attention": 307.97413754463196
+    },
+    {
+      "layer": 9,
+      "block_ms": 606.9464111328125,
+      "self_attention_ms": 441.2268524169922,
+      "cross_attention_ms": 68.28015899658203,
+      "ffn_ms": 70.00135803222656,
+      "other_ms": 27.43804168701172,
+      "rotary_ms_included_in_self_attention": 64.39723873138428,
+      "sdpa_ms_included_in_attention": 307.92833638191223
+    },
+    {
+      "layer": 10,
+      "block_ms": 608.9155883789062,
+      "self_attention_ms": 442.2059783935547,
+      "cross_attention_ms": 68.30102157592773,
+      "ffn_ms": 70.98049926757812,
+      "other_ms": 27.428089141845703,
+      "rotary_ms_included_in_self_attention": 68.64082050323486,
+      "sdpa_ms_included_in_attention": 307.500403881073
+    },
+    {
+      "layer": 11,
+      "block_ms": 606.0949401855469,
+      "self_attention_ms": 441.73313903808594,
+      "cross_attention_ms": 68.3196792602539,
+      "ffn_ms": 68.60810089111328,
+      "other_ms": 27.43402099609375,
+      "rotary_ms_included_in_self_attention": 63.635820388793945,
+      "sdpa_ms_included_in_attention": 307.31043314933777
+    },
+    {
+      "layer": 12,
+      "block_ms": 604.7340698242188,
+      "self_attention_ms": 441.8792419433594,
+      "cross_attention_ms": 68.2630615234375,
+      "ffn_ms": 67.1445198059082,
+      "other_ms": 27.447246551513672,
+      "rotary_ms_included_in_self_attention": 63.52663993835449,
+      "sdpa_ms_included_in_attention": 308.18945717811584
+    },
+    {
+      "layer": 13,
+      "block_ms": 605.7593688964844,
+      "self_attention_ms": 441.23976135253906,
+      "cross_attention_ms": 68.37635803222656,
+      "ffn_ms": 68.71052169799805,
+      "other_ms": 27.432727813720703,
+      "rotary_ms_included_in_self_attention": 63.98119926452637,
+      "sdpa_ms_included_in_attention": 308.1965010166168
+    },
+    {
+      "layer": 14,
+      "block_ms": 606.7056884765625,
+      "self_attention_ms": 442.2949523925781,
+      "cross_attention_ms": 68.21941757202148,
+      "ffn_ms": 68.74034118652344,
+      "other_ms": 27.450977325439453,
+      "rotary_ms_included_in_self_attention": 64.0246000289917,
+      "sdpa_ms_included_in_attention": 306.584091424942
+    },
+    {
+      "layer": 15,
+      "block_ms": 609.7139587402344,
+      "self_attention_ms": 444.96775817871094,
+      "cross_attention_ms": 68.31756210327148,
+      "ffn_ms": 68.98819732666016,
+      "other_ms": 27.440441131591797,
+      "rotary_ms_included_in_self_attention": 64.71025943756104,
+      "sdpa_ms_included_in_attention": 308.59126901626587
+    },
+    {
+      "layer": 16,
+      "block_ms": 607.3132629394531,
+      "self_attention_ms": 441.76104736328125,
+      "cross_attention_ms": 68.28031921386719,
+      "ffn_ms": 69.86655807495117,
+      "other_ms": 27.405338287353516,
+      "rotary_ms_included_in_self_attention": 63.378499031066895,
+      "sdpa_ms_included_in_attention": 307.2367115020752
+    },
+    {
+      "layer": 17,
+      "block_ms": 606.9902648925781,
+      "self_attention_ms": 441.8690643310547,
+      "cross_attention_ms": 68.24217987060547,
+      "ffn_ms": 69.42285919189453,
+      "other_ms": 27.456161499023438,
+      "rotary_ms_included_in_self_attention": 63.28032112121582,
+      "sdpa_ms_included_in_attention": 308.0856475830078
+    },
+    {
+      "layer": 18,
+      "block_ms": 607.5713806152344,
+      "self_attention_ms": 439.96302795410156,
+      "cross_attention_ms": 68.30147933959961,
+      "ffn_ms": 71.87601852416992,
+      "other_ms": 27.43085479736328,
+      "rotary_ms_included_in_self_attention": 63.42552089691162,
+      "sdpa_ms_included_in_attention": 308.6907608509064
+    },
+    {
+      "layer": 19,
+      "block_ms": 608.3162841796875,
+      "self_attention_ms": 442.47576904296875,
+      "cross_attention_ms": 68.24140167236328,
+      "ffn_ms": 70.14786148071289,
+      "other_ms": 27.451251983642578,
+      "rotary_ms_included_in_self_attention": 63.341718673706055,
+      "sdpa_ms_included_in_attention": 308.181911945343
+    },
+    {
+      "layer": 20,
+      "block_ms": 606.6623229980469,
+      "self_attention_ms": 441.64117431640625,
+      "cross_attention_ms": 68.28926086425781,
+      "ffn_ms": 69.27917861938477,
+      "other_ms": 27.452709197998047,
+      "rotary_ms_included_in_self_attention": 65.87920188903809,
+      "sdpa_ms_included_in_attention": 308.38745045661926
+    },
+    {
+      "layer": 21,
+      "block_ms": 606.8682861328125,
+      "self_attention_ms": 442.21099853515625,
+      "cross_attention_ms": 68.2666015625,
+      "ffn_ms": 68.90243911743164,
+      "other_ms": 27.48824691772461,
+      "rotary_ms_included_in_self_attention": 64.03424072265625,
+      "sdpa_ms_included_in_attention": 307.24863052368164
+    },
+    {
+      "layer": 22,
+      "block_ms": 608.0226135253906,
+      "self_attention_ms": 442.1199035644531,
+      "cross_attention_ms": 68.26577758789062,
+      "ffn_ms": 70.21870040893555,
+      "other_ms": 27.418231964111328,
+      "rotary_ms_included_in_self_attention": 65.34893989562988,
+      "sdpa_ms_included_in_attention": 307.8398199081421
+    },
+    {
+      "layer": 23,
+      "block_ms": 607.9827880859375,
+      "self_attention_ms": 441.84654235839844,
+      "cross_attention_ms": 68.3897819519043,
+      "ffn_ms": 70.2944221496582,
+      "other_ms": 27.452041625976562,
+      "rotary_ms_included_in_self_attention": 64.30157947540283,
+      "sdpa_ms_included_in_attention": 307.6874313354492
+    },
+    {
+      "layer": 24,
+      "block_ms": 607.0995178222656,
+      "self_attention_ms": 442.0393524169922,
+      "cross_attention_ms": 68.20190048217773,
+      "ffn_ms": 69.41809844970703,
+      "other_ms": 27.440166473388672,
+      "rotary_ms_included_in_self_attention": 63.95206069946289,
+      "sdpa_ms_included_in_attention": 306.14945101737976
+    },
+    {
+      "layer": 25,
+      "block_ms": 607.684326171875,
+      "self_attention_ms": 441.8506774902344,
+      "cross_attention_ms": 68.32962036132812,
+      "ffn_ms": 70.05780029296875,
+      "other_ms": 27.44622802734375,
+      "rotary_ms_included_in_self_attention": 64.14336109161377,
+      "sdpa_ms_included_in_attention": 308.02715039253235
+    },
+    {
+      "layer": 26,
+      "block_ms": 609.429443359375,
+      "self_attention_ms": 444.82606506347656,
+      "cross_attention_ms": 68.23995971679688,
+      "ffn_ms": 68.93280029296875,
+      "other_ms": 27.430618286132812,
+      "rotary_ms_included_in_self_attention": 64.16561985015869,
+      "sdpa_ms_included_in_attention": 307.07749700546265
+    },
+    {
+      "layer": 27,
+      "block_ms": 606.9716491699219,
+      "self_attention_ms": 441.7495422363281,
+      "cross_attention_ms": 68.2714614868164,
+      "ffn_ms": 69.50120162963867,
+      "other_ms": 27.449443817138672,
+      "rotary_ms_included_in_self_attention": 64.01260089874268,
+      "sdpa_ms_included_in_attention": 307.5661692619324
+    },
+    {
+      "layer": 28,
+      "block_ms": 606.9965515136719,
+      "self_attention_ms": 439.2758483886719,
+      "cross_attention_ms": 68.31993865966797,
+      "ffn_ms": 71.97789764404297,
+      "other_ms": 27.422866821289062,
+      "rotary_ms_included_in_self_attention": 63.64482021331787,
+      "sdpa_ms_included_in_attention": 307.92519760131836
+    },
+    {
+      "layer": 29,
+      "block_ms": 606.2214965820312,
+      "self_attention_ms": 441.21771240234375,
+      "cross_attention_ms": 68.28568267822266,
+      "ffn_ms": 69.28052139282227,
+      "other_ms": 27.437580108642578,
+      "rotary_ms_included_in_self_attention": 93.3546199798584,
+      "sdpa_ms_included_in_attention": 305.1307089328766
+    },
+    {
+      "layer": 30,
+      "block_ms": 604.8631591796875,
+      "self_attention_ms": 441.30609130859375,
+      "cross_attention_ms": 68.30176162719727,
+      "ffn_ms": 67.77872085571289,
+      "other_ms": 27.476585388183594,
+      "rotary_ms_included_in_self_attention": 64.555419921875,
+      "sdpa_ms_included_in_attention": 307.30155634880066
+    },
+    {
+      "layer": 31,
+      "block_ms": 607.0885925292969,
+      "self_attention_ms": 441.04632568359375,
+      "cross_attention_ms": 68.32414245605469,
+      "ffn_ms": 70.26023864746094,
+      "other_ms": 27.4578857421875,
+      "rotary_ms_included_in_self_attention": 64.55675983428955,
+      "sdpa_ms_included_in_attention": 306.9058630466461
+    },
+    {
+      "layer": 32,
+      "block_ms": 605.5998840332031,
+      "self_attention_ms": 441.3087921142578,
+      "cross_attention_ms": 68.26545715332031,
+      "ffn_ms": 68.60691833496094,
+      "other_ms": 27.418716430664062,
+      "rotary_ms_included_in_self_attention": 69.68059921264648,
+      "sdpa_ms_included_in_attention": 307.15226435661316
+    },
+    {
+      "layer": 33,
+      "block_ms": 605.6278076171875,
+      "self_attention_ms": 440.03990173339844,
+      "cross_attention_ms": 68.37480163574219,
+      "ffn_ms": 69.74541854858398,
+      "other_ms": 27.46768569946289,
+      "rotary_ms_included_in_self_attention": 63.7544002532959,
+      "sdpa_ms_included_in_attention": 306.3573865890503
+    },
+    {
+      "layer": 34,
+      "block_ms": 605.9974975585938,
+      "self_attention_ms": 441.0484313964844,
+      "cross_attention_ms": 68.2492790222168,
+      "ffn_ms": 69.27328109741211,
+      "other_ms": 27.42650604248047,
+      "rotary_ms_included_in_self_attention": 64.31716060638428,
+      "sdpa_ms_included_in_attention": 304.5825333595276
+    },
+    {
+      "layer": 35,
+      "block_ms": 607.3762817382812,
+      "self_attention_ms": 441.0333557128906,
+      "cross_attention_ms": 68.34647750854492,
+      "ffn_ms": 70.51700210571289,
+      "other_ms": 27.479446411132812,
+      "rotary_ms_included_in_self_attention": 64.8151388168335,
+      "sdpa_ms_included_in_attention": 307.2027003765106
+    },
+    {
+      "layer": 36,
+      "block_ms": 606.3067321777344,
+      "self_attention_ms": 440.4958801269531,
+      "cross_attention_ms": 68.27920150756836,
+      "ffn_ms": 70.09676361083984,
+      "other_ms": 27.434886932373047,
+      "rotary_ms_included_in_self_attention": 71.96497917175293,
+      "sdpa_ms_included_in_attention": 305.77812671661377
+    },
+    {
+      "layer": 37,
+      "block_ms": 607.9063415527344,
+      "self_attention_ms": 440.4212341308594,
+      "cross_attention_ms": 68.25709915161133,
+      "ffn_ms": 71.7929573059082,
+      "other_ms": 27.43505096435547,
+      "rotary_ms_included_in_self_attention": 67.91881942749023,
+      "sdpa_ms_included_in_attention": 307.2661597728729
+    },
+    {
+      "layer": 38,
+      "block_ms": 601.16943359375,
+      "self_attention_ms": 436.4778289794922,
+      "cross_attention_ms": 68.32497787475586,
+      "ffn_ms": 68.93011856079102,
+      "other_ms": 27.436508178710938,
+      "rotary_ms_included_in_self_attention": 64.94801998138428,
+      "sdpa_ms_included_in_attention": 306.006228685379
+    },
+    {
+      "layer": 39,
+      "block_ms": 604.5609741210938,
+      "self_attention_ms": 439.6282196044922,
+      "cross_attention_ms": 68.26537704467773,
+      "ffn_ms": 69.2123794555664,
+      "other_ms": 27.454998016357422,
+      "rotary_ms_included_in_self_attention": 66.13785934448242,
+      "sdpa_ms_included_in_attention": 305.26219749450684
+    }
+  ],
+  "device_operator_groups": {
+    "aclnnStack": {
+      "count": 323,
+      "duration_us": 322442.491
+    },
+    "aclnnCat": {
+      "count": 180,
+      "duration_us": 165720.92599999992
+    },
+    "aclnnCast": {
+      "count": 2762,
+      "duration_us": 1592351.2530000063
+    },
+    "aclnnConvolution": {
+      "count": 24,
+      "duration_us": 2320.9060000000004
+    },
+    "aclnnInplaceCopy": {
+      "count": 646,
+      "duration_us": 472932.3450000005
+    },
+    "aclnnDivs": {
+      "count": 2,
+      "duration_us": 3.12
+    },
+    "aclnnNeg": {
+      "count": 2,
+      "duration_us": 2.42
+    },
+    "aclnnPowScalarTensor": {
+      "count": 2,
+      "duration_us": 8.06
+    },
+    "aclnnMul": {
+      "count": 2404,
+      "duration_us": 1718737.7949999988
+    },
+    "aclnnCos": {
+      "count": 2,
+      "duration_us": 4.220000000000001
+    },
+    "aclnnSin": {
+      "count": 2,
+      "duration_us": 4.0
+    },
+    "aclnnAddmm": {
+      "count": 1944,
+      "duration_us": 5109031.022000004
+    },
+    "aclnnSilu": {
+      "count": 4,
+      "duration_us": 5.92
+    },
+    "aclnnInplaceZero": {
+      "count": 404,
+      "duration_us": 87263.85700000002
+    },
+    "aclnnGelu": {
+      "count": 84,
+      "duration_us": 127538.46700000005
+    },
+    "aclnnAdd": {
+      "count": 726,
+      "duration_us": 801245.5600000004
+    },
+    "aclnnLayerNormWithImplMode": {
+      "count": 246,
+      "duration_us": 294140.353
+    },
+    "aclnnInplaceOne": {
+      "count": 162,
+      "duration_us": 252.884
+    },
+    "aclnnAdds": {
+      "count": 562,
+      "duration_us": 1765.2220000000016
+    },
+    "aclnnPowTensorScalar": {
+      "count": 400,
+      "duration_us": 254937.98199999984
+    },
+    "aclnnMean": {
+      "count": 400,
+      "duration_us": 162246.59600000014
+    },
+    "aclnnRsqrt": {
+      "count": 400,
+      "duration_us": 1620.4499999999987
+    },
+    "aclnnSub": {
+      "count": 160,
+      "duration_us": 133480.32600000003
+    },
+    "aclnnFlashAttentionScore": {
+      "count": 480,
+      "duration_us": 12277779.695999999
+    }
+  },
+  "limitations": [
+    "Event timings are inclusive stream intervals and may contain host-induced idle time.",
+    "Layer categories overlap; self-attention includes rotary encoding and SDPA.",
+    "Layer events and detail events are sampled from separate warmed denoising steps.",
+    "No per-layer synchronization is inserted. Instrumented steps are excluded from baseline speed.",
+    "One step is sampled per timing category; this is a diagnostic measurement, not a repeated benchmark."
+  ],
+  "run_notes": [
+    "First attempt failed before sampling because the task temporary path exceeded the Unix socket path limit; retried using a short directory on the same persistent disk.",
+    "Automatic CANN export used an unsuitable profiler path; raw captured records were exported successfully with the persistent toolkit profiler executable."
+  ],
+  "compute": {
+    "all_notebooks_stopped": true,
+    "stop_requested_at": "2026-10-24T15:45:10.385981+08:00",
+    "verified_stopped_at": "2026-10-24T15:46:19.862961+08:00",
+    "persistent_disks_retained": true,
+    "obs_retained": true
+  },
+  "backup": {
+    "archive_and_video_sizes_verified": true
+  }
+}

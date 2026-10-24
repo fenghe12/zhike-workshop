@@ -26,3 +26,5 @@ NPU 视频推理启动前，执行 `patch_video_storage.py --repo /home/ma-user/
 `agenthoi_runtime_records.py` 记录生成进度和已完成的推理轮次，保留原始提示词、模型、图像分块和生成 token 上限。中断后可通过保存的对话状态恢复已完成轮次。使用 `patch_progress.py` 前，将 `AGENTHOI_RUN_RECORDS` 配置为持久化卷上的可写目录。
 
 后续重试视频生成时，先检查保存的 `agent_refined/refined_merged.json` 中两例均包含全部四个阶段的输出，再通过官方 `SKIP_AGENT=1 DATASET_PATH=...` 参数复用已完成的推理，保留原始视频生成配置。
+
+[NPU 逐层性能分析](profiling/README.zh-CN.md)保存 10 月 24 日的实测记录及启动器。已确认使用昇腾融合注意力，记录包含全部 40 层耗时，并区分存在包含关系的模块区间与实际设备内核耗时。

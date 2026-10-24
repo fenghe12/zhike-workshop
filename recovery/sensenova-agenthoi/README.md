@@ -26,3 +26,5 @@ Apply `patch_video_storage.py --repo /home/ma-user/work/npu-migration/repos/Agen
 The `agenthoi_runtime_records.py` helper records token progress and completed reasoning turns without changing the prompts, model, image tiling or generation budget. Its saved conversation state can restore completed turns after an interrupted run. Set `AGENTHOI_RUN_RECORDS` to a writable directory on the persistent volume before applying `patch_progress.py`.
 
 For a later video retry, reuse the saved `agent_refined/refined_merged.json` through the official `SKIP_AGENT=1 DATASET_PATH=...` options after checking that both cases contain all four agent outputs. This reuses completed reasoning and retains the original video settings.
+
+[NPU layer profiling](profiling/README.md) provides the October 24 measurement and launcher. Actual Ascend fused attention was verified; the dated report includes all 40 layer timings and distinguishes nested module intervals from device kernel durations.
