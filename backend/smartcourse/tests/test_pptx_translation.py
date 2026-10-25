@@ -15,6 +15,34 @@ def presentation_parts(package, count=1):
 
 
 class TranslationPackageTests(unittest.TestCase):
+    def test_plain_master_heading_is_translated_as_one_phrase(self):
+        from lxml import etree as E
+        class Translator:
+            def respond_json(self, prompt, **kwargs):
+                values = json.loads(prompt.split('\n', 1)[1])
+                self.asserted_input = values
+                return {'paragraphs': [['1 AI 개요']]}
+        with tempfile.TemporaryDirectory() as temporary:
+            source, output = Path(temporary)/'source.pptx', Path(temporary)/'output.pptx'
+            runs = ''.join('<a:r><a:rPr b="1"/><a:t>'+value+'</a:t></a:r>' for value in ['1',' ','Overview',' ','of',' ','AI'])
+            master = '<p:sldMaster xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"><p:sp><a:p>'+runs+'</a:p></p:sp></p:sldMaster>'
+            with zipfile.ZipFile(source,'w') as package:
+                presentation_parts(package)
+                package.writestr('ppt/slides/slide1.xml','<root/>')
+                package.writestr('ppt/slides/_rels/slide1.xml.rels','<Relationships><Relationship Target="../slideLayouts/slideLayout1.xml"/></Relationships>')
+                package.writestr('ppt/slideLayouts/slideLayout1.xml','<root/>')
+                package.writestr('ppt/slideLayouts/_rels/slideLayout1.xml.rels','<Relationships><Relationship Target="../slideMasters/slideMaster1.xml"/></Relationships>')
+                package.writestr('ppt/slideMasters/slideMaster1.xml',master)
+            translator = Translator()
+            translate_package(source,output,translator,'Korean')
+            self.assertEqual(translator.asserted_input[0]['runs'], ['1 Overview of AI'])
+            with zipfile.ZipFile(output) as package:
+                tree = E.fromstring(package.read('ppt/slideMasters/slideMaster1.xml'))
+                nodes = list(tree.iter('{http://schemas.openxmlformats.org/drawingml/2006/main}t'))
+                self.assertEqual(''.join(node.text or '' for node in nodes),'1 AI 개요')
+                self.assertEqual(len(nodes),7)
+                self.assertTrue(all(node.get('b')=='1' for node in tree.iter('{http://schemas.openxmlformats.org/drawingml/2006/main}rPr')))
+
     def test_protected_personal_name_can_remain_in_source_script(self):
         class Translator:
             def respond_json(self, *args, **kwargs):
@@ -114,6 +142,8 @@ class TranslationPackageTests(unittest.TestCase):
                 presentation_parts(package)
                 for part in parts:
                     package.writestr(part, xml)
+                package.writestr('ppt/slides/_rels/slide1.xml.rels', '<Relationships><Relationship Target="../slideLayouts/slideLayout1.xml"/></Relationships>')
+                package.writestr('ppt/slideLayouts/_rels/slideLayout1.xml.rels', '<Relationships><Relationship Target="../slideMasters/slideMaster1.xml"/></Relationships>')
                 package.writestr("ppt/media/image1.bin", b"original image bytes")
             result = translate_package(source, output, Translator(), "German")
             self.assertEqual(result["translatedTextNodes"], 6)

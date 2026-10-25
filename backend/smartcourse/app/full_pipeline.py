@@ -26,6 +26,7 @@ from .code_lessons import get_lesson_spec
 from .gateway import ResponsesGateway
 from .pedagogical_ir import build_e2_variants, compile_course_structure_ir
 from .performance import PipelinePerformanceRecorder
+from .resource_scheduler import ResourceScheduler
 from .rehearsal_analyzer import analyze_rehearsal
 from .teacher_avatar import (
     build_teacher_profile,
@@ -79,13 +80,23 @@ def _safe_task_component(value: str) -> str:
 
 
 def _exact_token_accuracy(source: str, translated: str) -> float:
-    tokens = re.findall(
-        r"(?:\d+(?:[.,]\d+)*%?)|(?:[A-Z]{2,}(?:[A-Z0-9]|[_-](?=[A-Z0-9]))*)|(?:https?://\S+)",
-        source,
-    )
+    tokens = []
+    operators = {"AND", "OR", "NOT", "XOR", "NAND", "NOR", "XNOR", "AI", "ML", "DL",
+                 "CPU", "GPU", "NPU", "NLP", "LLM", "RAG", "API", "CNN", "RNN", "LSTM", "GAN", "SGD"}
+    for line in source.splitlines():
+        values = re.findall(
+            r"(?:\d+(?:[.,]\d+)*%?)|(?:[A-Z]{2,}(?:[A-Z0-9]|[_-](?=[A-Z0-9]))*)|(?:https?://\S+)",
+            line,
+        )
+        tokens.extend(value for value in values
+                      if not (line.isupper() and value.isalpha() and value.isupper() and value not in operators))
     if not tokens:
         return 1.0
-    return sum(token in translated for token in tokens) / len(tokens)
+    normalized_translation = re.sub(r'\s+', '', translated).casefold()
+    ai_names = ('artificialintelligence', '人工智能', '人工知能', '인공지능',
+                'künstlicheintelligenz', 'intelligenceartificielle')
+    return sum(token in translated or (token == 'AI' and any(name in normalized_translation for name in ai_names))
+               for token in tokens) / len(tokens)
 
 
 def promote_dense_slide_layout(pptx_path: Path, bbox_content: dict[str, Any], minimum_characters: int = 0) -> dict[str, Any]:
@@ -135,6 +146,7 @@ class FullPipelineRunner:
         self.workspace_root = (settings.workspace_root or self.artifact_root / "tasks").resolve()
         self.source_root = (settings.source_root or Path(".")).resolve()
         self.workspace_root.mkdir(parents=True, exist_ok=True)
+        self.resources = ResourceScheduler(settings.data_root)
 
     def _url(self, path: str | Path | None) -> str | None:
         if not path:
@@ -258,6 +270,19 @@ class FullPipelineRunner:
         _write_json(context_path, context)
         performance = PipelinePerformanceRecorder(task_id)
 
+        def run_stage(code, function):
+            resource, message = self.resources.STAGES[code]
+            started = time.perf_counter()
+            progress(int(code[1:]), "queued", 0, {"step": message, "resource": resource})
+            with self.resources.acquire(resource):
+                waited = time.perf_counter() - started
+                progress(int(code[1:]), "running", 0, {})
+                try:
+                    return performance.run_stage(code, function)
+                finally:
+                    performance.stages[code]["queueWaitSeconds"] = round(waited, 3)
+                    performance.stages[code]["resource"] = resource
+
         previous_outputs = task.get("outputs", {})
         results: dict[str, Any] = {
             f"s{index}": copy.deepcopy(previous_outputs[f"s{index}"])
@@ -266,7 +291,7 @@ class FullPipelineRunner:
         }
         structure_path = root / "s1" / "course_structure.json"
         if start_stage <= 1:
-            results["s1"] = performance.run_stage(
+            results["s1"] = run_stage(
                 "S1", lambda: self._run_s1(task, root, progress)
             )
         elif "s1" in results:
@@ -285,23 +310,23 @@ class FullPipelineRunner:
             raise FileNotFoundError(structure_path)
 
         if start_stage <= 2:
-            results["s2"] = performance.run_stage(
+            results["s2"] = run_stage(
                 "S2", lambda: self._run_s2(task, root, progress)
             )
         if start_stage <= 3:
             if not task.get("assets", {}).get("referenceAudio"):
                 raise StageInputRequired(3, "referenceAudio")
-            results["s3"] = performance.run_stage(
+            results["s3"] = run_stage(
                 "S3", lambda: self._run_s3(task, root, progress)
             )
         if start_stage <= 4:
             if not task.get("assets", {}).get("referenceImage"):
                 raise StageInputRequired(4, "referenceImage")
-            results["s4"] = performance.run_stage(
+            results["s4"] = run_stage(
                 "S4", lambda: self._run_s4(task, root, progress)
             )
         if start_stage <= 5:
-            results["s5"] = performance.run_stage(
+            results["s5"] = run_stage(
                 "S5", lambda: self._run_s5(task, root, progress)
             )
 
@@ -339,12 +364,18 @@ class FullPipelineRunner:
         output_dir.mkdir(parents=True, exist_ok=True)
         structure_path = output_dir / "course_structure.json"
         output_pptx = output_dir / "generated.pptx"
+        rag_service = self.rag_service
+        if task.get("createdBy"):
+            from rag.service import CourseRAGService
+            rag_service = CourseRAGService(self.settings.data_root / "rag" / _safe_task_component(task["createdBy"]))
         agent = CourseStructureAgent(
             self.gateway,
-            rag_service=self.rag_service,
+            rag_service=rag_service,
             courseware_skill=self._courseware_skill(),
             quality_system=self._quality_system(),
-            experience_memory_path=self.workspace_root / "courseware-experience-memory.json",
+            experience_memory_path=(self.workspace_root / "users" /
+                                    _safe_task_component(task.get("createdBy") or task["id"]) /
+                                    "courseware-experience-memory.json"),
             require_rag=True,
         )
         if task.get("mode") == "upload":

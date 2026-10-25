@@ -535,18 +535,43 @@ Return JSON only:
 
     @staticmethod
     def _write_pptx(pages: list[dict[str, Any]], output_path: Path) -> None:
+        import re
         from pptx import Presentation
+        from pptx.util import Inches, Pt
+        from pptx.dml.color import RGBColor
 
         presentation = Presentation()
-        for page in pages:
-            slide = presentation.slides.add_slide(presentation.slide_layouts[1])
-            slide.shapes.title.text = page["title"]
-            body = slide.placeholders[1].text_frame
-            body.clear()
-            for index, value in enumerate(page.get("key_points", [])):
-                paragraph = body.paragraphs[0] if index == 0 else body.add_paragraph()
-                paragraph.text = value
-                paragraph.level = 0
+        presentation.slide_width, presentation.slide_height = Inches(40 / 3), Inches(7.5)
+        for number, page in enumerate(pages, 1):
+            slide = presentation.slides.add_slide(presentation.slide_layouts[5])
+            slide.background.fill.solid()
+            slide.background.fill.fore_color.rgb = RGBColor.from_string("F5F8F6")
+            content = str(page["title"]) + " ".join(map(str, page.get("key_points", [])))
+            font = "Noto Sans CJK SC" if re.search(r'[\u3400-\u9fff\uac00-\ud7af]', content) else "Arial"
+            def text_box(text, x, y, width, height, size, color, bold=False, shape=None):
+                if shape is None:
+                    shape = slide.shapes.add_textbox(Inches(x), Inches(y), Inches(width), Inches(height))
+                shape.left, shape.top, shape.width, shape.height = Inches(x), Inches(y), Inches(width), Inches(height)
+                frame = shape.text_frame
+                frame.clear()
+                frame.word_wrap = True
+                frame.margin_left = frame.margin_right = 0
+                paragraph = frame.paragraphs[0]
+                paragraph.text = str(text)
+                for run in paragraph.runs:
+                    run.font.name = font
+                    run.font.size, run.font.bold = Pt(size), bold
+                    run.font.color.rgb = RGBColor.from_string(color)
+            text_box(page["title"], .75, .78, 11.9, 1.25, 32, "153E32", True, slide.shapes.title)
+            points = list(page.get("key_points", []))
+            spacing = min(.84, 4.65 / max(1, len(points)))
+            for index, value in enumerate(points):
+                y = 2.2 + index * spacing
+                text_box(f"{index + 1:02d}", .78, y + .02, .58, .5, 16, "4D8270", True)
+                text_box(value, 1.55, y, 10.95, max(.65, spacing), 23, "29473C")
+            text_box(f"{number:02d} / {len(pages):02d}", 11.7, 6.9, .9, .35, 12, "6B8279")
+            if page.get("script_text"):
+                slide.notes_slide.notes_text_frame.text = page["script_text"]
         output_path.parent.mkdir(parents=True, exist_ok=True)
         presentation.save(str(output_path))
 

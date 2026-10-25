@@ -11,6 +11,7 @@ from pathlib import Path
 
 from .interruption import load_interruption_context, generate_interruption_answer
 from .task_model import utc_now
+from .resource_scheduler import ResourceScheduler
 
 
 def public_interruption(record):
@@ -205,6 +206,10 @@ def retry_interruption(application, task, identifier):
 
 
 def execute_interruption(application, task, context, identifier):
+    def media_call(function, *args, **kwargs):
+        with ResourceScheduler(application.settings.data_root).acquire_media('avatar'):
+            return function(*args, **kwargs)
+
     def update(**fields):
         def operation(data):
             data['interruptions'][identifier].update(fields, updatedAt=utc_now())
@@ -270,17 +275,21 @@ def execute_interruption(application, task, context, identifier):
         else:
             # Use the same IndexTTS2 implementation as the validated S3 stage
             # when CosyVoice is not configured on the production worker.
-            if os.environ.get('SMARTCOURSE_COSYVOICE_ROOT') and os.environ.get('SMARTCOURSE_COSYVOICE_MODEL'):
-                from agents.cosyvoice_engine import CosyVoiceEngine
-                engine = CosyVoiceEngine()
-                try:
-                    duration = engine.synthesize(answer['answer'], str(reference_audio), str(audio), context['targetLanguage'])
-                finally:
-                    engine.close()
-            else:
-                from agents.s3_tts_agent import TTSEngine
-                engine = TTSEngine()
-                duration = engine.synthesize(answer['answer'], str(reference_audio), str(audio))
+            with ResourceScheduler(application.settings.data_root).acquire_media('speech'):
+                if os.environ.get('SMARTCOURSE_COSYVOICE_ROOT') and os.environ.get('SMARTCOURSE_COSYVOICE_MODEL'):
+                    from agents.cosyvoice_engine import CosyVoiceEngine
+                    engine = CosyVoiceEngine()
+                    try:
+                        duration = engine.synthesize(answer['answer'], str(reference_audio), str(audio), context['targetLanguage'])
+                    finally:
+                        engine.close()
+                else:
+                    from agents.s3_tts_agent import TTSEngine
+                    engine = TTSEngine()
+                    try:
+                        duration = engine.synthesize(answer['answer'], str(reference_audio), str(audio))
+                    finally:
+                        getattr(engine, 'close', lambda: None)()
         timeline = root / 'timeline.json'
         timeline.write_text(json.dumps({'pages': [{'page_id': 1, 'wav_path': str(audio),
                                                    'duration': duration, 'script_text': answer['answer']}]},
@@ -292,7 +301,7 @@ def execute_interruption(application, task, context, identifier):
             avatar_video=None
             try:
                 from .float_process import run_float_avatar
-                avatar_result=run_float_avatar(
+                avatar_result=media_call(run_float_avatar,
                     task_root=root,runtime_root=root.parent,code=identifier,
                     timeline=timeline,reference_image=reference_image,
                     float_dir=runner.source_root/'float',gpu_id=runner.settings.gpu_id,
@@ -311,11 +320,11 @@ def execute_interruption(application, task, context, identifier):
             flashhead_command = os.environ.get('SMARTCOURSE_FLASHHEAD_COMMAND')
             if os.environ.get('SMARTCOURSE_REMOTE_MEDIA') == '1' or (flashhead_command and os.path.isfile(flashhead_command)):
                 from agents.flashhead_agent import FlashHeadAvatarAgent
-                output = FlashHeadAvatarAgent(str(root), str(reference_image)).run('answer', str(timeline))
+                output = media_call(FlashHeadAvatarAgent(str(root), str(reference_image)).run, 'answer', str(timeline))
                 video = output['pages'][0]['video_path']
             else:
                 from .float_process import run_float_avatar
-                output = run_float_avatar(
+                output = media_call(run_float_avatar,
                     task_root=root,
                     runtime_root=root.parent,
                     code=identifier,

@@ -39,6 +39,11 @@ def course_status(task):
     identifier = quote(task['id'], safe='')
     message = {'completed': '课程已完成', 'failed': '课程处理失败，请查看任务详情',
                'cancelled': '课程已取消', 'waiting_input': '请补充任务所需素材'}.get(status, '课程正在处理')
+    queue = task.get('queue', {})
+    if status == 'queued':
+        message = f"任务已排队，前方还有 {max(0, queue.get('position', 1) - 1)} 个任务"
+    elif queue.get('state') == 'waiting_resource':
+        message = queue.get('message') or '正在等待计算资源'
     error = None
     if status == 'failed' and isinstance(task.get('error'), dict):
         from .task_errors import task_error_message
@@ -54,5 +59,5 @@ def course_status(task):
             'videoUrl': first.get('video'), 'pptUrl': first.get('coursePptx'),
             'pdfUrl': first.get('coursePdf') or first.get('previewPdf'),
             'languages': languages,
-            'message': message, 'error': error,
+            'message': message, 'error': error, 'queue': queue,
             'updatedAt': task.get('updatedAt')}

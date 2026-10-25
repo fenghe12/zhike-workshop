@@ -1,0 +1,19 @@
+{
+  "checkpoint_step": 100,
+  "initialization_mode": "all_added_parameters_zero",
+  "same_weights_and_seed": true,
+  "variants": [
+    {
+      "name": "ditalker",
+      "cfg": 1.0,
+      "steps": 25,
+      "status": "large uniform color fields observed"
+    },
+    {
+      "name": "ditalker-cfg7",
+      "cfg": 7.0,
+      "steps": 25,
+      "status": "queued official configuration comparison"
+    }
+  ]
+}

@@ -50,6 +50,12 @@ The [AD-NeRF recovery tools](recovery/adnerf/README.md) use the official pretrai
 
 The [video training adapters](recovery/video-training/README.md) record bounded EasyAnimate V3 and Wan2.2 S2V training on one Ascend device, including backward passes, actual parameter updates, native conditional paths, and private checkpoint recovery.
 
+The [DiTalker/CogPortrait adapters and records](recovery/ditalker-cogportrait/README.md) preserve the 50-case training runs, step-200-to-220 continuation, and fresh 100-step all-zero experiment. Both models have 100 recorded loss rows in the latter run, but DiTalker had eight groups with no nonzero gradients and failed generation. CogPortrait covers the added pose branch, not agent planning or KTO.
+
+The [Higher Education Press configuration archive](integrations/hep/README.md) preserves the existing agent prompt and historical plugin contract. It does not change the platform or redeploy a cloud endpoint.
+
+The October 25 source update also includes account isolation, a persistent three-to-five-worker task queue with shared media slots, slide notes and font handling, subtitle wrapping, and the latest Korean/Japanese speech corrections. Teacher listening and final educational-content acceptance remain pending; see the dated recovery notes for the measured scope.
+
 ## Rights and licenses
 
 No repository-wide open-source license has been granted at this time. Third-party code and models remain subject to their respective licenses. Preserve the original licenses when restoring their source. Public access does not grant unrestricted redistribution rights.
@@ -58,9 +64,9 @@ No repository-wide open-source license has been granted at this time. Third-part
 
 ```bash
 cd backend/smartcourse
-python -m unittest tests.test_course_api tests.test_remote_media_status tests.test_translation_policy tests.test_speech_timing tests.test_pptx_translation tests.test_deeppresenter_course tests.test_topic_source_language
+python -m unittest tests.test_app tests.test_pptx_notes tests.test_pptx_translation tests.test_translation_policy tests.test_speech_chunks tests.test_subtitle_validation
 cd ../../vue-app
 npm run build
 ```
 
-On October 23, 2026, these 27 backend tests passed. The unchanged frontend last passed its build on October 21. A new machine still requires the dependencies and models described in the recovery guide.
+On October 25, 2026, these 55 backend checks and the frontend production build passed. The archived DiTalker source patch was applied and compared directly with the executed source. A new machine still requires the dependencies and models described in the recovery guide.

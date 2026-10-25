@@ -1,0 +1,28 @@
+{
+  "reason": "DiTalker CFG7 output has severe color distortion",
+  "preserve_original": true,
+  "variants": [
+    {
+      "name": "ditalker",
+      "cfg": 7.0,
+      "vae": "BF16 autocast"
+    },
+    {
+      "name": "ditalker-cfg1",
+      "cfg": 1.0,
+      "vae": "BF16 autocast"
+    },
+    {
+      "name": "ditalker-cfg1-fp32vae",
+      "cfg": 1.0,
+      "vae": "FP32"
+    }
+  ],
+  "shared": {
+    "checkpoint_step": 220,
+    "seed": 42,
+    "steps": 25,
+    "input": "WDA_KirstenGillibrand_000_8181_8261"
+  },
+  "fp32_uses_same_generated_latents_and_rng": true
+}

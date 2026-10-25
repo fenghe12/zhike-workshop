@@ -1,0 +1,197 @@
+--- a/ditalker/models/base/attention.py
++++ b/ditalker/models/base/attention.py
+@@ -782,7 +782,7 @@
+                 # print("dothis")
+                 norm_hidden_states = self.pos_embed(norm_hidden_states)
+ 
+-            if norm_hidden_states.dtype != encoder_hidden_states.dtype or norm_hidden_states.dtype != encoder_attention_mask.dtype:
++            if norm_hidden_states.dtype != encoder_hidden_states.dtype:
+                 norm_hidden_states = norm_hidden_states.to(encoder_hidden_states.dtype)
+ 
+             attn_output = self.attn2(
+@@ -1239,7 +1239,7 @@
+                 # print("dothis")
+                     audio_norm_hidden_states = self.pos_embed(audio_norm_hidden_states)
+ 
+-                if audio_norm_hidden_states.dtype != encoder_hidden_states.dtype or audio_norm_hidden_states.dtype != encoder_attention_mask.dtype:
++                if audio_norm_hidden_states.dtype != encoder_hidden_states.dtype:
+                     audio_norm_hidden_states = audio_norm_hidden_states.to(encoder_hidden_states.dtype)
+ 
+                 
+--- a/ditalker/models/base/transformer3d.py
++++ b/ditalker/models/base/transformer3d.py
+@@ -1463,9 +1463,9 @@
+                     class_labels,
+                     audio_encoder_hidden_states,
+                     style_encoder_hidden_states,
+-                    c_emo,
+                     scale_scalar,
+                     audio_scale_scalar,
++                    c_emo,
+                     index,
+                     *args,
+                     **ckpt_kwargs,          
+@@ -1503,9 +1503,11 @@
+                     # print(out_repa.shape)
+                 if index + 1 ==self.encoder_depth and self.enable_repa_2 :
+                     # print("2")  
+-                    lo_index = random.randint(0,video_length)%16
+-                    out_repa = hidden_states[:,256*(lo_index):256*(lo_index+1):,:]
+-                    out_repa = self.repa_proj(out_repa)
++                    frame_index = int(getattr(self, "repa_frame_index", 0)) % video_length
++                    frame_features = hidden_states.reshape(hidden_states.shape[0], video_length, height, width, -1)[:, frame_index]
++                    frame_features = frame_features.permute(0, 3, 1, 2)
++                    frame_features = F.adaptive_avg_pool2d(frame_features, (16, 16)).flatten(2).transpose(1, 2)
++                    out_repa = self.repa_proj(frame_features)
+                 # else:
+                 #     out_repa = None
+ 
+@@ -1559,9 +1561,11 @@
+                     z_s = out_repa
+                     # print(out_repa.shape)
+                 if index + 1 ==self.encoder_depth and self.enable_repa_2  :
+-                    lo_index = random.randint(0,video_length)%16
+-                    out_repa = hidden_states[:,256*(lo_index):256*(lo_index+1):,:]
+-                    out_repa = self.repa_proj(out_repa)
++                    frame_index = int(getattr(self, "repa_frame_index", 0)) % video_length
++                    frame_features = hidden_states.reshape(hidden_states.shape[0], video_length, height, width, -1)[:, frame_index]
++                    frame_features = frame_features.permute(0, 3, 1, 2)
++                    frame_features = F.adaptive_avg_pool2d(frame_features, (16, 16)).flatten(2).transpose(1, 2)
++                    out_repa = self.repa_proj(frame_features)
+                     z_s = out_repa
+                 # else:
+                 #     out_repa = None
+--- a/ditalker/utils/gaussian_diffusion.py
++++ b/ditalker/utils/gaussian_diffusion.py
+@@ -836,14 +836,15 @@
+             if enable_repa:
+                 proj_loss = 0.
+                 bsz = z[0].shape[0]
++                encoder_count = len(z)
+                 # print("z",z.shape)
+                 # print("zs_tilde",zs_tilde.shape)
+-                for i, (z, z_tilde) in enumerate(zip(z, zs_tilde)):
+-                    for j, (z_j, z_tilde_j) in enumerate(zip(z, z_tilde)):
++                for encoder_features, projected_features in zip(z, zs_tilde):
++                    for z_j, z_tilde_j in zip(encoder_features, projected_features):
+                         z_tilde_j = F.normalize(z_tilde_j, dim=-1) 
+                         z_j = F.normalize(z_j, dim=-1) 
+                         proj_loss += mean_flat(-(z_j * z_tilde_j).sum(dim=-1))
+-                proj_loss /= (len(z) * bsz)
++                proj_loss /= (encoder_count * bsz)
+                 loss += repa_weight * proj_loss
+             if sync_net is not None and sync_lip_loss_weight !=0 and deepspeech_emb is not None:
+                 sync_net.eval()
+@@ -1147,4 +1148,4 @@
+     res = th.from_numpy(arr).to(device=timesteps.device)[timesteps].float()
+     while len(res.shape) < len(broadcast_shape):
+         res = res[..., None]
+-    return res + th.zeros(broadcast_shape, device=timesteps.device)
+\ No newline at end of file
++    return res + th.zeros(broadcast_shape, device=timesteps.device)
+--- a/scripts/shape_check.py
++++ b/scripts/shape_check.py
+@@ -59,8 +59,9 @@
+     # Padding mask for style clip: (B, 256) bool
+     pad_mask = torch.zeros(B, 256, device=device, dtype=torch.bool)
+ 
+-    # DWPose keypoints at original resolution: (B, 3, F, 512, 512)
+-    pixel_values_pose = torch.randn(B, 3, F, 512, 512, device=device, dtype=dtype)
++    # Match the dataset: 64 source pose frames resized to 256 square.
++    # The VAE/backbone sequence has 16 latent frames at 64 square.
++    pixel_values_pose = torch.randn(B, 3, 64, 256, 256, device=device, dtype=dtype)
+ 
+     # CLIP image embedding: (B, 768)
+     clip_encoder_hidden_states = torch.randn(B, 768, device=device, dtype=dtype)
+--- a/scripts/train.py
++++ b/scripts/train.py
+@@ -948,6 +948,7 @@
+     parser.add_argument(
+         '--trainable_modules', 
+         nargs='+', 
++        default=['.'],
+         help='Enter a list of trainable modules'
+     )
+     parser.add_argument(
+@@ -1039,6 +1040,7 @@
+         "enable_region_mask_loss",
+         "region_loss_weight",
+         "enable_repa",
++        "enable_audio_emb",
+         "repa_weight",
+         "enable_sync_lip_loss",
+         "sync_lip_loss_weight",
+@@ -1080,10 +1082,15 @@
+ 
+     transformer_additional_kwargs = config_dict.get("transformer_additional_kwargs")
+     if isinstance(transformer_additional_kwargs, dict):
++        if "enable_audio_emb" not in config_dict and transformer_additional_kwargs.get("enable_audio_attention"):
++            args.enable_audio_emb = True
+         for key in ("enable_style_attn", "enable_pose_adapter", "enable_eca"):
+             value = transformer_additional_kwargs.get(key)
+             if value is not None:
+                 setattr(args, key, value)
++
++    if config_dict.get("syncnet_checkpoint") is not None:
++        args.pretrained_color_syncnet_path = config_dict["syncnet_checkpoint"]
+ 
+     return args
+ 
+@@ -1330,7 +1337,7 @@
+         )
+     for name, param in transformer3d.named_parameters():
+         for trainable_module_name in args.trainable_modules + args.trainable_modules_low_learning_rate:
+-            if trainable_module_name in name:
++            if trainable_module_name == '.' or trainable_module_name in name:
+                 param.requires_grad = True if not args.only_train_audio else False
+                 print(f"{name} requires grad")
+                 break
+@@ -1431,7 +1438,9 @@
+         accelerator.register_load_state_pre_hook(load_model_hook)
+ 
+     if args.gradient_checkpointing:
+-        transformer3d.enable_gradient_checkpointing()
++        # The native V3 forward reads this flag; its legacy setter is incompatible
++        # with the newer diffusers enable_gradient_checkpointing call signature.
++        transformer3d.gradient_checkpointing = True
+ 
+     # Enable TF32 for faster training on Ampere GPUs,
+     # cf https://pytorch.org/docs/stable/notes/cuda.html#tensorfloat-32-tf32-on-ampere-devices
+@@ -1472,11 +1481,13 @@
+     ]
+     in_already = []
+     for name, param in transformer3d.named_parameters():
++        if not param.requires_grad:
++            continue
+         high_lr_flag = False
+         if name in in_already:
+             continue
+         for trainable_module_name in args.trainable_modules:
+-            if trainable_module_name in name:
++            if trainable_module_name == '.' or trainable_module_name in name:
+                 in_already.append(name)
+                 high_lr_flag = True
+                 trainable_params_optim[0]['params'].append(param)
+@@ -1486,12 +1497,21 @@
+         if high_lr_flag:
+             continue
+         for trainable_module_name in args.trainable_modules_low_learning_rate:
+-            if trainable_module_name in name:
++            if trainable_module_name == '.' or trainable_module_name in name:
+                 in_already.append(name)
+                 trainable_params_optim[1]['params'].append(param)
+                 if accelerator.is_main_process:
+                     print(f"Set {name} to lr : {args.learning_rate / 2}")
+                 break
++
++    # Include explicitly enabled audio/style/pose parameters outside named groups.
++    for name, param in transformer3d.named_parameters():
++        if param.requires_grad and name not in in_already:
++            trainable_params_optim[0]['params'].append(param)
++            in_already.append(name)
++    grouped = [param for group in trainable_params_optim for param in group['params']]
++    assert len(grouped) == len(trainable_params)
++    assert {id(param) for param in grouped} == {id(param) for param in trainable_params}
+ 
+     if args.use_came:
+         optimizer = optimizer_cls(

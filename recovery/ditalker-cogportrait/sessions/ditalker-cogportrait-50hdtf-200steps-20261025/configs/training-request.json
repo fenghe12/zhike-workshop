@@ -1,0 +1,32 @@
+{
+  "samples": 50,
+  "steps_per_model": 200,
+  "epochs": 4,
+  "batch_size": 1,
+  "resolution": [
+    512,
+    512
+  ],
+  "ditalker_source_frames": 16,
+  "cogportrait_source_frames": 16,
+  "new_initialization": "zero residual outputs; internal layers retain normal initialization; Scale Adapter gates keep tanh(1) so the product of two zero branches does not prevent learning",
+  "base_weights": "pretrained and frozen",
+  "losses": {
+    "DiTalker": "native diffusion epsilon loss, learned variance, measured eye-region weighted loss (10) and DINOv2 REPA (0.1)",
+    "CogPortrait": "native Wan flow matching with genuine measured upper-face pose conditioning"
+  },
+  "preprocessing_adaptations": [
+    "MediaPipe measured facial contours and upper-face 62 landmarks replace DWPose/FLAME rendering in this HDTF training-path experiment",
+    "Deep3DFaceRecon original pretrained 64-dimensional expression coefficients",
+    "Whisper word alignment plus CMU pronunciation dictionary uses a documented 41-symbol mapping; unpublished WhisperX supplementary mapping unavailable",
+    "Shared explicit neutral speaking caption; no claim of emotion-labelled supervision"
+  ],
+  "excluded_claims": [
+    "Full paper training schedules or final quality metrics",
+    "CogPortrait agent-planner training or KTO preference optimization",
+    "Original pretrained SyncNet audio-visual loss, whose matching checkpoint is unavailable"
+  ],
+  "ditalker_source_stride": 4,
+  "ditalker_audio_context_frames": 64,
+  "ditalker_pose_frames": 16
+}

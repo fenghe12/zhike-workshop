@@ -199,6 +199,51 @@ class SubtitleLayoutTests(unittest.TestCase):
 
 
 class ServerTests(unittest.TestCase):
+    def test_registration_login_cookie_and_logout(self):
+        from http.cookiejar import CookieJar
+
+        account = "registration-flow@example.test"
+        payload = {"account": account, "password": "course-password", "name": "注册检查",
+                   "institution": "测试单位", "confirmPassword": "different"}
+        original_token = self.default_token
+        try:
+            with self.assertRaises(error.HTTPError) as mismatch:
+                self.api("POST", "/v1/auth/register", payload, token="")
+            self.assertEqual(mismatch.exception.code, 400)
+            payload["confirmPassword"] = payload["password"]
+            status, registered = self.api("POST", "/v1/auth/register", payload, token="")
+            self.assertEqual(status, 201)
+            self.assertEqual(registered["user"]["institution"], "测试单位")
+            self.assertNotIn("passwordHash", registered["user"])
+            with self.assertRaises(error.HTTPError) as duplicate:
+                self.api("POST", "/v1/auth/register", payload, token="")
+            self.assertEqual(duplicate.exception.code, 400)
+            with self.assertRaises(error.HTTPError):
+                self.api("POST", "/v1/auth/login", {"account": account, "password": "incorrect"}, token="")
+
+            browser = request.build_opener(request.HTTPCookieProcessor(CookieJar()))
+
+            def cookie_post(path, body):
+                req = request.Request(self.base + path, data=json.dumps(body).encode(),
+                                      headers={"Content-Type": "application/json"}, method="POST")
+                with browser.open(req, timeout=5) as response:
+                    return json.loads(response.read())
+
+            logged_in = cookie_post("/v1/auth/login", {"account": " " + account + " ",
+                                                       "password": payload["password"]})
+            self.assertEqual(logged_in["user"]["id"], registered["user"]["id"])
+            restored = cookie_post("/v1/auth/session", {})
+            self.assertEqual(restored["user"]["id"], registered["user"]["id"])
+            self.assertTrue(cookie_post("/v1/auth/logout", {})["loggedOut"])
+            with self.assertRaises(error.HTTPError) as expired_cookie:
+                cookie_post("/v1/auth/session", {})
+            self.assertEqual(expired_cookie.exception.code, 401)
+            with self.assertRaises(error.HTTPError) as expired_token:
+                self.api("GET", "/v1/tasks", token=logged_in["accessToken"])
+            self.assertEqual(expired_token.exception.code, 401)
+        finally:
+            type(self).default_token = original_token
+
     def test_interruption_routes_require_course_owner(self):
         from unittest.mock import patch
         _, owner = self.api('POST', '/v1/auth/register', {'account': 'answer-owner@example.test',

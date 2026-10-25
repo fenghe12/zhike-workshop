@@ -50,6 +50,12 @@ Qwen3.6 主模型、CosyVoice3 和 FlashHeadLite 使用 Ascend 910B。FFmpeg 合
 
 [视频训练适配文件](recovery/video-training/README.zh-CN.md)记录了昇腾单卡上的 EasyAnimate V3 与 Wan2.2 S2V 短程训练，包含反向传播、实际参数更新、原有条件分支及私有检查点恢复。
 
+[DiTalker/CogPortrait 适配代码与记录](recovery/ditalker-cogportrait/README.zh-CN.md)保存 50 个 case 的训练、200 至 220 步恢复训练，以及重新初始化的 100 步全零实验。后一实验两个模型各有 100 条 loss，但 DiTalker 有 8 组全程零梯度，生成失败。CogPortrait 的范围为新增姿态分支，未包括代理规划或 KTO。
+
+[高教社配置归档](integrations/hep/README.zh-CN.md)保留已有智能体提示词与旧插件参数约定，不修改高教社平台，也不重新部署云端入口。
+
+10 月 25 日源码更新还包括账号隔离、持久化的 3 至 5 工作进程任务队列与媒体资源互斥、课件备注与字体处理、字幕分行，以及韩语和日语语音修正。教师听感和教学内容验收待进行，已实测范围见对应日期的恢复记录。
+
 ## 权利说明
 
 本仓库暂未授予统一的开源许可证。第三方代码和模型遵循各自许可证，原始许可证应随恢复的来源代码保留。公开可读取不等同于授予任意再分发权限。
@@ -58,9 +64,9 @@ Qwen3.6 主模型、CosyVoice3 和 FlashHeadLite 使用 Ascend 910B。FFmpeg 合
 
 ```bash
 cd backend/smartcourse
-python -m unittest tests.test_course_api tests.test_remote_media_status tests.test_translation_policy tests.test_speech_timing tests.test_pptx_translation tests.test_deeppresenter_course tests.test_topic_source_language
+python -m unittest tests.test_app tests.test_pptx_notes tests.test_pptx_translation tests.test_translation_policy tests.test_speech_chunks tests.test_subtitle_validation
 cd ../../vue-app
 npm run build
 ```
 
-2026-10-23：上述 27 项后端检查通过；前端代码未修改，最近一次构建检查于 10 月 21 日通过。新机器仍需按恢复说明准备依赖与模型。
+2026-10-25：上述 55 项后端检查及前端生产构建通过。DiTalker 源码补丁已实际应用并与执行源码直接逐文件比较。新机器仍需按恢复说明准备依赖与模型。

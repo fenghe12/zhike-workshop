@@ -29,7 +29,7 @@ class FlashHeadAvatarAgent:
         photo_version=reference_version(output,self.reference,'photo')
         from concurrent.futures import ThreadPoolExecutor,as_completed
         from queue import Queue
-        workers=max(1,min(2,int(os.environ.get('SMARTCOURSE_AVATAR_WORKERS','1')))) if remote_media else 1
+        workers=1
         devices=Queue()
         for device in range(workers):devices.put(device)
         records=[]

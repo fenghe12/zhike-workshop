@@ -1,0 +1,23 @@
+{
+  "models": [
+    "ditalker",
+    "cogportrait"
+  ],
+  "data_count": 50,
+  "steps": 100,
+  "epochs": 2,
+  "batch_size": 1,
+  "resolution": [
+    512,
+    512
+  ],
+  "initialization_mode": "all_added_parameters_zero",
+  "start": "fresh released pretrained base; no step-220 optimizer or added weights",
+  "learning_rate": 2e-05,
+  "optimizer": "AdamW",
+  "base_frozen": true,
+  "cogportrait_scope": "pose branch only; no planner or KTO",
+  "seed": 42,
+  "compute_limit_seconds": 3600,
+  "inference_after_training": true
+}

@@ -83,7 +83,7 @@ class ComposeAgent:
             avatar=Path(avatars_dir)/f"page_{page['page_id']:03d}.mp4"
             if not avatar.is_file():raise ValueError('缺少页面数字人视频')
             avatar_versions[str(page['page_id'])]=reference_version(Path(output_dir)/'avatar-inputs'/str(page['page_id']),avatar,'avatar')
-        cache_input={'styleVersion':'framed-caption-plain-v3','sourceVersion':source_version,'audioVersion':audio_version,
+        cache_input={'styleVersion':'framed-caption-balanced-v5','sourceVersion':source_version,'audioVersion':audio_version,
                      'avatarVersions':avatar_versions,'timeline':timeline,'bbox':{str(key):value for key,value in bbox_map.items()},
                      'subtitle':Path(subtitle_srt).read_text() if subtitle_srt else ''}
         checkpoint=Path(output_dir)/'composition-input.json';cached=read_record(checkpoint)
@@ -268,17 +268,44 @@ class ComposeAgent:
                 continue
             tokens = source.split() if " " in source else list(source)
             separator = " " if " " in source else ""
-            current = ""
+            no_line_start = set('，。、！？；：,.!?;:%）)]｝}」』】》〉”’')
+            joined_tokens = []
             for token in tokens:
-                candidate = token if not current else current + separator + token
-                candidate_box = draw.textbbox((0, 0), candidate, font=font, stroke_width=2)
-                if current and candidate_box[2] - candidate_box[0] > max_width:
-                    wrapped.append(current)
-                    current = token
+                if len(token) == 1 and token in no_line_start and joined_tokens:
+                    joined_tokens[-1] += separator + token
                 else:
-                    current = candidate
-            if current:
-                wrapped.append(current)
+                    joined_tokens.append(token)
+            tokens = joined_tokens
+            def width(value):
+                box = draw.textbbox((0, 0), value, font=font, stroke_width=2)
+                return box[2] - box[0]
+
+            def fit(limit):
+                lines, current = [], ""
+                for token in tokens:
+                    candidate = token if not current else current + separator + token
+                    if current and width(candidate) > limit:
+                        lines.append(current)
+                        current = token
+                    else:
+                        current = candidate
+                if current:
+                    lines.append(current)
+                return lines
+
+            lines = fit(max_width)
+            if len(lines) > 1 and width(lines[-1]) < max(map(width, lines)) * .45:
+                lower, upper = 0, max_width
+                balanced = lines
+                for _ in range(6):
+                    limit = (lower + upper) / 2
+                    candidate = fit(limit)
+                    if len(candidate) > len(lines):
+                        lower = limit
+                    else:
+                        upper, balanced = limit, candidate
+                lines = balanced
+            wrapped.extend(lines)
         return "\n".join(wrapped)
 
     @staticmethod

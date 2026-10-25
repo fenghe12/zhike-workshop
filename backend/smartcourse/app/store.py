@@ -91,7 +91,11 @@ class JsonStore:
         phone = phone.strip()
         display_name = display_name.strip() or "智课用户"
         if len(phone) < 6 or len(password) < 6:
-            raise ValueError("手机号和密码格式不正确")
+            raise ValueError("账号和密码均须至少 6 个字符")
+        if len(phone) > 128 or any(character.isspace() for character in phone):
+            raise ValueError("账号不能包含空格，且不能超过 128 个字符")
+        if len(password) > 128 or not password.strip():
+            raise ValueError("密码须为 6 至 128 个字符，且不能全部为空格")
 
         def operation(data):
             if phone in data["users"]:

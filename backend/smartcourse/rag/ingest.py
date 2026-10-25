@@ -35,6 +35,7 @@ class PptxCourseIngestor:
         course_version: str,
         source_id: str,
         language: str = "en-US",
+        teacher_confirmed: bool = True,
     ) -> list[KnowledgeUnit]:
         from pptx import Presentation
 
@@ -101,7 +102,7 @@ class PptxCourseIngestor:
                     unit_type="slide",
                     language=language,
                     authority=1,
-                    teacher_confirmed=True,
+                    teacher_confirmed=teacher_confirmed,
                     terms=terms,
                     formulas=formulas,
                     metadata={"elementCount": len(elements), "hasNotes": bool(notes)},
@@ -130,7 +131,7 @@ class PptxCourseIngestor:
                         unit_type="slide_element",
                         language=language,
                         authority=1,
-                        teacher_confirmed=True,
+                        teacher_confirmed=teacher_confirmed,
                         terms=element_terms,
                         formulas=element_formulas,
                         bbox=item["bbox"],

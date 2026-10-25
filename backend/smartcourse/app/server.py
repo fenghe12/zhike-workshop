@@ -43,6 +43,7 @@ from .ai_intro_product import ai_intro_status, execute_fixed_ai_intro_interrupt
 from .interactive_course import execute_fixed_interrupt, list_interruptions
 from .pedagogical_ir import EXPERIMENT_CATALOG, build_e2_variants, compile_lesson_ir
 from .store import JsonStore
+from .task_queue import PersistentTaskQueue, TaskAlreadyQueued, with_queue_position
 from .uploads import save_upload
 from .translation_policy import validate_policy
 from .task_model import create_task, retry_stage, safe_artifact_name, utc_now, replace_task_assets
@@ -96,24 +97,34 @@ class SmartCourseApplication:
         )
         self._execution_lock = threading.RLock()
         self._executions: dict[str, threading.Thread] = {}
+        self.task_queue = PersistentTaskQueue(
+            self.store, self._execute, os.environ.get("SMARTCOURSE_TASK_WORKERS", "3")
+        )
+        self.task_queue.start()
 
     def task_template(self) -> dict[str, Any] | None:
         if not self.task_template_path.exists():
             return None
         return json.loads(self.task_template_path.read_text(encoding="utf-8"))
 
+    def rag_for_user(self, user_id):
+        return CourseRAGService(self.settings.data_root / "rag" / safe_artifact_name(user_id),
+                                self.rag.generator)
+
     def list_tasks(self, status: str | None = None) -> list[dict[str, Any]]:
-        tasks = [task for task in self.store.snapshot()["tasks"].values()
+        data = self.store.snapshot()
+        tasks = [with_queue_position(task, data) for task in data["tasks"].values()
                  if not task.get('inputs', {}).get('interruptionParent')]
         if status:
             tasks = [task for task in tasks if task.get("status") == status]
         return sorted(tasks, key=lambda task: task.get("updatedAt", ""), reverse=True)
 
     def get_task(self, task_id: str) -> dict[str, Any]:
-        task = self.store.snapshot()["tasks"].get(task_id)
+        data = self.store.snapshot()
+        task = data["tasks"].get(task_id)
         if not task:
             raise ApiError(HTTPStatus.NOT_FOUND, "任务不存在")
-        return task
+        return with_queue_position(task, data)
 
     def add_task(self, payload: dict[str, Any], user_id: str | None, validated_assets=None) -> dict[str, Any]:
         task = create_task(payload)
@@ -130,6 +141,7 @@ class SmartCourseApplication:
         result = self.store.transact(operation)
         if bool(payload.get("autoExecute", self.settings.auto_execute)):
             self.execute_task(result["id"], asynchronous=True)
+            return self.get_task(result["id"])
         return result
 
     def mutate_task(self, task_id: str, operation):
@@ -176,13 +188,18 @@ class SmartCourseApplication:
                     task.setdefault("outputs", {})[stage["key"]] = copy.deepcopy(detail)
                     for following in stages:
                         if following["index"] == stage_index + 1:
-                            following["status"] = "running"
+                            following["status"] = "waiting"
                             following["progress"] = 0
                 task["currentStage"] = min(5, stage_index + (status == "completed"))
                 task["overallProgress"] = round(
                     sum(int(item.get("progress", 0)) for item in stages) / 5, 1
                 )
                 task["status"] = "completed" if task["overallProgress"] == 100 else "processing"
+                if status == "queued":
+                    task["queue"] = {"state": "waiting_resource", "message": detail.get("step"),
+                                     "resource": detail.get("resource")}
+                else:
+                    task["queue"] = {"state": "running"}
                 task["updatedAt"] = now
                 return task
 
@@ -191,6 +208,8 @@ class SmartCourseApplication:
         return update
 
     def _execute(self, task_id: str, start_stage: int) -> None:
+        with self._execution_lock:
+            self._executions[task_id] = threading.current_thread()
         try:
             progress = self._progress_callback(task_id)
             progress(start_stage, "running", 0, {})
@@ -263,6 +282,9 @@ class SmartCourseApplication:
         self, task_id: str, start_stage: int = 1, asynchronous: bool = True
     ) -> dict[str, Any]:
         task = self.get_task(task_id)
+        from .remote_media import media_service_status
+        if start_stage < 5 and media_service_status() == "INACTIVE":
+            raise ApiError(HTTPStatus.CONFLICT, "本项目计算服务当前已暂停，历史课程仍可播放。启动服务后可继续执行。")
         if start_stage not in range(1, 6):
             raise ApiError(HTTPStatus.BAD_REQUEST, "阶段编号必须为 1 至 5")
         if any(not task.get("outputs", {}).get("s"+str(index)) for index in range(1, start_stage)):
@@ -271,26 +293,14 @@ class SmartCourseApplication:
             active = self._executions.get(task_id)
             if active and active.is_alive():
                 raise ApiError(HTTPStatus.CONFLICT, "任务正在执行")
-            def mark_queued(value, _data):
-                import socket
-                value.update(status="processing", currentStage=start_stage, updatedAt=utc_now())
-                value.update(workerPid=os.getpid(), workerHost=socket.gethostname())
-                value.pop("requiredAsset", None)
-                value.pop("error", None)
-                value["stages"][start_stage-1].update(status="queued", progress=0)
-            self.mutate_task(task_id, mark_queued)
-            if asynchronous:
-                worker = threading.Thread(
-                    target=self._execute,
-                    args=(task_id, start_stage),
-                    name=f"smartcourse-{task_id}",
-                    daemon=True,
-                )
-                self._executions[task_id] = worker
-                worker.start()
-                return {"accepted": True, "taskId": task_id, "startStage": start_stage}
-            self._executions[task_id] = threading.current_thread()
-        self._execute(task_id, start_stage)
+            try:
+                self.task_queue.submit(task_id, start_stage)
+            except TaskAlreadyQueued as exc:
+                raise ApiError(HTTPStatus.CONFLICT, str(exc)) from exc
+        if asynchronous:
+            return {"accepted": True, "taskId": task_id, "startStage": start_stage,
+                    "queue": self.get_task(task_id).get("queue")}
+        self.task_queue.wait(task_id)
         return self.get_task(task_id)
 
 
@@ -510,6 +520,8 @@ def make_handler(application: SmartCourseApplication):
                     self._serve_artifact(path.removeprefix("/artifacts/"), head_only=True)
                     return
                 raise ApiError(HTTPStatus.NOT_FOUND, "接口不存在")
+            except (BrokenPipeError, ConnectionResetError):
+                return
             except ApiError as exc:
                 self._json(exc.status, {"message": exc.message})
 
@@ -609,6 +621,8 @@ def make_handler(application: SmartCourseApplication):
                                 "E1", "E2", "E3", "E4", "E5", "E6", "E7", "E8", "E9"
                             ],
                             "autoExecute": application.settings.auto_execute,
+                            "taskQueue": {"workers": application.task_queue.workers, "maxWorkers": 5,
+                                          "stageLimits": application.task_queue.resources.stage_limits},
                             "mediaService": media_service_status(),
                         },
                     )
@@ -680,7 +694,7 @@ def make_handler(application: SmartCourseApplication):
                     self._json(HTTPStatus.OK, ai_intro_status(product_root))
                     return
                 if path == "/v1/rag/status":
-                    self._json(HTTPStatus.OK, application.rag.status())
+                    self._json(HTTPStatus.OK, application.rag_for_user(self._user_id(required=True)).status())
                     return
                 if path == "/v1/experiments":
                     self._json(
@@ -753,6 +767,8 @@ def make_handler(application: SmartCourseApplication):
                     self._serve_artifact(path.removeprefix("/artifacts/"))
                     return
                 raise ApiError(HTTPStatus.NOT_FOUND, "接口不存在")
+            except (BrokenPipeError, ConnectionResetError):
+                return
             except ApiError as exc:
                 self._json(exc.status, {"message": exc.message})
             except Exception as exc:
@@ -836,18 +852,26 @@ def make_handler(application: SmartCourseApplication):
                         except Exception as exc:result['remediationError']=str(exc)
                     self._json(HTTPStatus.OK,result); return
                 if path == "/v1/auth/register":
+                    account = payload.get("account", payload.get("phone", ""))
+                    password = payload.get("password", "")
+                    name = payload.get("name", "")
+                    institution = payload.get("institution", "")
+                    if not all(isinstance(value, str) for value in [account, password, name, institution]):
+                        raise ValueError("注册信息必须为文本")
+                    if "confirmPassword" in payload and payload["confirmPassword"] != password:
+                        raise ValueError("两次输入的密码不一致")
                     result = application.store.register(
-                        str(payload.get("account", payload.get("phone", ""))),
-                        str(payload.get("password", "")),
-                        str(payload.get("name", "")),
-                        str(payload.get("institution", "")),
+                        account, password, name, institution,
                     )
                     self._json(HTTPStatus.CREATED, result, self._session_cookie(result["accessToken"]))
                     return
                 if path == "/v1/auth/login":
+                    account = payload.get("account", payload.get("phone", ""))
+                    password = payload.get("password", "")
+                    if not isinstance(account, str) or not isinstance(password, str):
+                        raise ValueError("账号和密码必须为文本")
                     result = application.store.login(
-                        str(payload.get("account", payload.get("phone", ""))),
-                        str(payload.get("password", "")),
+                        account, password,
                     )
                     self._json(HTTPStatus.OK, result, self._session_cookie(result["accessToken"]))
                     return
@@ -917,18 +941,31 @@ def make_handler(application: SmartCourseApplication):
                     self._json(HTTPStatus.OK,updated)
                     return
                 if path == "/v1/rag/query":
+                    service = application.rag_for_user(self._user_id(required=True))
+                    if service.index is None:
+                        raise ApiError(HTTPStatus.CONFLICT, "请先导入课程参考课件")
                     try:
-                        result = application.rag.query(payload)
+                        result = service.query(payload)
                     except ValueError as exc:
                         raise ApiError(HTTPStatus.BAD_REQUEST, str(exc)) from exc
                     self._json(HTTPStatus.OK, result)
                     return
                 if path == "/v1/rag/verify":
-                    self._json(HTTPStatus.OK, application.rag.verify(payload))
+                    self._json(HTTPStatus.OK, application.rag_for_user(self._user_id(required=True)).verify(payload))
                     return
                 if path == "/v1/rag/ingest":
+                    user_id = self._user_id(required=True)
+                    if payload.get("registry"):
+                        raise ApiError(HTTPStatus.BAD_REQUEST, "请上传当前账户的 PPTX 参考课件")
+                    uploaded = payload.get("pptx")
+                    if isinstance(uploaded, str):
+                        uploaded = {"path": uploaded}
+                    asset = self._uploaded_asset(uploaded, "ppt")
+                    source = (application.settings.artifact_root / asset["path"].removeprefix("/artifacts/")).resolve()
+                    if source.suffix.lower() != ".pptx":
+                        raise ApiError(HTTPStatus.BAD_REQUEST, "知识库当前接收 PPTX 参考课件")
                     try:
-                        result = application.rag.ingest(payload)
+                        result = application.rag_for_user(user_id).ingest({**payload, "pptx": str(source)})
                     except (ValueError, FileNotFoundError) as exc:
                         raise ApiError(HTTPStatus.BAD_REQUEST, str(exc)) from exc
                     self._json(HTTPStatus.CREATED, result)
@@ -1217,9 +1254,12 @@ def make_handler(application: SmartCourseApplication):
                 if match:
                     def cancel(task, _data):
                         task["status"] = "cancelled"
+                        task["queue"] = {"state": "cancelled"}
+                        _data["executionQueue"] = [message for message in _data.get("executionQueue", [])
+                                                   if message["taskId"] != task["id"]]
                         task["updatedAt"] = utc_now()
                         for stage in task.get("stages", []):
-                            if stage.get("status") == "running":
+                            if stage.get("status") in {"running", "queued"}:
                                 stage["status"] = "cancelled"
                         return task
                     self._json(HTTPStatus.OK, application.mutate_task(match.group(1), cancel))
@@ -1227,6 +1267,9 @@ def make_handler(application: SmartCourseApplication):
                 match = re.fullmatch(r"/v1/tasks/([^/]+)/stages/([1-5])/retry", path)
                 if match:
                     stage_index = int(match.group(2))
+                    current = application.get_task(match.group(1))
+                    if current.get("status") in {"queued", "processing", "running"} and current.get("queue"):
+                        raise ApiError(HTTPStatus.CONFLICT, "任务已排队或正在执行")
                     result = application.mutate_task(
                         match.group(1),
                         lambda task, _data: retry_stage(task, stage_index),
@@ -1303,7 +1346,8 @@ def make_handler(application: SmartCourseApplication):
                     task_id = match.group(1)
                     with application._execution_lock:
                         active = application._executions.get(task_id)
-                        if active and active.is_alive():
+                        current = application.get_task(task_id)
+                        if (active and active.is_alive()) or (current.get("status") == "queued" and current.get("queue")):
                             raise ApiError(HTTPStatus.CONFLICT, "当前任务仍在执行，请停止后再更换素材")
                         for key in allowed:
                             allowed[key] = self._copy_task_asset(task_id, key, allowed[key])
@@ -1352,7 +1396,11 @@ def main() -> None:
     application = SmartCourseApplication(settings)
     server = ThreadingHTTPServer((host, port), make_handler(application))
     print(f"SmartCourse API listening on http://{host}:{port}", flush=True)
-    server.serve_forever()
+    try:
+        server.serve_forever()
+    finally:
+        application.task_queue.close(wait=False)
+        server.server_close()
 
 
 if __name__ == "__main__":

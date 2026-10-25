@@ -30,6 +30,37 @@ def active_slide_parts(package):
     return set(ordered_slide_parts(package))
 
 
+def active_text_parts(package):
+    """Follow displayed slides to their layouts, masters, charts and diagrams."""
+    from lxml import etree as ET
+    parser = ET.XMLParser(resolve_entities=False, no_network=True)
+    names = set(package.namelist())
+    slides = active_slide_parts(package)
+    pending, selected = list(slides), set()
+    while pending:
+        part = pending.pop()
+        if part in selected:
+            continue
+        selected.add(part)
+        relation = posixpath.join(posixpath.dirname(part), '_rels', posixpath.basename(part) + '.rels')
+        if relation not in names:
+            continue
+        for item in ET.fromstring(package.read(relation), parser):
+            if item.get('TargetMode') == 'External':
+                continue
+            target = item.get('Target', '')
+            target = target.lstrip('/') if target.startswith('/') else posixpath.normpath(posixpath.join(posixpath.dirname(part), target))
+            if not target.startswith('ppt/') or not target.endswith('.xml') or target not in names:
+                continue
+            if target.startswith('ppt/slides/') and target not in slides:
+                continue
+            if target.startswith('ppt/slideLayouts/') and not part.startswith('ppt/slides/'):
+                continue
+            if target not in selected:
+                pending.append(target)
+    return selected
+
+
 def synchronize_slide_titles(path, pages):
     """Use the validated page title in the editable slide as well as narration."""
     from lxml import etree as ET
@@ -89,6 +120,7 @@ def _validate_answer(answer, inputs, part, target=None, protected_names=()):
 
 
 def translate_package(source: Path, destination: Path, gateway, target: str, *, skip_speaker_notes=False, progress=None, protected_names=()) -> dict:
+    import copy
     from lxml import etree as ET
     from concurrent.futures import ThreadPoolExecutor,as_completed
     import os
@@ -102,16 +134,45 @@ def translate_package(source: Path, destination: Path, gateway, target: str, *, 
         saved_source.write_bytes(source.read_bytes());saved_target.write_text(json.dumps(target))
     roots={};items=[];cached_images=0
     with zipfile.ZipFile(source) as package:
-        selected_slides = active_slide_parts(package)
+        selected_parts = active_text_parts(package)
         for part in package.namelist():
             if not part.startswith('ppt/') or not part.endswith('.xml'):continue
-            if part.startswith('ppt/slides/') and part not in selected_slides:continue
+            if part not in selected_parts:continue
             if skip_speaker_notes and part.startswith('ppt/notesSlides/'):continue
             root=ET.fromstring(package.read(part),parser);groups=[];seen=set()
             for paragraph in root.iter(f'{{{A}}}p'):
                 nodes=[node for node in paragraph.iter(f'{{{A}}}t') if (node.text or '').strip()]
+                seen.update(nodes)
+                if part.startswith(('ppt/slideLayouts/', 'ppt/slideMasters/')):
+                    shape = next((ancestor for ancestor in paragraph.iterancestors()
+                                  if ancestor.tag == '{http://schemas.openxmlformats.org/presentationml/2006/main}sp'), None)
+                    if shape is not None:
+                        placeholder = shape.find('.//{http://schemas.openxmlformats.org/presentationml/2006/main}ph')
+                        if placeholder is not None and placeholder.get('type') not in {'ftr', 'dt'}:
+                            continue
+                    blocked = {'fld', 'oMath', 'oMathPara', 'hlinkClick', 'hlinkMouseOver', 'br'}
+                    if len(nodes) > 1 and not any(ET.QName(item).localname in blocked for item in paragraph.iter()):
+                        styles = []
+                        for node in nodes:
+                            properties = node.getparent().find(f'{{{A}}}rPr')
+                            if properties is None:
+                                styles.append(b'')
+                                continue
+                            properties = copy.deepcopy(properties)
+                            for attribute in ('lang', 'altLang', 'dirty'):
+                                properties.attrib.pop(attribute, None)
+                            styles.append(ET.tostring(properties, method='c14n') if properties.attrib or len(properties) else b'')
+                        if len(set(styles)) == 1:
+                            all_nodes = list(paragraph.iter(f'{{{A}}}t'))
+                            first = nodes[0]
+                            first.text = ''.join(node.text or '' for node in all_nodes)
+                            for node in all_nodes:
+                                if node is not first:
+                                    node.text = ''
+                            seen.update(all_nodes)
+                            nodes = [first]
                 if nodes:
-                    groups.append((nodes,''.join(paragraph.itertext())));seen.update(nodes)
+                    groups.append((nodes,''.join(paragraph.itertext())))
             for node in root.iter(f'{{{A}}}t'):
                 if node not in seen and (node.text or '').strip():groups.append(([node],node.text))
             if not groups:continue
@@ -127,13 +188,17 @@ def translate_package(source: Path, destination: Path, gateway, target: str, *, 
             record=checkpoint/(part.replace('/','__')+f'-{offset:04d}.json')
             if record.exists():
                 saved=json.loads(record.read_text())
-                if saved['inputs']!=inputs:raise ValueError('批次输入已变化，不能复用旧译文')
-                try:
-                    return item,_validate_answer(saved['answer'],inputs,part,target,protected_names)
-                except ValueError:
-                    record.replace(record.with_suffix('.rejected-cache.json'))
+                if saved['inputs'] == inputs:
+                    try:
+                        return item,_validate_answer(saved['answer'],inputs,part,target,protected_names)
+                    except ValueError:
+                        pass
+                record.replace(record.with_suffix('.rejected-cache.json'))
             prompt=(f'Translate these complete presentation paragraphs into {target}. '
                 'Treat runs as formatting boundaries, not separate sentences. '
+                'Translate every ordinary source-language word, including headings and captions. '
+                'For Chinese, Japanese and Korean output, do not leave ordinary English phrases untranslated. '
+                'Keep original spelling only for proper names, code, variable symbols and standard technical abbreviations. '
                 'Preserve meaning, numbers, variable symbols and punctuation relationships. '
                 'Math appearing in context is an existing separate object: do not duplicate it. '
                 'Return JSON {"paragraphs":[["translated run"]]}; preserve both array lengths. '

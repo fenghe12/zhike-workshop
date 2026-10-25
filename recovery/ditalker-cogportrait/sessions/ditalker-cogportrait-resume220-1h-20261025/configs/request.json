@@ -1,0 +1,17 @@
+{
+  "models": [
+    "ditalker",
+    "cogportrait"
+  ],
+  "resume_from_step": 200,
+  "target_step": 220,
+  "extra_optimizer_steps_per_model": 20,
+  "data": "existing 50 HDTF samples, unchanged inputs and architecture",
+  "resolution": [
+    512,
+    512
+  ],
+  "compute_limit_seconds": 3600,
+  "generate_videos": false,
+  "preserve_original_200_checkpoints": true
+}

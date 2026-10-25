@@ -3,12 +3,20 @@ import unittest
 from pathlib import Path
 
 from app.config import Settings
-from app.full_pipeline import FullPipelineRunner
+from app.full_pipeline import FullPipelineRunner, _exact_token_accuracy
 from app.server import SmartCourseApplication
 from app.translation_policy import validate_policy, meets_thresholds
 
 
 class TranslationPolicyTests(unittest.TestCase):
+    def test_ai_expansion_preserves_the_term_without_ignoring_numbers_or_operators(self):
+        source = 'Origin of AI\n1956\nAND'
+        for name in ['人工智能', '人工知能', '인공 지능', 'Künstliche Intelligenz',
+                     'intelligence artificielle', 'artificial intelligence']:
+            self.assertEqual(_exact_token_accuracy(source, name + ' 1956 AND'), 1.0)
+        self.assertLess(_exact_token_accuracy(source, '人工智能 1957 AND'), 1.0)
+        self.assertLess(_exact_token_accuracy(source, '人工智能 1956'), 1.0)
+
     def test_invalid_thresholds_are_rejected(self):
         for value in [{"semantic_similarity": float("nan")}, {"terminology_coverage": 1.1},
                       {"maxRetries": 4}, {"maxRetries": True}, {"unknown": 1}]:

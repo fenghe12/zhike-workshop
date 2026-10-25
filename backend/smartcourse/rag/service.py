@@ -58,6 +58,7 @@ class CourseRAGService:
                     pptx, course_id=course_id, course_version=course_version,
                     source_id=str(payload.get("pptxSourceId", "teacher-chapter-2")),
                     language=str(payload.get("pptxLanguage", "en-US")),
+                    teacher_confirmed=False,
                 )
             )
         registry = payload.get("registry")

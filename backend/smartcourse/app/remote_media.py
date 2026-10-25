@@ -14,6 +14,8 @@ from urllib.parse import urlparse
 def media_service_status():
     if os.environ.get("SMARTCOURSE_REMOTE_MEDIA") != "1":
         return "LOCAL"
+    if os.environ.get("SMARTCOURSE_MEDIA_SERVICE_ENABLED", "1") != "1":
+        return "INACTIVE"
     state_path = os.environ.get("SMARTCOURSE_REMOTE_STATE")
     if not state_path:
         return "UNCONFIGURED"

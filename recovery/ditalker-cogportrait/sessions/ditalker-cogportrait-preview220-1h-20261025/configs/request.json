@@ -1,0 +1,29 @@
+{
+  "task": "Show actual short-training outputs",
+  "checkpoint_step": 220,
+  "models": [
+    "ditalker",
+    "cogportrait-pose"
+  ],
+  "resolution": [
+    512,
+    512
+  ],
+  "sample": "WDA_KirstenGillibrand_000_8181_8261",
+  "split": "training sample",
+  "ditalker": {
+    "frames": 16,
+    "source_stride": 4,
+    "fps": 6.25,
+    "sampling_steps": 25,
+    "cfg": 7.0
+  },
+  "cogportrait": {
+    "frames": 64,
+    "fps": 25,
+    "sampling_steps": 40,
+    "cfg": 4.5,
+    "shift": 3.0
+  },
+  "compute_limit_seconds": 3600
+}

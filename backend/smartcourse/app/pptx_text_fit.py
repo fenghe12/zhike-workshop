@@ -181,10 +181,10 @@ def fit_translated_text(source, target):
                             size.set('cy', str(min(51206400, int(size.get('cy')) * 4)))
                             content = E.tostring(tree, encoding='UTF-8', xml_declaration=True)
                         expanded.writestr(name, content)
-            subprocess.run([office,'-env:UserInstallation='+(folder/'profile').as_uri(),
-                            '--headless','--convert-to','pdf','--outdir',str(folder),str(render_path)],
-                           check=True,capture_output=True,timeout=180)
-            pdfs.append(folder/(render_path.stem+'.pdf'))
+            from .pptx_render import render_pptx
+            rendered = folder / 'rendered'
+            render_pptx(render_path, rendered, width=640, pdf_name='measurement.pdf')
+            pdfs.append(rendered / 'measurement.pdf')
         return fit_from_pdfs(source,target,*pdfs)
 
 

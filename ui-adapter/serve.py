@@ -1,5 +1,5 @@
 """Serve the UI and read actual PPTX metadata without starting any model."""
-import argparse,base64,json,posixpath,uuid,zipfile,io
+import argparse,base64,json,posixpath,uuid,zipfile,io,os
 from pathlib import Path
 from http.server import BaseHTTPRequestHandler,ThreadingHTTPServer
 from urllib.parse import urlparse,parse_qs,unquote
@@ -7,7 +7,7 @@ from urllib.request import Request,urlopen
 from urllib.error import HTTPError,URLError
 from xml.etree import ElementTree as E
 ROOT=Path(__file__).resolve().parent
-PRIVATE=ROOT/'.preview';PRIVATE.mkdir(exist_ok=True)
+PRIVATE=Path(os.environ.get('SMARTCOURSE_ADAPTER_STATE_ROOT',ROOT/'.preview'));PRIVATE.mkdir(parents=True,exist_ok=True)
 CONFIG=PRIVATE/'service.json'
 NS={'p':'http://schemas.openxmlformats.org/presentationml/2006/main','a':'http://schemas.openxmlformats.org/drawingml/2006/main','r':'http://schemas.openxmlformats.org/officeDocument/2006/relationships'}
 def config():return json.loads(CONFIG.read_text()) if CONFIG.exists() else {'base_url':'http://127.0.0.1:19080'}
@@ -88,6 +88,7 @@ class Handler(BaseHTTPRequestHandler):
   body=self.rfile.read(length)
   try:
    if path=='/api/config':
+    if os.environ.get('SMARTCOURSE_ALLOW_SERVICE_CONFIG')!='1':return self.send(403,{'message':'服务连接由管理员配置，请在账户设置中调整课程参数。'})
     value=json.loads(body);url=value.get('base_url','');parsed=urlparse(url)
     if parsed.scheme not in ['http','https'] or not parsed.hostname or parsed.username or parsed.password:raise ValueError('请输入有效的服务地址')
     CONFIG.write_text(json.dumps({'base_url':url.rstrip('/')}));return self.send(200,{'saved':True})

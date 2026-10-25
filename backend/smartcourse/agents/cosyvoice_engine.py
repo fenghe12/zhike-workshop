@@ -23,7 +23,7 @@ MATH_WORDS = {
 LANGUAGE_INSTRUCTIONS = {
     'zh': 'You are a helpful assistant. 请使用自然、清晰、适合高校课堂的普通话讲解，语速稳定，句末适当停顿。<|endofprompt|>',
     'ja': 'You are a helpful assistant. 请用日语表达。<|endofprompt|>',
-    'ko': 'You are a helpful assistant. 한국어로 자연스럽고 또렷하게 말하세요.<|endofprompt|>',
+    'ko': 'You are a helpful assistant. 请用韩语表达。<|endofprompt|>',
 }
 
 
@@ -42,11 +42,17 @@ def speech_chunks(text, maximum=180):
     for sentence in sentences:
         remaining = sentence.strip()
         while len(remaining) > maximum:
-            boundary = remaining.rfind(' ', 0, maximum+1)
+            phrase = remaining.rfind('、', maximum//2, maximum+1)
+            boundary = phrase+1 if phrase >= 0 else remaining.rfind(' ', 0, maximum+1)
             if boundary <= 0:
                 boundary = maximum
-            result.append(remaining[:boundary].strip())
+            part = remaining[:boundary].strip()
             remaining = remaining[boundary:].strip()
+            # Keep closing punctuation with the preceding phrase before synthesis.
+            while remaining and remaining[0] in '、，,。.!?！？；;：:':
+                part += remaining[0]
+                remaining = remaining[1:].lstrip()
+            result.append(part)
         if remaining:
             result.append(remaining)
     return result

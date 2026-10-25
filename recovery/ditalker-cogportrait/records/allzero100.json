@@ -1,0 +1,137 @@
+{
+  "date": "2026-10-25",
+  "hardware": "one Ascend 910B1, 64 GB",
+  "models": {
+    "ditalker": {
+      "completed_steps": 100,
+      "actual_optimizer_updates": 100,
+      "data_count": 50,
+      "resolution": [
+        512,
+        512
+      ],
+      "initialization_mode": "all_added_parameters_zero",
+      "fresh_start": true,
+      "trainable_parameter_count": 557911534,
+      "optimizer_state_count": 908,
+      "optimizer_steps_min": 100,
+      "optimizer_steps_max": 100,
+      "nonzero_gradient_steps_by_group": {
+        "scale_adapter": 0,
+        "audio_attention": 0,
+        "style_attention": 0,
+        "emotion_cross_attention": 100,
+        "audio_projection": 0,
+        "style_model": 0,
+        "style_content_model": 0,
+        "style_content_decoder": 0,
+        "style_projection": 0,
+        "pose_adapter": 100,
+        "repa_proj": 100
+      },
+      "groups_with_no_nonzero_gradient": [
+        "scale_adapter",
+        "audio_attention",
+        "style_attention",
+        "audio_projection",
+        "style_model",
+        "style_content_model",
+        "style_content_decoder",
+        "style_projection"
+      ],
+      "final_nonzero_parameter_elements_by_group": {
+        "scale_adapter": 0,
+        "audio_attention": 0,
+        "style_attention": 0,
+        "emotion_cross_attention": 32256,
+        "audio_projection": 0,
+        "style_model": 0,
+        "style_content_model": 0,
+        "style_content_decoder": 0,
+        "style_projection": 0,
+        "pose_adapter": 4,
+        "repa_proj": 768
+      },
+      "changed_parameter_tensors_by_group": {
+        "scale_adapter": 0,
+        "audio_attention": 0,
+        "style_attention": 0,
+        "emotion_cross_attention": 28,
+        "audio_projection": 0,
+        "style_model": 0,
+        "style_content_model": 0,
+        "style_content_decoder": 0,
+        "style_projection": 0,
+        "pose_adapter": 1,
+        "repa_proj": 1
+      },
+      "checkpoint_inspection": {
+        "full_checkpoint_loaded_on_cpu": true,
+        "step": 100,
+        "optimizer_states": 908,
+        "optimizer_steps_min": 100,
+        "optimizer_steps_max": 100,
+        "trained_parameter_samples_match": true,
+        "all_cases_seen_twice": true,
+        "initialization_mode": "all_added_parameters_zero"
+      },
+      "initialization_audit": {
+        "all_added_parameters_exactly_zero": true,
+        "total_added_parameters": 557911534,
+        "added_parameter_tensors": 908,
+        "nonzero_elements": 0
+      },
+      "generation_result": "failed: nearly uniform color frames with CFG1 and CFG7"
+    },
+    "cogportrait": {
+      "completed_steps": 100,
+      "actual_optimizer_updates": 100,
+      "data_count": 50,
+      "resolution": [
+        512,
+        512
+      ],
+      "initialization_mode": "all_added_parameters_zero",
+      "fresh_start": true,
+      "trainable_parameter_count": 332800,
+      "optimizer_state_count": 2,
+      "optimizer_steps_min": 100,
+      "optimizer_steps_max": 100,
+      "nonzero_gradient_steps_by_group": {
+        "cond_encoder": 100
+      },
+      "groups_with_no_nonzero_gradient": [],
+      "final_nonzero_parameter_elements_by_group": {
+        "cond_encoder": 332800
+      },
+      "changed_parameter_tensors_by_group": {
+        "cond_encoder": 2
+      },
+      "checkpoint_inspection": {
+        "full_checkpoint_loaded_on_cpu": true,
+        "step": 100,
+        "optimizer_states": 2,
+        "optimizer_steps_min": 100,
+        "optimizer_steps_max": 100,
+        "trained_parameter_samples_match": true,
+        "all_cases_seen_twice": true,
+        "initialization_mode": "all_added_parameters_zero"
+      },
+      "initialization_audit": {
+        "all_added_parameters_exactly_zero": true,
+        "total_added_parameters": 332800,
+        "added_parameter_tensors": 2,
+        "nonzero_elements": 0
+      },
+      "generation_result": "pose preview generated; planner/KTO and final quality metrics not evaluated"
+    }
+  },
+  "upstream_ditalker": "https://github.com/fenghe12/DiTalker-CVIU",
+  "patched_source_files": [
+    "ditalker/models/base/attention.py",
+    "ditalker/models/base/transformer3d.py",
+    "ditalker/utils/gaussian_diffusion.py",
+    "scripts/shape_check.py",
+    "scripts/train.py"
+  ]
+}
