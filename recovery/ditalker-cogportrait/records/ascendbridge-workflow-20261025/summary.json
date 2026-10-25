@@ -1,0 +1,18 @@
+{
+  "framework_readme_version": "2.5",
+  "native_client_authentication": "401",
+  "entry": "Codex-compatible AGENTS adapter and benchmark-runner roles",
+  "workflow_completed": false,
+  "valid_completed_NPU_cases": {
+    "EasyAnimateV3": 0,
+    "Wan2.2S2V14B": 0
+  },
+  "requested_cases_per_model": 50,
+  "full_video_pipeline": false,
+  "actual_failure": "CANN multiprocessing AF_UNIX path too long before valid model forwards",
+  "final_tempdir_correction_local_process_test_passed": true,
+  "final_tempdir_correction_NPU_retest": false,
+  "official_source_checks_passed": true,
+  "official_completion_checks_passed": false,
+  "compute_stopped": true
+}

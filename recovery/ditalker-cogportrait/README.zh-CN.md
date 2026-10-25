@@ -45,3 +45,8 @@ bash /home/ma-user/work/npu-migration/recovery/ditalker-cogportrait-50hdtf-100st
 ## 用户明确的初始化含义与当前结果
 
 零初始化指新增残差分支最后输出层为零，内部参数保留正常初始化。此前全部参数为零属于实现理解错误。[本次50例100步修复](sessions/ditalker-gradient-repair-50hdtf-100steps-20261025/README.zh-CN.md)已验证11/11组的非零梯度与参数更新，908/908个新增张量曾获得非零梯度。纯固定噪声MSE略升0.221%，当前完成梯度传播验证，未作收敛结论。统一HTML内嵌两模型完整loss、曲线、诊断、历史记录和新预览。
+
+
+## AscendBridge workflow trial · 2026-10-25
+
+[实际流程试验](sessions/ascendbridge-workflow-trial-20261025/README.zh-CN.md)：适配与评测源码检查通过；真实NPU试验在CANN进程通信初始化处失败，没有有效50输入指标。原生客户端认证也未通过。短临时路径及Python缓存修正已通过本地通信验证，仍需NPU复测。

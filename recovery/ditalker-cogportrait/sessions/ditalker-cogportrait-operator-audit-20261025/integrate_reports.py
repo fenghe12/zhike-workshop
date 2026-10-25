@@ -67,7 +67,10 @@ repair+='</section>'
 header='<header class="audit"><h1>DiTalker / CogPortrait 训练与诊断总览</h1><p>完整loss、曲线、诊断、视频与DiTalker修复记录已整合在本文件，离线可查看。</p><nav><a href="#gradient-repair">DiTalker修复训练</a> · <a href="#complete-loss-records">两模型100步loss与曲线</a> · <a href="#operator-audit-20261025">算子与质量诊断</a> · <a href="#historical-allzero100">历史完整训练报告</a></nav></header>'
 if repaired:header=header.replace('</header>','<p>'+file_link(FIX/'outputs/ditalker/loss.csv','DiTalker loss CSV')+' · '+file_link(OLD/'outputs/cogportrait/loss.csv','CogPortrait loss CSV')+'</p></header>')
 styles=''.join(t.get_text() for t in diagnosis.find_all('style'))+''.join(t.get_text() for t in history.find_all('style'))+'body{max-width:1340px;margin:20px auto;background:#0e161d;padding:20px}.audit{margin:20px 0}.audit table{white-space:nowrap}.audit nav{line-height:2}.audit video{max-width:100%;width:100%}.audit details{margin:15px 0}.audit h1{font-size:30px}#historical-allzero100{padding:25px;border:1px solid #405260;border-radius:14px;margin-top:24px}#historical-allzero100:before{content:"历史记录：以下保留原全零实验，当前修复结果见本页顶部";display:block;padding:16px;background:#302c25;color:#f8dfad}'
-content=header+repair+losses+str(diagnostic_section)+str(historical_section)
+bridge_fragment=H.parent/'ascendbridge-workflow-trial-20261025/outputs/bridge-report-section.html'
+bridge=bridge_fragment.read_text() if bridge_fragment.exists() else ''
+if bridge:header=header.replace('<nav>','<nav><a href="#ascendbridge-workflow-20261025">AscendBridge实际流程</a> · ')
+content=header+bridge+repair+losses+str(diagnostic_section)+str(historical_section)
 page='<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DiTalker / CogPortrait训练、loss、曲线与诊断</title><style>'+styles+'</style><body>'+content+'</body></html>'
 def atomic_text(path,value):
     staging=path.with_name('.'+path.name+'.staged')

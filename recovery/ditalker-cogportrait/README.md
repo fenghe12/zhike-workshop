@@ -59,3 +59,8 @@ bash /home/ma-user/work/npu-migration/recovery/ditalker-gradient-repair-50hdtf-1
 It performs both training runs before inference, skips already completed runs when recovering an interrupted session, and loads the new step-100 export explicitly. `run_cfg7_after_cog.sh` preserves the additional CFG 7 comparison after CogPortrait exits. Cloud start/stop and billing controls remain the caller's responsibility; stop compute after collection and retain the persistent volume and private backups.
 
 The included configuration records the strict all-zero experiment. Do not describe the corrected DiTalker preview as effective training of every added component. In the earlier residual-output-zero experiment, internal parameters were not all zero; that experiment must remain distinct.
+
+
+## AscendBridge workflow trial · 2026-10-25
+
+[Actual workflow trial](sessions/ascendbridge-workflow-trial-20261025/README.md): adapters and benchmark source checks completed; real NPU runs stopped at CANN process-communication initialization. No valid50-input metrics. Native client authentication also failed. The final short-TMPDIR correction passed a local communication test and still needs an NPU retest.
