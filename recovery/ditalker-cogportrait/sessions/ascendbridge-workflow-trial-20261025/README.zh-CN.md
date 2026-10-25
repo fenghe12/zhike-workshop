@@ -1,21 +1,20 @@
-# AscendBridge 实际流程试验 · 2026-10-25
+# AscendBridge 原生Qwen试验 · 2026-10-25
 
 [English](README.md)
 
-本次流程未完成。两个适配和评测脚本均通过官方源码检查，但没有有效的50输入NPU指标，完整完成检查仍未通过。没有报告视频质量、CUDA数值精度或模型性能结论。
+本次恢复的运行试验已通过：原生编码客户端使用自托管Qwen3.6-35B-A3B Q8生成方案、调用真实执行工具并核对实际结果。两个完整原始预训练主干均完成50个不同HDTF输入，通过未修改的适配与评测检查器。成功执行未使用Kimi或外部语言模型接口。
 
-已下载的SLAI-AscendBridge2源码README标注版本2.5。原生Claude客户端的两份既有Kimi配置均返回401。本次按源码支持的Codex AGENTS入口执行适配与评测角色，不能称为原生Claude自动编排成功。工具源码：https://gitcode.com/SLAI/SLAI-AscendBridge2
+| 模型 | 不同输入 | 平均同步前向 | 测量阶段峰值已分配设备内存 |
+|---|---:|---:|---:|
+| EasyAnimate V3 |50|0.292390秒|7.1964GiB|
+| Wan2.2 S2V-14B |50|1.269906秒|32.3737GiB|
 
-验证对象为完整原始预训练EasyAnimate V3和Wan2.2 S2V主干，不包含DiTalker或CogPortrait新增部件。计划使用50个不同HDTF512×512、16帧输入的原生latent，执行单个去噪时间步前向，不包含完整视频采样和解码。本次未完成50输入。
+硬件为单张昇腾910B2。原始输入512×512、16帧，测量对象为其原生VAE latent的单个去噪时间步，保留完整原始主干。耗时包含输入传输、噪声与条件准备，不包含文件读取、输出统计及模型加载。设备内存为两次预热后50次测量中的峰值。本次未评估完整视频采样、解码、视频质量或匹配条件的CUDA数值对照。
 
-## 实际失败与修正
+实际使用README标注为2.5的Bridge源码：https://gitcode.com/SLAI/SLAI-AscendBridge2 。原生客户端以单工作进程顺序继续既有适配，实际调用三次Bash工具，完成方案写入、真实模型执行和结果核对。工作工具仅停止本任务Qwen，顺序执行两模型，再恢复Qwen供结果核对。未启动多智能体团队，也未声称从原始CUDA源码重新完成全自动迁移。
 
-CANN初始化时Python进程通信报`OSError: AF_UNIX path too long`，随后返回ACL500001，尚未进入有效模型前向。仅更新TMPDIR不能清除Python此前缓存的长路径。现已将启动前临时目录设为已确认持久化数据盘上的短路径，并显式更新`tempfile.tempdir`。本地进程通信复现了旧错误，显式清除缓存后通信通过。最终修正尚未在NPU复测，不能将该问题归为模型算子不支持。
+历史失败包括Kimi401、CANN进程通信路径过长和原生客户端上下文超限，记录保存在本地与私有OBS。最终修正为Python启动前短持久化TMPDIR、显式重置tempfile.tempdir、64K Qwen上下文及精简任务说明。真实NPU进程通信和矩阵计算检查均通过。
 
-## 文件与运行
+独立环境重建验收未执行：上游verify_environment.py计算文件校验值，与用户当前AGENTS.md要求冲突。原检查器未修改，正式看板仍为in_progress；本次真实运行结果不代表新隔离环境安装已通过。
 
-将adaptations目录复制到对应Bridge源码目录。run_remote.sh和run_models.py顺序执行两模型，并调用未修改的官方适配、评测检查器。各模型accuracy_run.py使用`--use-pretrained --max-samples 50`读取真实权重，仅加载一次模型，再执行一次真实demo前向、两次预热与50输入评测。实际成功后才会生成指标、trace和小型输出统计文件。
-
-复用的持久化环境为Python3.11、torch2.7.1+cpu、torch_npu2.7.1、CANN8.3rc1、diffusers0.35.2、transformers4.53.1、accelerate1.12.0、safetensors0.4.5。torch版本的cpu后缀不表示模型已使用CPU回退。uv.lock由解析器实际生成；新建隔离环境安装尚未验证。本次未修改原模型环境。
-
-build_trial_report.py保存本次状态，reproduce_tempdir.py仅验证本地进程通信修正。私有云状态、失败日志、模型权重、HDTF数据及整合报告未发布到公开仓库，保存在本地与私有OBS。既有DiTalker/CogPortrait训练记录保持独立。
+复现需将adaptations复制到对应Bridge完整源码的framework/adaptations中，准备已有持久化权重、真实HDTF缓存及Python3.11、torch2.7.1+cpu、torch_npu2.7.1、CANN8.3rc1环境。uv.lock由解析器生成。cloud_session.py为可配置的公开控制器模板，将cloud-config.example.json复制为cloud-config.private.json并填写自己的账号及凭据文件路径，保持该配置私有。qwen-task.txt的{{SESSION_ROOT}}由启动器替换。还需要已安装的原生编码客户端和Huawei ModelArts SDK。权重、数据、私钥、真实账号配置及完整日志未公开，保存在私有OBS。实际数值、Qwen方案和核对记录见../../records/ascendbridge-workflow-20261025/。

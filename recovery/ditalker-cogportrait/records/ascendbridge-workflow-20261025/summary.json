@@ -1,18 +1,70 @@
 {
   "framework_readme_version": "2.5",
-  "native_client_authentication": "401",
-  "entry": "Codex-compatible AGENTS adapter and benchmark-runner roles",
-  "workflow_completed": false,
-  "valid_completed_NPU_cases": {
-    "EasyAnimateV3": 0,
-    "Wan2.2S2V14B": 0
-  },
-  "requested_cases_per_model": 50,
+  "execution_entry": "Native coding client with self-hosted Qwen3.6-35B-A3B-Q8",
+  "native_client_exit_code": 0,
+  "native_client_tool_calls": 3,
+  "native_worker_executions": 1,
+  "external_Kimi_used": false,
+  "requested_runtime_trial_completed": true,
   "full_video_pipeline": false,
-  "actual_failure": "CANN multiprocessing AF_UNIX path too long before valid model forwards",
-  "final_tempdir_correction_local_process_test_passed": true,
-  "final_tempdir_correction_NPU_retest": false,
-  "official_source_checks_passed": true,
-  "official_completion_checks_passed": false,
-  "compute_stopped": true
+  "CUDA_reference_comparison": false,
+  "formal_environment_rebuild_executed": false,
+  "formal_board_completion": false,
+  "formal_completion_reason": "Upstream environment validator computes file digests, prohibited by current workspace instructions",
+  "actual_NPU_tempdir_fix_passed": true,
+  "compute_stopped": true,
+  "models": [
+    {
+      "model_id": "Wan-AI/Wan2.2-S2V-14B",
+      "num_samples": 50,
+      "latency_s": 1.2699060970172287,
+      "peak_memory_mb": 33150.71337890625,
+      "all_outputs_finite": true,
+      "attention_adapter_calls": 4876,
+      "source_resolution": [
+        512,
+        512
+      ],
+      "rgb_frames": 16,
+      "model_loading": {
+        "missing_keys": 0,
+        "unexpected_keys": 0,
+        "source": "Original WanModel_S2V",
+        "weight_path": "/home/ma-user/work/npu-migration/checkpoints/wan2.2-s2v-14b",
+        "layers": 40,
+        "parameter_count": 16295755609,
+        "base_only": true,
+        "native_cond_encoder": true,
+        "native_framepack_preserved": true,
+        "native_motioner_preserved": false,
+        "compatibility": {
+          "forward_max_abs": 2.384185791015625e-07,
+          "input_gradient_max_abs": 4.76837158203125e-07
+        }
+      }
+    },
+    {
+      "model_id": "alibaba-pai/EasyAnimateV3-XL-2-InP-512x512",
+      "num_samples": 50,
+      "latency_s": 0.2923897456843406,
+      "peak_memory_mb": 7369.14697265625,
+      "all_outputs_finite": true,
+      "attention_adapter_calls": 8162,
+      "source_resolution": [
+        512,
+        512
+      ],
+      "rgb_frames": 16,
+      "model_loading": {
+        "missing_keys": 0,
+        "unexpected_keys": 0,
+        "source": "Original EasyAnimate Transformer3DModel",
+        "weight_path": "/home/ma-user/work/npu-migration/recovery/easyanimate-wans2v-training-3h-20261024/models/EasyAnimateV3-XL-2-InP-512x512/transformer",
+        "layers": 28,
+        "parameter_count": 1538364704,
+        "base_only": true,
+        "native_inpainting_required": true
+      }
+    }
+  ]
 }

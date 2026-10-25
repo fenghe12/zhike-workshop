@@ -1,0 +1,48 @@
+[
+  {
+    "adaptation": "alibaba_pai_easyanimatev3_xl_2_inp_512x512",
+    "started_epoch": 1792941225.6314895,
+    "exit_code": 0,
+    "wall_seconds": 155.78435516357422,
+    "adaptation_gate": {
+      "exit_code": 0
+    },
+    "benchmark_gate": {
+      "exit_code": 0
+    },
+    "trace_analysis_exit_code": 0,
+    "formal_environment_validation": {
+      "executed": false,
+      "reason": "Upstream validator computes file digests; forbidden by current workspace instructions. Existing persistent environment is reused, not a new isolated installation."
+    },
+    "board_adaptation": {
+      "exit_code": 0
+    },
+    "board_benchmark": {
+      "exit_code": 0
+    }
+  },
+  {
+    "adaptation": "wan_ai_wan2_2_s2v_14b",
+    "started_epoch": 1792941392.2990167,
+    "exit_code": 0,
+    "wall_seconds": 287.3617789745331,
+    "adaptation_gate": {
+      "exit_code": 0
+    },
+    "benchmark_gate": {
+      "exit_code": 0
+    },
+    "trace_analysis_exit_code": 0,
+    "formal_environment_validation": {
+      "executed": false,
+      "reason": "Upstream validator computes file digests; forbidden by current workspace instructions. Existing persistent environment is reused, not a new isolated installation."
+    },
+    "board_adaptation": {
+      "exit_code": 0
+    },
+    "board_benchmark": {
+      "exit_code": 0
+    }
+  }
+]

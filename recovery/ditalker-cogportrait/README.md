@@ -61,6 +61,6 @@ It performs both training runs before inference, skips already completed runs wh
 The included configuration records the strict all-zero experiment. Do not describe the corrected DiTalker preview as effective training of every added component. In the earlier residual-output-zero experiment, internal parameters were not all zero; that experiment must remain distinct.
 
 
-## AscendBridge workflow trial · 2026-10-25
+## AscendBridge native Qwen trial · 2026-10-25
 
-[Actual workflow trial](sessions/ascendbridge-workflow-trial-20261025/README.md): adapters and benchmark source checks completed; real NPU runs stopped at CANN process-communication initialization. No valid50-input metrics. Native client authentication also failed. The final short-TMPDIR correction passed a local communication test and still needs an NPU retest.
+[Native self-hosted Qwen trial](sessions/ascendbridge-workflow-trial-20261025/README.md): both complete pretrained backbones passed50 distinct real inputs and the unmodified source/runtime checkers. EasyAnimate0.292390s, Wan S2V1.269906s per single denoising forward. Native client tool execution and final review completed. Formal isolated environment rebuild is unverified; full video and CUDA comparisons are untested.

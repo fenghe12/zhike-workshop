@@ -1,0 +1,8 @@
+{
+  "upstream_file": "framework/adaptation/scripts/verify_environment.py",
+  "forbidden_operation": "_fingerprint uses hashlib.sha256 on adaptation files",
+  "will_execute": false,
+  "official_checkers_modified": false,
+  "actual_model_execution_continues": true,
+  "formal_board_completion_claim": false
+}

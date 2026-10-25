@@ -1,0 +1,26 @@
+[
+  {
+    "model": "Wan-AI/Wan2.2-S2V-14B",
+    "distinct_case_count": 50,
+    "all50_match_manifest": true,
+    "all_outputs_finite": true,
+    "mean_forward_seconds": 1.2699060970172287,
+    "peak_allocated_GiB": 32.373743534088135,
+    "full_layers": 40,
+    "npu_attention_calls": 4876,
+    "strict_pretrained_load_passed": true,
+    "trace_and_output_files_present": true
+  },
+  {
+    "model": "alibaba-pai/EasyAnimateV3-XL-2-InP-512x512",
+    "distinct_case_count": 50,
+    "all50_match_manifest": true,
+    "all_outputs_finite": true,
+    "mean_forward_seconds": 0.2923897456843406,
+    "peak_allocated_GiB": 7.196432590484619,
+    "full_layers": 28,
+    "npu_attention_calls": 8162,
+    "strict_pretrained_load_passed": true,
+    "trace_and_output_files_present": true
+  }
+]

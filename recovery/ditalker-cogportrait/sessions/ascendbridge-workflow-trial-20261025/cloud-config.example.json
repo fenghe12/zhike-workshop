@@ -1,0 +1,8 @@
+{
+  "notebook_id": "YOUR_NOTEBOOK_ID",
+  "project_id": "YOUR_PROJECT_ID",
+  "region": "cn-southwest-2",
+  "credentials_csv": "/persistent/config/credentials.csv",
+  "ssh_key_file": "/persistent/config/id_rsa",
+  "prior_estimate_cny": 0
+}

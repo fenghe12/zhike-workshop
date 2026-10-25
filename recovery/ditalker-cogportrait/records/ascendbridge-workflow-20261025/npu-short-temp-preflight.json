@@ -1,0 +1,10 @@
+{
+  "effective_tempdir": "/home/ma-user/work/npu-migration/runtime/b25p",
+  "started_epoch": 1792940896.71684,
+  "manager_communication_passed": true,
+  "npu_matmul_passed": true,
+  "hardware": "Ascend910B2",
+  "torch": "2.7.1+cpu",
+  "torch_npu": "2.7.1",
+  "elapsed_seconds": 21.838853120803833
+}

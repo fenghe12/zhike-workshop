@@ -1,0 +1,42 @@
+{
+  "plan_id": "ascendbridge-qwen-migration-20261025",
+  "models": [
+    "EasyAnimateV3-XL-2-InP-512x512",
+    "Wan2.2-S2V-14B"
+  ],
+  "evaluation": {
+    "distinct_HDTF_cases": 50,
+    "source_rgb_resolution": [512, 512],
+    "source_rgb_frames": 16,
+    "native_latent_temporal_frames": 4,
+    "native_latent_spatial_resolution": [64, 64],
+    "single_denoising_timestep": 500,
+    "full_video_sampling": false,
+    "quality_metrics": false,
+    "warmups": 2,
+    "profile_forwards": 1
+  },
+  "tmpdir_config": {
+    "persistent_tmpdir": "/home/ma-user/work/npu-migration/runtime/b25p",
+    "tempfile_tempdir_reset": true,
+    "applied_to_fix": "AF_UNIX path too long in CANN multiprocessing"
+  },
+  "npu_preflight": {
+    "effective_tempdir": "/home/ma-user/work/npu-migration/runtime/b25p",
+    "started_epoch": 1792939605.6129935,
+    "manager_communication_passed": true,
+    "npu_matmul_passed": true,
+    "hardware": "Ascend910B2",
+    "torch": "2.7.1+cpu",
+    "torch_npu": "2.7.1",
+    "elapsed_seconds": 22.197083711624146
+  },
+  "runtime_checks": [
+    "unmodified check_adaptation.py",
+    "unmodified check_accuracy_run.py with 50 measured cases"
+  ],
+  "execution_order": "sequential on one physical NPU",
+  "budget_total_cny": 100,
+  "formal_environment_rebuild": false,
+  "no_fabrication": true
+}

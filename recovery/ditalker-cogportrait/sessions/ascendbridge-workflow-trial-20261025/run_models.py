@@ -37,7 +37,11 @@ for directory in ['alibaba_pai_easyanimatev3_xl_2_inp_512x512','wan_ai_wan2_2_s2
     if row['adaptation_gate']['exit_code']==0 and row['benchmark_gate']['exit_code']==0 and metrics_files:
         metrics=json.loads(metrics_files[-1].read_text())
         note=json.dumps(dict(scope=metrics['workload'],num_samples=metrics['num_samples'],metrics_file=metrics_files[-1].name,latency_s=metrics['latency_s'],full_video_pipeline=False,independent_accuracy_evaluation=False))
-        for label,args in [('adaptation',['update_adaptation_status','--model_id',metrics['model_id'],'--adaptation_status','completed','--adaptation_path','adaptations/'+directory,'--adaptation_notes',note]),('benchmark',['update_benchmark_status','--model_id',metrics['model_id'],'--benchmark_status','completed','--notes',note])]:
+        # Upstream formal completion invokes file digests and a new environment
+        # rebuild. The user's file-digest prohibition takes precedence; retain
+        # actual runtime results without invoking or claiming that extra gate.
+        row['formal_environment_validation']=dict(executed=False,reason='Upstream validator computes file digests; forbidden by current workspace instructions. Existing persistent environment is reused, not a new isolated installation.')
+        for label,args in [('adaptation',['update_adaptation_status','--model_id',metrics['model_id'],'--adaptation_status','in_progress','--adaptation_path','adaptations/'+directory,'--adaptation_notes',note]),('benchmark',['update_benchmark_status','--model_id',metrics['model_id'],'--benchmark_status','in_progress','--notes',note])]:
             response=subprocess.run([sys.executable,str(F/'scripts/board_ops.py'),*args],cwd=F,capture_output=True,text=True)
             (H/'logs'/(directory+'-board-'+label+'.log')).write_text(response.stdout+response.stderr)
             row['board_'+label]=dict(exit_code=response.returncode)

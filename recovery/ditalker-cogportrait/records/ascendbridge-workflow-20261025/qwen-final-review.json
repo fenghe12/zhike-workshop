@@ -1,0 +1,43 @@
+{
+  "review_id": "ascendbridge-qwen-final-review-20261025",
+  "models": [
+    {
+      "adaptation": "wan_ai_wan2_2_s2v_14b",
+      "model_name": "Wan2.2-S2V-14B",
+      "status": "completed",
+      "num_samples": 50,
+      "latency_s": 1.2699060970172287,
+      "peak_memory_mb": 33150.71337890625,
+      "exception": "",
+      "artifact_directory": "/Users/Apple/Documents/New project/outputs/ascendbridge-workflow-trial-20261025/framework/adaptations/wan_ai_wan2_2_s2v_14b"
+    },
+    {
+      "adaptation": "alibaba_pai_easyanimatev3_xl_2_inp_512x512",
+      "model_name": "EasyAnimateV3-XL-2-InP-512x512",
+      "status": "completed",
+      "num_samples": 50,
+      "latency_s": 0.2923897456843406,
+      "peak_memory_mb": 7369.14697265625,
+      "exception": "",
+      "artifact_directory": "/Users/Apple/Documents/New project/outputs/ascendbridge-workflow-trial-20261025/framework/adaptations/alibaba_pai_easyanimatev3_xl_2_inp_512x512"
+    }
+  ],
+  "model_states": "both models completed without exceptions",
+  "total_samples": 100,
+  "distinct_HDTF_cases_per_model": 50,
+  "source_resolution": "512x512",
+  "source_frames": 16,
+  "native_latent_spatial": "64x64",
+  "native_latent_temporal": 4,
+  "single_denoising_timestep": 500,
+  "full_video_pipeline": false,
+  "CUDA_reference_evaluated": false,
+  "formal_environment_rebuild_executed": false,
+  "formal_completion_limitation": "Upstream environment validator calculates file digests, forbidden by user instructions",
+  "tmpdir_applied": "/home/ma-user/work/npu-migration/runtime/b25p",
+  "npu_preflight_passed": true,
+  "hardware": "Ascend910B2",
+  "runtime": "Python 3.11 / torch 2.7.1+cpu / torch_npu 2.7.1 / CANN 8.3rc1",
+  "Qwen_restarted_after_benchmarks": true,
+  "no_fabrication": true
+}

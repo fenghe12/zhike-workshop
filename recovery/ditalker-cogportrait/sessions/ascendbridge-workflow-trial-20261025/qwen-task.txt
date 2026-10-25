@@ -1,0 +1,77 @@
+Execute the resumed AscendBridge adapter and benchmark phase with self-hosted Qwen. Previous source inspection is complete. Do not inspect source files or old logs again. The complete required facts are supplied below. Read tools are deliberately absent to keep the context bounded.
+
+Use exactly this sequence of real tool calls:
+1. Write a concise migration/evaluation plan to ABSOLUTE file {{SESSION_ROOT}}/framework/qwen-migration-plan.json. Include the two original full pretrained model names,50 distinct HDTF cases each,512x512/16-frame source, native latent single denoising timestep, short persistent TMPDIR plus tempfile.tempdir reset, the actual passed NPU initialization preflight, and unmodified runtime/source checks. No claimed result before execution.
+2. Call Bash with command "python3 '{{SESSION_ROOT}}/qwen_worker_tool.py' execute" and timeout600000. Do not run any other Bash command. The helper stops this task Qwen, executes the two complete model benchmarks sequentially on the same physical NPU, collects real outputs, then restarts Qwen before returning. Do not run it in the background.
+3. Use ONLY the actual JSON returned by that helper. Write a concise honest review to ABSOLUTE file {{SESSION_ROOT}}/framework/qwen-final-review.json. Include actual model states, actual sample counts, latency/memory only if measured, real failures, full_video_pipeline=false, CUDA_reference_evaluated=false, and formal_environment_rebuild_executed=false. The formal environment validator computes file digests, forbidden by the user, so the formal board must not be called completed. If a model fails, report that exact failure without pretending it passed. Do not read logs or perform additional research; the parent controller can handle any further source correction.
+Then finish concisely.
+
+Never calculate file digests, fabricate metrics, access credentials, alter cloud/budget controls, reduce model layers, or repeat one sample as50. Total CNY cap100 is enforced by the controller. The provider is self-hosted; client token-price estimates are not an external API charge.
+
+CONFIGURATION:
+{
+  "framework": "SLAI-AscendBridge2.5 existing source",
+  "execution_mode": "resume existing native diffusion adapters with Qwen as coding-client model",
+  "models": [
+    {
+      "model": "EasyAnimateV3-XL-2-InP-512x512",
+      "directory": "adaptations/alibaba_pai_easyanimatev3_xl_2_inp_512x512",
+      "weights": "/home/ma-user/work/npu-migration/recovery/easyanimate-wans2v-training-3h-20261024/models/EasyAnimateV3-XL-2-InP-512x512/transformer",
+      "full_backbone": true,
+      "real_pretrained": true
+    },
+    {
+      "model": "Wan2.2-S2V-14B",
+      "directory": "adaptations/wan_ai_wan2_2_s2v_14b",
+      "weights": "/home/ma-user/work/npu-migration/checkpoints/wan2.2-s2v-14b",
+      "full_backbone": true,
+      "real_pretrained": true
+    }
+  ],
+  "evaluation": {
+    "distinct_HDTF_cases": 50,
+    "source_rgb_resolution": [
+      512,
+      512
+    ],
+    "source_rgb_frames": 16,
+    "native_latent_temporal_frames": 4,
+    "native_latent_spatial_resolution": [
+      64,
+      64
+    ],
+    "single_denoising_timestep": 500,
+    "full_video_sampling": false,
+    "quality_metrics": false,
+    "warmups": 2,
+    "profile_forwards": 1
+  },
+  "prior_failure": "AF_UNIX path too long in CANN multiprocessing; both pre-Python short TMPDIR and tempfile.tempdir reset now applied",
+  "actual_NPU_preflight": {
+    "effective_tempdir": "/home/ma-user/work/npu-migration/runtime/b25p",
+    "started_epoch": 1792939605.6129935,
+    "manager_communication_passed": true,
+    "npu_matmul_passed": true,
+    "hardware": "Ascend910B2",
+    "torch": "2.7.1+cpu",
+    "torch_npu": "2.7.1",
+    "elapsed_seconds": 22.197083711624146
+  },
+  "runtime": "persistent Python3.11 torch2.7.1+cpu torch_npu2.7.1 CANN8.3rc1",
+  "checks": [
+    "unmodified check_adaptation.py",
+    "unmodified check_accuracy_run.py,50 measured cases required"
+  ],
+  "formal_environment_rebuild": "Not invoked because upstream computes file digests forbidden by user; do not claim isolated environment validated",
+  "resource_policy": "one physical NPU sequentially; helper stops only task Qwen, benchmarks both models, restarts task Qwen before returning",
+  "budget_total_cny": 100,
+  "API_billing": "self-hosted provider; CLI token cost estimates are not an external API invoice",
+  "never_do": [
+    "calculate file digests",
+    "generate false metrics",
+    "reduce model layers",
+    "repeat one sample as50",
+    "read old full logs",
+    "modify cloud budget or stop other tasks"
+  ]
+}

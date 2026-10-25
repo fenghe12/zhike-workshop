@@ -1,0 +1,6 @@
+{
+  "total_budget_cny": 100,
+  "max_new_lease_seconds": 3300,
+  "llm_provider": "self-hosted Qwen3.6-35B-A3B-Q8",
+  "stop_compute_after_completion": true
+}
