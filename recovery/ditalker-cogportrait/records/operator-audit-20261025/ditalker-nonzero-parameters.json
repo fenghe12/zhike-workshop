@@ -1,0 +1,212 @@
+{
+  "transformer_blocks.0.emotion_cross_attention.to_out.0.bias": {
+    "elements": 1152,
+    "nonzero_elements": 1152,
+    "max_abs": 0.0017172578955069184,
+    "l2_norm": 0.0382072851061821,
+    "is_bias": true
+  },
+  "transformer_blocks.1.emotion_cross_attention.to_out.0.bias": {
+    "elements": 1152,
+    "nonzero_elements": 1152,
+    "max_abs": 0.0017897927900776267,
+    "l2_norm": 0.0384213961660862,
+    "is_bias": true
+  },
+  "transformer_blocks.2.emotion_cross_attention.to_out.0.bias": {
+    "elements": 1152,
+    "nonzero_elements": 1152,
+    "max_abs": 0.0017562013817951083,
+    "l2_norm": 0.0384756363928318,
+    "is_bias": true
+  },
+  "transformer_blocks.3.emotion_cross_attention.to_out.0.bias": {
+    "elements": 1152,
+    "nonzero_elements": 1152,
+    "max_abs": 0.0017702445620670915,
+    "l2_norm": 0.03889632970094681,
+    "is_bias": true
+  },
+  "transformer_blocks.4.emotion_cross_attention.to_out.0.bias": {
+    "elements": 1152,
+    "nonzero_elements": 1152,
+    "max_abs": 0.0016992714954540133,
+    "l2_norm": 0.0378134623169899,
+    "is_bias": true
+  },
+  "transformer_blocks.5.emotion_cross_attention.to_out.0.bias": {
+    "elements": 1152,
+    "nonzero_elements": 1152,
+    "max_abs": 0.0017040434759110212,
+    "l2_norm": 0.03471289947628975,
+    "is_bias": true
+  },
+  "transformer_blocks.6.emotion_cross_attention.to_out.0.bias": {
+    "elements": 1152,
+    "nonzero_elements": 1152,
+    "max_abs": 0.0017261304892599583,
+    "l2_norm": 0.03295975178480148,
+    "is_bias": true
+  },
+  "transformer_blocks.7.emotion_cross_attention.to_out.0.bias": {
+    "elements": 1152,
+    "nonzero_elements": 1152,
+    "max_abs": 0.001743942848406732,
+    "l2_norm": 0.032380882650613785,
+    "is_bias": true
+  },
+  "transformer_blocks.8.emotion_cross_attention.to_out.0.bias": {
+    "elements": 1152,
+    "nonzero_elements": 1152,
+    "max_abs": 0.001657372689805925,
+    "l2_norm": 0.03230924904346466,
+    "is_bias": true
+  },
+  "transformer_blocks.9.emotion_cross_attention.to_out.0.bias": {
+    "elements": 1152,
+    "nonzero_elements": 1152,
+    "max_abs": 0.001703457091934979,
+    "l2_norm": 0.03285472095012665,
+    "is_bias": true
+  },
+  "transformer_blocks.10.emotion_cross_attention.to_out.0.bias": {
+    "elements": 1152,
+    "nonzero_elements": 1152,
+    "max_abs": 0.001729350071400404,
+    "l2_norm": 0.03385864943265915,
+    "is_bias": true
+  },
+  "transformer_blocks.11.emotion_cross_attention.to_out.0.bias": {
+    "elements": 1152,
+    "nonzero_elements": 1152,
+    "max_abs": 0.001688978634774685,
+    "l2_norm": 0.03512296453118324,
+    "is_bias": true
+  },
+  "transformer_blocks.12.emotion_cross_attention.to_out.0.bias": {
+    "elements": 1152,
+    "nonzero_elements": 1152,
+    "max_abs": 0.0017433315515518188,
+    "l2_norm": 0.03590526804327965,
+    "is_bias": true
+  },
+  "transformer_blocks.13.emotion_cross_attention.to_out.0.bias": {
+    "elements": 1152,
+    "nonzero_elements": 1152,
+    "max_abs": 0.00194148113951087,
+    "l2_norm": 0.035531122237443924,
+    "is_bias": true
+  },
+  "transformer_blocks.14.emotion_cross_attention.to_out.0.bias": {
+    "elements": 1152,
+    "nonzero_elements": 1152,
+    "max_abs": 0.00195614667609334,
+    "l2_norm": 0.03573189675807953,
+    "is_bias": true
+  },
+  "transformer_blocks.15.emotion_cross_attention.to_out.0.bias": {
+    "elements": 1152,
+    "nonzero_elements": 1152,
+    "max_abs": 0.0018830917542800307,
+    "l2_norm": 0.03510069474577904,
+    "is_bias": true
+  },
+  "transformer_blocks.16.emotion_cross_attention.to_out.0.bias": {
+    "elements": 1152,
+    "nonzero_elements": 1152,
+    "max_abs": 0.001887531136162579,
+    "l2_norm": 0.0354372002184391,
+    "is_bias": true
+  },
+  "transformer_blocks.17.emotion_cross_attention.to_out.0.bias": {
+    "elements": 1152,
+    "nonzero_elements": 1152,
+    "max_abs": 0.0019117024494335055,
+    "l2_norm": 0.03557104244828224,
+    "is_bias": true
+  },
+  "transformer_blocks.18.emotion_cross_attention.to_out.0.bias": {
+    "elements": 1152,
+    "nonzero_elements": 1152,
+    "max_abs": 0.0019508505938574672,
+    "l2_norm": 0.036001209169626236,
+    "is_bias": true
+  },
+  "transformer_blocks.19.emotion_cross_attention.to_out.0.bias": {
+    "elements": 1152,
+    "nonzero_elements": 1152,
+    "max_abs": 0.0019638817757368088,
+    "l2_norm": 0.03601947799324989,
+    "is_bias": true
+  },
+  "transformer_blocks.20.emotion_cross_attention.to_out.0.bias": {
+    "elements": 1152,
+    "nonzero_elements": 1152,
+    "max_abs": 0.00196319748647511,
+    "l2_norm": 0.035826463252305984,
+    "is_bias": true
+  },
+  "transformer_blocks.21.emotion_cross_attention.to_out.0.bias": {
+    "elements": 1152,
+    "nonzero_elements": 1152,
+    "max_abs": 0.0020232447423040867,
+    "l2_norm": 0.03475687652826309,
+    "is_bias": true
+  },
+  "transformer_blocks.22.emotion_cross_attention.to_out.0.bias": {
+    "elements": 1152,
+    "nonzero_elements": 1152,
+    "max_abs": 0.002005601767450571,
+    "l2_norm": 0.03640347346663475,
+    "is_bias": true
+  },
+  "transformer_blocks.23.emotion_cross_attention.to_out.0.bias": {
+    "elements": 1152,
+    "nonzero_elements": 1152,
+    "max_abs": 0.001889271312393248,
+    "l2_norm": 0.034560125321149826,
+    "is_bias": true
+  },
+  "transformer_blocks.24.emotion_cross_attention.to_out.0.bias": {
+    "elements": 1152,
+    "nonzero_elements": 1152,
+    "max_abs": 0.0020644920878112316,
+    "l2_norm": 0.03383207321166992,
+    "is_bias": true
+  },
+  "transformer_blocks.25.emotion_cross_attention.to_out.0.bias": {
+    "elements": 1152,
+    "nonzero_elements": 1152,
+    "max_abs": 0.0021046921610832214,
+    "l2_norm": 0.035292547196149826,
+    "is_bias": true
+  },
+  "transformer_blocks.26.emotion_cross_attention.to_out.0.bias": {
+    "elements": 1152,
+    "nonzero_elements": 1152,
+    "max_abs": 0.0020998662803322077,
+    "l2_norm": 0.038575828075408936,
+    "is_bias": true
+  },
+  "transformer_blocks.27.emotion_cross_attention.to_out.0.bias": {
+    "elements": 1152,
+    "nonzero_elements": 1152,
+    "max_abs": 0.00201940955594182,
+    "l2_norm": 0.03906127065420151,
+    "is_bias": true
+  },
+  "pose_adapter.conv_out.bias": {
+    "elements": 4,
+    "nonzero_elements": 4,
+    "max_abs": 0.001476242789067328,
+    "l2_norm": 0.0025083294603973627,
+    "is_bias": true
+  },
+  "repa_proj.4.bias": {
+    "elements": 768,
+    "nonzero_elements": 768,
+    "max_abs": 0.0009062367025762796,
+    "l2_norm": 0.005283494479954243,
+    "is_bias": true
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "legacy_cache_rejected": true,
+  "explicit_historical_comparison_retained": true,
+  "new_version_accepted": true,
+  "versioned_condition_overlay_applied": true,
+  "mouth_distance_uses_coordinate_units": true,
+  "incorrect_SyncNet_metric_name_rejected": true
+}

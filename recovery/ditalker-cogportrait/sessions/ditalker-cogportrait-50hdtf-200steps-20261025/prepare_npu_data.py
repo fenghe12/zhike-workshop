@@ -33,14 +33,18 @@ def ea():
  vae=AutoencoderKLMagvit.from_pretrained(str(root),subfolder='vae',torch_dtype=torch.float32).to(D).eval().requires_grad_(False)
  for i,row in enumerate(rows):
   dest=out/(row['id']+'.pt')
-  if dest.exists():continue
+  if dest.exists():
+   existing=torch.load(dest,map_location='cpu',weights_only=False)
+   if existing.get('preprocessing_version')!='native_mask_unknown_minus_one_v1':
+    raise RuntimeError('Existing DiTalker cache uses the earlier masked-pixel convention. Preserve it as an experimental record; rebuild into a fresh persistent session or use the separately versioned repaired conditions from the operator audit.')
+   continue
   frames,pixels=video(row,64);pixels=pixels[:,::4][None].to(D)
   mask=torch.ones_like(pixels[:,:1]);mask[:,:,:1]=0
   with torch.no_grad(),torch.autocast('npu',dtype=torch.bfloat16):
    latent=vae.encode(pixels).latent_dist.mode()*vae.config.scaling_factor
-   inpaint=torch.cat([vae.encode(mask.repeat(1,3,1,1,1)).latent_dist.mode(),vae.encode(pixels*(1-mask)).latent_dist.mode()],dim=1)*vae.config.scaling_factor
+   inpaint=torch.cat([vae.encode(mask.repeat(1,3,1,1,1)).latent_dist.mode(),vae.encode(pixels*(1-mask)-mask).latent_dist.mode()],dim=1)*vae.config.scaling_factor
   assert latent.shape[2:]==(4,64,64)
-  torch.save(dict(latents=latent.cpu().bfloat16(),inpaint_latents=inpaint.cpu().bfloat16()),dest)
+  torch.save(dict(latents=latent.cpu().bfloat16(),inpaint_latents=inpaint.cpu().bfloat16(),preprocessing_version='native_mask_unknown_minus_one_v1'),dest)
   progress('DiTalker VAE',i+1)
  del vae;release()
  tokenizer=T5Tokenizer.from_pretrained(str(root/'tokenizer'))

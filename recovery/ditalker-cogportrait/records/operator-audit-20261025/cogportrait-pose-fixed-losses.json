@@ -1,0 +1,317 @@
+{
+  "protocol": {
+    "cases": 50,
+    "split": "same_training_50",
+    "sigma": 0.5,
+    "seed": 6000,
+    "frames": 16,
+    "resolution": [
+      512,
+      512
+    ],
+    "base": "complete released Wan2.2 S2V",
+    "compared": "identical noise/sample, newly added pose Conv3d initial-zero versus saved-step100"
+  },
+  "rows": [
+    {
+      "initialzero": 0.05665110796689987,
+      "step100": 0.056070275604724884,
+      "sample": "WRA_DanSullivan_000_3240_3320",
+      "seconds": 25.412745815701783
+    },
+    {
+      "initialzero": 0.05457619950175285,
+      "step100": 0.053558677434921265,
+      "sample": "WDA_TammyDuckworth_000_3240_3320",
+      "seconds": 2.5156488940119743
+    },
+    {
+      "initialzero": 0.049644339829683304,
+      "step100": 0.04957691580057144,
+      "sample": "WDA_EdMarkey1_000_4941_5021",
+      "seconds": 2.514480887912214
+    },
+    {
+      "initialzero": 0.025481916964054108,
+      "step100": 0.025014905259013176,
+      "sample": "WDA_BenCardin1_000_2268_2348",
+      "seconds": 2.5129551091231406
+    },
+    {
+      "initialzero": 0.03985802084207535,
+      "step100": 0.03988412022590637,
+      "sample": "WRA_DebFischer1_000_486_566",
+      "seconds": 2.514353266917169
+    },
+    {
+      "initialzero": 0.030327793210744858,
+      "step100": 0.029671382158994675,
+      "sample": "RD_Radio49_000_972_1052",
+      "seconds": 2.512915648985654
+    },
+    {
+      "initialzero": 0.042248666286468506,
+      "step100": 0.04185297340154648,
+      "sample": "WRA_RogerWicker1_001_4617_4697",
+      "seconds": 2.5125267379917204
+    },
+    {
+      "initialzero": 0.0781281515955925,
+      "step100": 0.07780477404594421,
+      "sample": "WDA_DebbieDingell0_000_2430_2510",
+      "seconds": 2.517147911246866
+    },
+    {
+      "initialzero": 0.0437004491686821,
+      "step100": 0.04292868822813034,
+      "sample": "RD_Radio31_000_1215_1295",
+      "seconds": 2.5140532748773694
+    },
+    {
+      "initialzero": 0.047153450548648834,
+      "step100": 0.046552956104278564,
+      "sample": "WRA_JuddGregg_001_810_890",
+      "seconds": 2.5147273391485214
+    },
+    {
+      "initialzero": 0.04413577541708946,
+      "step100": 0.04409094154834747,
+      "sample": "WDA_LloydDoggett0_000_4617_4697",
+      "seconds": 2.5127545786090195
+    },
+    {
+      "initialzero": 0.051361601799726486,
+      "step100": 0.05092684179544449,
+      "sample": "WDA_MichelleLujanGrisham_000_6399_6479",
+      "seconds": 2.5122146853245795
+    },
+    {
+      "initialzero": 0.030885610729455948,
+      "step100": 0.030689530074596405,
+      "sample": "WRA_DanNewhouse_000_2511_2591",
+      "seconds": 2.5159091809764504
+    },
+    {
+      "initialzero": 0.04034586623311043,
+      "step100": 0.039697665721178055,
+      "sample": "WDA_AlexandriaOcasioCortez_000_1863_1943",
+      "seconds": 2.5154210492037237
+    },
+    {
+      "initialzero": 0.04726014286279678,
+      "step100": 0.0469137504696846,
+      "sample": "WRA_DebFischer0_000_3807_3887",
+      "seconds": 2.517752740997821
+    },
+    {
+      "initialzero": 0.05273061990737915,
+      "step100": 0.05205591022968292,
+      "sample": "WDA_BernieSanders_000_1863_1943",
+      "seconds": 2.5143168829381466
+    },
+    {
+      "initialzero": 0.03321727365255356,
+      "step100": 0.032619819045066833,
+      "sample": "WDA_EliotEngel_000_1377_1457",
+      "seconds": 2.5110985268838704
+    },
+    {
+      "initialzero": 0.051601871848106384,
+      "step100": 0.05090036615729332,
+      "sample": "WDA_AndyLevin_000_3726_3806",
+      "seconds": 2.512221482116729
+    },
+    {
+      "initialzero": 0.06066663935780525,
+      "step100": 0.05994534119963646,
+      "sample": "WDA_RobinKelly_000_405_485",
+      "seconds": 2.513582090381533
+    },
+    {
+      "initialzero": 0.051612645387649536,
+      "step100": 0.05097714439034462,
+      "sample": "WDA_JimmyGomez_000_1701_1781",
+      "seconds": 2.5116451801732183
+    },
+    {
+      "initialzero": 0.052893996238708496,
+      "step100": 0.052249521017074585,
+      "sample": "WDA_KimSchrier_000_6480_6560",
+      "seconds": 2.5134533890523016
+    },
+    {
+      "initialzero": 0.03560715913772583,
+      "step100": 0.034847527742385864,
+      "sample": "WDA_TedLieu_000_2106_2186",
+      "seconds": 2.5129222059622407
+    },
+    {
+      "initialzero": 0.04864750802516937,
+      "step100": 0.04797932505607605,
+      "sample": "WDA_KathyCastor1_000_1296_1376",
+      "seconds": 2.5152589781209826
+    },
+    {
+      "initialzero": 0.06415256857872009,
+      "step100": 0.0637122094631195,
+      "sample": "WDA_AmyKlobuchar0_000_5589_5669",
+      "seconds": 2.51020719204098
+    },
+    {
+      "initialzero": 0.06798546016216278,
+      "step100": 0.06717729568481445,
+      "sample": "WDA_KatieHill_000_1134_1214",
+      "seconds": 2.513878691010177
+    },
+    {
+      "initialzero": 0.03712519258260727,
+      "step100": 0.036432430148124695,
+      "sample": "WDA_PattyMurray1_000_1620_1700",
+      "seconds": 2.5141258826479316
+    },
+    {
+      "initialzero": 0.03848300501704216,
+      "step100": 0.03753156214952469,
+      "sample": "WDA_LucilleRoybal-Allard_000_1296_1376",
+      "seconds": 2.512304912786931
+    },
+    {
+      "initialzero": 0.043864183127880096,
+      "step100": 0.04347000643610954,
+      "sample": "WDA_BobCasey0_000_810_890",
+      "seconds": 2.5135734686627984
+    },
+    {
+      "initialzero": 0.052920639514923096,
+      "step100": 0.052473992109298706,
+      "sample": "WDA_DanKildee1_000_3888_3968",
+      "seconds": 2.510836055036634
+    },
+    {
+      "initialzero": 0.039725955575704575,
+      "step100": 0.038785554468631744,
+      "sample": "WRA_BobbySchilling_000_1458_1538",
+      "seconds": 2.5098741208203137
+    },
+    {
+      "initialzero": 0.04507726803421974,
+      "step100": 0.04464368149638176,
+      "sample": "WDA_LaurenUnderwood_000_2754_2834",
+      "seconds": 2.5110646770335734
+    },
+    {
+      "initialzero": 0.045979224145412445,
+      "step100": 0.04532557725906372,
+      "sample": "WDA_SherrodBrown1_000_4212_4292",
+      "seconds": 2.5106064742431045
+    },
+    {
+      "initialzero": 0.040817342698574066,
+      "step100": 0.04013817757368088,
+      "sample": "WDA_JeffMerkley1_000_6399_6479",
+      "seconds": 2.51346935890615
+    },
+    {
+      "initialzero": 0.03787391260266304,
+      "step100": 0.03743378072977066,
+      "sample": "WDA_DebbieWassermanSchultz_000_1782_1862",
+      "seconds": 2.5115628289058805
+    },
+    {
+      "initialzero": 0.04936229810118675,
+      "step100": 0.04881730675697327,
+      "sample": "WDA_DianneFeinstein_000_4536_4616",
+      "seconds": 2.511420737951994
+    },
+    {
+      "initialzero": 0.05771423876285553,
+      "step100": 0.057330213487148285,
+      "sample": "WDA_BarbaraLee0_000_1215_1295",
+      "seconds": 2.5115403686650097
+    },
+    {
+      "initialzero": 0.05613876134157181,
+      "step100": 0.05566612258553505,
+      "sample": "WDA_KirstenGillibrand_000_8181_8261",
+      "seconds": 2.511261616833508
+    },
+    {
+      "initialzero": 0.06321053206920624,
+      "step100": 0.0627841204404831,
+      "sample": "WDA_ScottPeters0_000_4455_4535",
+      "seconds": 2.5095364688895643
+    },
+    {
+      "initialzero": 0.05003459006547928,
+      "step100": 0.04988599568605423,
+      "sample": "WRA_MikeCrapo_000_486_566",
+      "seconds": 2.5115240290760994
+    },
+    {
+      "initialzero": 0.04610573500394821,
+      "step100": 0.04588453844189644,
+      "sample": "WDA_NancyPelosi0_000_2268_2348",
+      "seconds": 2.511802279856056
+    },
+    {
+      "initialzero": 0.04729917645454407,
+      "step100": 0.04672788456082344,
+      "sample": "WDA_JackReed0_000_2025_2105",
+      "seconds": 2.5113745578564703
+    },
+    {
+      "initialzero": 0.05630797892808914,
+      "step100": 0.055787790566682816,
+      "sample": "WDA_ZoeLofgren_000_3726_3806",
+      "seconds": 2.511514008976519
+    },
+    {
+      "initialzero": 0.07296516001224518,
+      "step100": 0.07251715660095215,
+      "sample": "WRA_KristiNoem2_000_2349_2429",
+      "seconds": 2.5102673317305744
+    },
+    {
+      "initialzero": 0.03637475520372391,
+      "step100": 0.03600718080997467,
+      "sample": "WRA_ReneeEllmers_000_1377_1457",
+      "seconds": 2.512512133922428
+    },
+    {
+      "initialzero": 0.015497691929340363,
+      "step100": 0.015539304353296757,
+      "sample": "WRA_AllenWest_000_4131_4211",
+      "seconds": 2.5129213761538267
+    },
+    {
+      "initialzero": 0.035321447998285294,
+      "step100": 0.03463122621178627,
+      "sample": "RD_Radio25_000_1215_1295",
+      "seconds": 2.509017225820571
+    },
+    {
+      "initialzero": 0.042775459587574005,
+      "step100": 0.04196975380182266,
+      "sample": "RD_Radio59_000_162_242",
+      "seconds": 2.510754525195807
+    },
+    {
+      "initialzero": 0.05087885633111,
+      "step100": 0.05038606375455856,
+      "sample": "WDA_EmanuelCleaver_000_4536_4616",
+      "seconds": 2.51146376831457
+    },
+    {
+      "initialzero": 0.04444843530654907,
+      "step100": 0.0439472571015358,
+      "sample": "RD_Radio7_000_1782_1862",
+      "seconds": 2.512767035048455
+    },
+    {
+      "initialzero": 0.060943808406591415,
+      "step100": 0.06048889085650444,
+      "sample": "WDA_JanSchakowsky1_000_5994_6074",
+      "seconds": 2.512273073196411
+    }
+  ]
+}

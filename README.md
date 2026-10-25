@@ -50,7 +50,7 @@ The [AD-NeRF recovery tools](recovery/adnerf/README.md) use the official pretrai
 
 The [video training adapters](recovery/video-training/README.md) record bounded EasyAnimate V3 and Wan2.2 S2V training on one Ascend device, including backward passes, actual parameter updates, native conditional paths, and private checkpoint recovery.
 
-The [DiTalker/CogPortrait adapters and records](recovery/ditalker-cogportrait/README.md) preserve the 50-case training runs, step-200-to-220 continuation, and fresh 100-step all-zero experiment. Both models have 100 recorded loss rows in the latter run, but DiTalker had eight groups with no nonzero gradients and failed generation. CogPortrait covers the added pose branch, not agent planning or KTO.
+The [DiTalker/CogPortrait adapters and records](recovery/ditalker-cogportrait/README.md) preserve the 50-case training runs, step-200-to-220 continuation, and fresh 100-step all-zero experiment. Both models have 100 recorded loss rows in the latter run; DiTalker had eight groups with no nonzero gradients. The [later operator audit](recovery/ditalker-cogportrait/sessions/ditalker-cogportrait-operator-audit-20261025/README.md) identifies and fixes its masked-input preview bug, while retaining the failed-learning finding and adding paired training losses and single-preview quality diagnostics. CogPortrait covers the added pose branch, not agent planning or KTO.
 
 The [Higher Education Press configuration archive](integrations/hep/README.md) preserves the existing agent prompt and historical plugin contract. It does not change the platform or redeploy a cloud endpoint.
 

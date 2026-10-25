@@ -81,7 +81,8 @@
         "added_parameter_tensors": 908,
         "nonzero_elements": 0
       },
-      "generation_result": "failed: nearly uniform color frames with CFG1 and CFG7"
+      "generation_result": "Original mask cache produced uniform-color frames. The same step100 weights produce a visible face after the native -1 masked-pixel fix; eight zero-gradient groups still prevent effective full-component learning.",
+      "original_generation_result": "failed: nearly uniform color frames with CFG1 and CFG7"
     },
     "cogportrait": {
       "completed_steps": 100,
@@ -133,5 +134,6 @@
     "ditalker/utils/gaussian_diffusion.py",
     "scripts/shape_check.py",
     "scripts/train.py"
-  ]
+  ],
+  "diagnosis_update": "See operator-audit-20261025: CPU/NPU gating comparison, exact operator errors, paired 50-case losses, and single-preview metrics."
 }

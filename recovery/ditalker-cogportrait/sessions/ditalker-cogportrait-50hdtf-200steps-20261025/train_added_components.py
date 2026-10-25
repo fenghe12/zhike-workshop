@@ -117,7 +117,20 @@ def pose(row):
   cv2.circle(image,tuple(np.rint(p[1,:2]*255).astype(int)),2,(255,0,0),-1)
  return torch.from_numpy(images).permute(3,0,1,2)[None].to(D).float()/127.5-1
 
+def validated_di_sample(sample,identifier):
+ # Old experiment caches remain available only for an explicitly requested comparison.
+ directory=os.environ.get('DITALKER_CONDITIONS_DIR')
+ if directory:
+  replacement=torch.load(Path(directory)/(identifier+'.pt'),map_location='cpu',weights_only=False)
+  assert replacement.get('preprocessing_version')=='native_mask_unknown_minus_one_v1'
+  assert replacement['inpaint_latents'].shape==sample['inpaint_latents'].shape
+  sample=dict(sample,inpaint_latents=replacement['inpaint_latents'],preprocessing_version=replacement['preprocessing_version'])
+ if sample.get('preprocessing_version')!='native_mask_unknown_minus_one_v1' and os.environ.get('DITALKER_ALLOW_RECORDED_MASK_CACHE')!='1':
+  raise RuntimeError('DiTalker masked-video cache predates the native -1 unknown-pixel fix. Set DITALKER_CONDITIONS_DIR to separately repaired conditions, or regenerate in a fresh persistent session. Historical comparisons must explicitly set DITALKER_ALLOW_RECORDED_MASK_CACHE=1.')
+ return sample
+
 def di_loss(model,row,sample,step):
+ sample=validated_di_sample(sample,row['id'])
  from ditalker.utils import gaussian_diffusion as gd
  from ditalker.utils.respace import SpacedDiffusion,space_timesteps
  latent=sample['latents'].to(D).float();model.repa_frame_index=(step-1)%latent.shape[2]

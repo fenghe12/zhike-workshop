@@ -1,3 +1,4 @@
+diff --git a/ditalker/models/base/attention.py b/ditalker/models/base/attention.py
 --- a/ditalker/models/base/attention.py
 +++ b/ditalker/models/base/attention.py
 @@ -782,7 +782,7 @@
@@ -18,6 +19,7 @@
                      audio_norm_hidden_states = audio_norm_hidden_states.to(encoder_hidden_states.dtype)
  
                  
+diff --git a/ditalker/models/base/transformer3d.py b/ditalker/models/base/transformer3d.py
 --- a/ditalker/models/base/transformer3d.py
 +++ b/ditalker/models/base/transformer3d.py
 @@ -1463,9 +1463,9 @@
@@ -61,9 +63,22 @@
                      z_s = out_repa
                  # else:
                  #     out_repa = None
+diff --git a/ditalker/utils/gaussian_diffusion.py b/ditalker/utils/gaussian_diffusion.py
 --- a/ditalker/utils/gaussian_diffusion.py
 +++ b/ditalker/utils/gaussian_diffusion.py
-@@ -836,14 +836,15 @@
+@@ -818,6 +818,7 @@
+ 
+             # print(x_start_emu.shape)
+             loss = (target - output) ** 2
++            terms["noise_mse"] = mean_flat(loss)
+             if enable_region_mask_loss:
+                 eye_mask=region_mask["eye_region_mask"]
+                 eye_mask = eye_mask.transpose(1,2)
+@@ -833,18 +834,22 @@
+                 # output_lip =output*region_mask["lip_region_mask"][:,:target.shape[2],:,:,:].transpose(1,2)
+                 # print("hahahahah")
+                 loss += region_loss_weight * (target_eye - output_eye) ** 2 
++                terms["eye_mse_weighted"] = mean_flat(region_loss_weight * (target_eye - output_eye) ** 2)
              if enable_repa:
                  proj_loss = 0.
                  bsz = z[0].shape[0]
@@ -80,15 +95,27 @@
 -                proj_loss /= (len(z) * bsz)
 +                proj_loss /= (encoder_count * bsz)
                  loss += repa_weight * proj_loss
++                terms["repa_negative_cosine"] = proj_loss
++                terms["repa_weighted"] = repa_weight * proj_loss
              if sync_net is not None and sync_lip_loss_weight !=0 and deepspeech_emb is not None:
                  sync_net.eval()
-@@ -1147,4 +1148,4 @@
+                 x_start_emu=self._predict_xstart_from_eps(x_t,t,output)
+@@ -954,6 +959,7 @@
+                 if model_kwargs['mask_loss_coef'] > 0:
+                     terms['mae'] = model_kwargs['mask_loss_coef'] * mean_flat(loss * mask) * mask.shape[1]/mask.sum(1)
+             else:
++                # Preserve the legacy key; it also includes the enabled auxiliary losses.
+                 terms["mse"] = mean_flat(loss)
+             terms["loss"] = terms["mse"] + terms["vb"] if "vb" in terms else terms["mse"]
+             if "mae" in terms:
+@@ -1147,4 +1153,4 @@
      res = th.from_numpy(arr).to(device=timesteps.device)[timesteps].float()
      while len(res.shape) < len(broadcast_shape):
          res = res[..., None]
 -    return res + th.zeros(broadcast_shape, device=timesteps.device)
 \ No newline at end of file
 +    return res + th.zeros(broadcast_shape, device=timesteps.device)
+diff --git a/scripts/shape_check.py b/scripts/shape_check.py
 --- a/scripts/shape_check.py
 +++ b/scripts/shape_check.py
 @@ -59,8 +59,9 @@
@@ -103,6 +130,7 @@
  
      # CLIP image embedding: (B, 768)
      clip_encoder_hidden_states = torch.randn(B, 768, device=device, dtype=dtype)
+diff --git a/scripts/train.py b/scripts/train.py
 --- a/scripts/train.py
 +++ b/scripts/train.py
 @@ -948,6 +948,7 @@
@@ -195,3 +223,110 @@
  
      if args.use_came:
          optimizer = optimizer_cls(
+diff --git a/metrics/calculate_lse_d.py b/metrics/calculate_lse_d.py
+--- a/metrics/calculate_lse_d.py
++++ b/metrics/calculate_lse_d.py
+@@ -1,32 +1,12 @@
+-#!/usr/bin/env python3
+-"""Compute LSE-D from paired GT/generated landmark files."""
+-
+-from __future__ import annotations
+-
+-import argparse
+-
+-from metrics.common import LANDMARK_EXTS, load_landmarks, paired_files, save_result
+-from metrics.landmark_distance import LIP_68, landmark_distance
+-
+-
+-def parse_args() -> argparse.Namespace:
+-    parser = argparse.ArgumentParser(description="Compute LSE-D from paired landmarks.")
+-    parser.add_argument("--gt_dir", required=True, help="Directory of GT landmark .npy/.json files.")
+-    parser.add_argument("--generated_dir", required=True, help="Directory of generated landmark .npy/.json files.")
+-    parser.add_argument("--output_json", default=None)
+-    return parser.parse_args()
++"""Reject the historical mouth-distance calculation mislabeled as SyncNet LSE-D."""
+ 
+ 
+ def main() -> None:
+-    args = parse_args()
+-    scores = []
+-    for gt_path, gen_path in paired_files(args.gt_dir, args.generated_dir, LANDMARK_EXTS):
+-        score = landmark_distance(load_landmarks(gt_path), load_landmarks(gen_path), indices=LIP_68)
+-        scores.append(score)
+-        print(f"{gt_path.name}: {score:.6f}")
+-    result = {"lse_d": float(sum(scores) / len(scores)), "num_pairs": len(scores)}
+-    print(f"LSE-D: {result['lse_d']:.6f}")
+-    save_result(args.output_json, result)
++    raise SystemExit(
++        "The former calculate_lse_d.py computed mouth landmark distance, not SyncNet LSE-D. "
++        "Use calculate_mouth_landmark_distance.py for that geometric measurement. "
++        "Use the official SyncNet audio-visual evaluation for LSE-D."
++    )
+ 
+ 
+ if __name__ == "__main__":
+diff --git a/metrics/calculate_mouth_landmark_distance.py b/metrics/calculate_mouth_landmark_distance.py
+new file mode 100644
+--- /dev/null
++++ b/metrics/calculate_mouth_landmark_distance.py
+@@ -0,0 +1,32 @@
++"""Mean mouth landmark distance. This is not the SyncNet audio-visual metric."""
++
++from __future__ import annotations
++
++import argparse
++
++from metrics.common import LANDMARK_EXTS, load_landmarks, paired_files, save_result
++from metrics.landmark_distance import LIP_68, landmark_distance
++
++
++def parse_args() -> argparse.Namespace:
++    parser = argparse.ArgumentParser(description="Compute mean mouth landmark distance in input coordinate units.")
++    parser.add_argument("--gt_dir", required=True, help="Directory of GT landmark .npy/.json files.")
++    parser.add_argument("--generated_dir", required=True, help="Directory of generated landmark .npy/.json files.")
++    parser.add_argument("--output_json", default=None)
++    return parser.parse_args()
++
++
++def main() -> None:
++    args = parse_args()
++    scores = []
++    for gt_path, gen_path in paired_files(args.gt_dir, args.generated_dir, LANDMARK_EXTS):
++        score = landmark_distance(load_landmarks(gt_path), load_landmarks(gen_path), indices=LIP_68)
++        scores.append(score)
++        print(f"{gt_path.name}: {score:.6f}")
++    result = {"mouth_landmark_distance": float(sum(scores) / len(scores)), "num_pairs": len(scores)}
++    print(f"Mouth landmark distance: {result['mouth_landmark_distance']:.6f}")
++    save_result(args.output_json, result)
++
++
++if __name__ == "__main__":
++    main()
+diff --git a/metrics/README.md b/metrics/README.md
+--- a/metrics/README.md
++++ b/metrics/README.md
+@@ -57,16 +57,20 @@
+   --output_json results/sync_c.json
+ ```
+ 
+-## LSE-D
++## SyncNet LSE-D and mouth landmark distance
++
++SyncNet LSE-D measures audio-visual embedding distance. It cannot be computed from facial landmark arrays alone. Use the [official SyncNet evaluation](https://github.com/joonson/syncnet_python/blob/master/SyncNetInstance.py) with its required video frame rate, audio, face preprocessing, and pretrained weights. This repository does not currently expose a validated LSE-D wrapper.
++
++The former `calculate_lse_d.py` used 2D mouth landmark distance and was mislabeled. It now exits with an explicit correction. The geometric calculation is available under its proper name:
+ 
+ ```bash
+-python metrics/calculate_lse_d.py \
++python metrics/calculate_mouth_landmark_distance.py \
+   --gt_dir path/to/gt_landmarks \
+   --generated_dir path/to/generated_landmarks \
+-  --output_json results/lse_d.json
++  --output_json results/mouth_landmark_distance.json
+ ```
+ 
+-Landmarks should be `.npy` or `.json` arrays with shape `[T, K, 2]`; for 68-point landmarks, mouth indices 48..67 are used.
++Landmarks use `[T, K, 2]` arrays. The 68-point input convention selects mouth indices 48..67. Distances retain the input coordinate units and are not directly comparable with differently normalized landmark protocols.
+ 
+ ## AKD
+ 

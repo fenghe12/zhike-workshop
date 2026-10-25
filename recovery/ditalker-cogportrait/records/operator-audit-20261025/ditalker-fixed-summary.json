@@ -1,0 +1,171 @@
+{
+  "original": {
+    "initialzero": {
+      "noise_mse": 0.07916723237431142,
+      "eye_mse_weighted": 0.018960133630316706,
+      "repa_negative_cosine": 0.0,
+      "repa_weighted": 0.0,
+      "vb": 0.0012570835078622622,
+      "loss": 0.09938444853760302
+    },
+    "step100": {
+      "noise_mse": 0.07424703389726346,
+      "eye_mse_weighted": 0.017986071714112768,
+      "repa_negative_cosine": -0.3690429639816284,
+      "repa_weighted": -0.036904297024011615,
+      "vb": 0.0011912254874732753,
+      "loss": 0.05652003579307348
+    }
+  },
+  "native": {
+    "initialzero": {
+      "noise_mse": 0.04194373412101413,
+      "eye_mse_weighted": 0.01171872751434421,
+      "repa_negative_cosine": 0.0,
+      "repa_weighted": 0.0,
+      "vb": 0.000752308180772161,
+      "loss": 0.05441476865424193
+    },
+    "step100": {
+      "noise_mse": 0.041973696348140944,
+      "eye_mse_weighted": 0.011735475885507185,
+      "repa_negative_cosine": -0.3690429639816284,
+      "repa_weighted": -0.036904297024011615,
+      "vb": 0.000752706786051931,
+      "loss": 0.017557581774890422
+    }
+  },
+  "training_native_condition_replay": {
+    "loss_terms": {
+      "vb": 1.1107292266387958e-05,
+      "noise_mse": 0.0003061909810639918,
+      "training_timestep": 794.0,
+      "eye_mse_weighted": 9.499791485723108e-05,
+      "repa_negative_cosine": -0.4339144229888916,
+      "repa_weighted": -0.04339144378900528,
+      "mse": -0.04299025610089302,
+      "loss": -0.04297914728522301
+    },
+    "forward_seconds": 0.7004680270329118,
+    "backward_seconds": 3.9073047619313,
+    "peak_allocated_bytes": 9392888320,
+    "nonzero_gradient_tensors": 30,
+    "layer_forward_and_checkpoint_recompute_events": [
+      {
+        "layer": 0,
+        "milliseconds": 19.976699829101562
+      },
+      {
+        "layer": 1,
+        "milliseconds": 18.28339958190918
+      },
+      {
+        "layer": 2,
+        "milliseconds": 19.588640213012695
+      },
+      {
+        "layer": 3,
+        "milliseconds": 18.40369987487793
+      },
+      {
+        "layer": 4,
+        "milliseconds": 19.758699417114258
+      },
+      {
+        "layer": 5,
+        "milliseconds": 19.29882049560547
+      },
+      {
+        "layer": 6,
+        "milliseconds": 20.258899688720703
+      },
+      {
+        "layer": 7,
+        "milliseconds": 18.77153968811035
+      },
+      {
+        "layer": 8,
+        "milliseconds": 19.75029945373535
+      },
+      {
+        "layer": 9,
+        "milliseconds": 18.429279327392578
+      },
+      {
+        "layer": 10,
+        "milliseconds": 19.734699249267578
+      },
+      {
+        "layer": 11,
+        "milliseconds": 18.34086036682129
+      },
+      {
+        "layer": 12,
+        "milliseconds": 19.776939392089844
+      },
+      {
+        "layer": 13,
+        "milliseconds": 18.29163932800293
+      },
+      {
+        "layer": 14,
+        "milliseconds": 19.641679763793945
+      },
+      {
+        "layer": 15,
+        "milliseconds": 19.445180892944336
+      },
+      {
+        "layer": 16,
+        "milliseconds": 19.72205924987793
+      },
+      {
+        "layer": 17,
+        "milliseconds": 18.370439529418945
+      },
+      {
+        "layer": 18,
+        "milliseconds": 20.037439346313477
+      },
+      {
+        "layer": 19,
+        "milliseconds": 19.516820907592773
+      },
+      {
+        "layer": 20,
+        "milliseconds": 21.200599670410156
+      },
+      {
+        "layer": 21,
+        "milliseconds": 19.778120040893555
+      },
+      {
+        "layer": 22,
+        "milliseconds": 21.410280227661133
+      },
+      {
+        "layer": 23,
+        "milliseconds": 60.04130172729492
+      },
+      {
+        "layer": 24,
+        "milliseconds": 21.289520263671875
+      },
+      {
+        "layer": 25,
+        "milliseconds": 21.154020309448242
+      },
+      {
+        "layer": 26,
+        "milliseconds": 21.377059936523438
+      },
+      {
+        "layer": 27,
+        "milliseconds": 20.194480895996094
+      }
+    ],
+    "optimizer_update": false
+  },
+  "completed": true,
+  "hardware": "Ascend910B1"
+}

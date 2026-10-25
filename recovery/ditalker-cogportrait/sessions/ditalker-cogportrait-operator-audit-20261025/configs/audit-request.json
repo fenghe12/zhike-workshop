@@ -1,0 +1,12 @@
+{
+  "scope": [
+    "operator_forward_backward",
+    "allzero_gradient_diagnosis",
+    "sampling_decode_isolation",
+    "aligned_single_case_metrics"
+  ],
+  "max_compute_seconds": 3600,
+  "single_device": true,
+  "training_baseline_unchanged": true,
+  "sample_limitations": "Existing previews use one training-set subject; no benchmark/generalization claim."
+}

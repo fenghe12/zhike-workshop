@@ -1,0 +1,37 @@
+{
+  "initialzero_mean": 0.04736240968108177,
+  "step100_mean": 0.04684608852490783,
+  "improved_cases": 48,
+  "cases": 50,
+  "training_replay": {
+    "loss": 0.17435863614082336,
+    "loss_terms": {
+      "flow_matching": 0.17435863614082336,
+      "sigma": 0.1788834035396576
+    },
+    "forward_seconds": 1.4092919901013374,
+    "backward_seconds": 5.003931158687919,
+    "update_seconds": 0.07392248092219234,
+    "gradient_by_tensor": {
+      "cond_encoder.added.weight": {
+        "norm": 0.37129685282707214,
+        "finite": true
+      },
+      "cond_encoder.added.bias": {
+        "norm": 0.028528885915875435,
+        "finite": true
+      }
+    },
+    "parameter_delta_norms": {
+      "cond_encoder.added.weight": 0.01144763920456171,
+      "cond_encoder.added.bias": 0.0014306476805359125
+    },
+    "peak_allocated_bytes": 43795895808,
+    "source_checkpoint_unchanged": true,
+    "extra_step_saved_as_training_result": false
+  },
+  "completed": true,
+  "hardware": "Ascend910B1",
+  "scope": "Pose branch only; no agent planner, no KTO",
+  "relative_mean_change_percent": -1.0901496770342356
+}

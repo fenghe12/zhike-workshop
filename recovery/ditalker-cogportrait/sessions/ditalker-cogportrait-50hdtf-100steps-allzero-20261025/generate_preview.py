@@ -89,6 +89,7 @@ def ditalker():
     negative,negative_mask=negative_di()
     model,details=training.make_ditalker();info=load_added(model,'ditalker')
     sample=torch.load(TRAIN/'inputs/ditalker'/(ID+'.pt'),map_location='cpu',weights_only=False)
+    sample=training.validated_di_sample(sample,ID)
     audio=torch.load(TRAIN/'inputs/features'/(ID+'-audio.pt'),map_location='cpu',weights_only=False)
     style=torch.from_numpy(np.load(TRAIN/'inputs/features'/(ID+'-3dmm.npy')))[None].to(D)
     common=dict(added_cond_kwargs={'resolution':None,'aspect_ratio':None},inpaint_latents=sample['inpaint_latents'].to(D),pad_mask=None,return_dict=False)

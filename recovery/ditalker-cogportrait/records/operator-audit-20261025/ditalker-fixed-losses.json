@@ -1,0 +1,3013 @@
+{
+  "protocol": {
+    "cases": 50,
+    "split": "same_training_50",
+    "paired_noise": true,
+    "seed": 9000,
+    "all_added_parameters_initial_zero": true,
+    "native_loss_arithmetic_preserved": true,
+    "original_cache_unchanged": true
+  },
+  "rows": [
+    {
+      "sample": "WRA_DanSullivan_000_3240_3320",
+      "seed": 9000,
+      "original_initialzero": {
+        "loss": 0.031630080193281174,
+        "components": {
+          "vb": 0.00018323374388273805,
+          "noise_mse": 0.02257416769862175,
+          "training_timestep": 337.0,
+          "eye_mse_weighted": 0.008872680366039276,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.031446848064661026,
+          "loss": 0.031630080193281174
+        },
+        "decomposition_residual": -1.6152625903487206e-09
+      },
+      "original_step100": {
+        "loss": -0.008795149624347687,
+        "components": {
+          "vb": 0.0001690637436695397,
+          "noise_mse": 0.020656298846006393,
+          "training_timestep": 337.0,
+          "eye_mse_weighted": 0.008129145950078964,
+          "repa_negative_cosine": -0.3774965703487396,
+          "repa_weighted": -0.03774965927004814,
+          "mse": -0.00896421354264021,
+          "loss": -0.008795149624347687
+        },
+        "decomposition_residual": 1.1059455573558807e-09
+      },
+      "native_initialzero": {
+        "loss": 0.015317913144826889,
+        "components": {
+          "vb": 8.904716378310695e-05,
+          "noise_mse": 0.009848657064139843,
+          "training_timestep": 337.0,
+          "eye_mse_weighted": 0.005380209535360336,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.015228865668177605,
+          "loss": 0.015317913144826889
+        },
+        "decomposition_residual": -6.184563972055912e-10
+      },
+      "native_step100": {
+        "loss": -0.022423923015594482,
+        "components": {
+          "vb": 8.910557517083362e-05,
+          "noise_mse": 0.009869211353361607,
+          "training_timestep": 337.0,
+          "eye_mse_weighted": 0.005367420148104429,
+          "repa_negative_cosine": -0.3774965703487396,
+          "repa_weighted": -0.03774965927004814,
+          "mse": -0.022513028234243393,
+          "loss": -0.022423923015594482
+        },
+        "decomposition_residual": -8.221832104027271e-10
+      }
+    },
+    {
+      "sample": "WDA_TammyDuckworth_000_3240_3320",
+      "seed": 9001,
+      "original_initialzero": {
+        "loss": 0.14261718094348907,
+        "components": {
+          "vb": 0.0010190785396844149,
+          "noise_mse": 0.11738701909780502,
+          "training_timestep": 208.0,
+          "eye_mse_weighted": 0.02421107143163681,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.14159810543060303,
+          "loss": 0.14261718094348907
+        },
+        "decomposition_residual": 1.1874362826347351e-08
+      },
+      "original_step100": {
+        "loss": 0.09401918947696686,
+        "components": {
+          "vb": 0.0009500474552623928,
+          "noise_mse": 0.10935086011886597,
+          "training_timestep": 208.0,
+          "eye_mse_weighted": 0.022591419517993927,
+          "repa_negative_cosine": -0.38873133063316345,
+          "repa_weighted": -0.038873132318258286,
+          "mse": 0.09306914359331131,
+          "loss": 0.09401918947696686
+        },
+        "decomposition_residual": -5.296897143125534e-09
+      },
+      "native_initialzero": {
+        "loss": 0.06342662870883942,
+        "components": {
+          "vb": 0.0004515917971730232,
+          "noise_mse": 0.05070057138800621,
+          "training_timestep": 208.0,
+          "eye_mse_weighted": 0.01227446086704731,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.06297503411769867,
+          "loss": 0.06342662870883942
+        },
+        "decomposition_residual": 4.6566128730773926e-09
+      },
+      "native_step100": {
+        "loss": 0.024574054405093193,
+        "components": {
+          "vb": 0.00045134403626434505,
+          "noise_mse": 0.050676919519901276,
+          "training_timestep": 208.0,
+          "eye_mse_weighted": 0.012318924069404602,
+          "repa_negative_cosine": -0.38873133063316345,
+          "repa_weighted": -0.038873132318258286,
+          "mse": 0.024122711271047592,
+          "loss": 0.024574054405093193
+        },
+        "decomposition_residual": -9.022187441587448e-10
+      }
+    },
+    {
+      "sample": "WDA_EdMarkey1_000_4941_5021",
+      "seed": 9002,
+      "original_initialzero": {
+        "loss": 0.38245847821235657,
+        "components": {
+          "vb": 0.007101477589458227,
+          "noise_mse": 0.30732834339141846,
+          "training_timestep": 60.0,
+          "eye_mse_weighted": 0.06802865862846375,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.3753570020198822,
+          "loss": 0.38245847821235657
+        },
+        "decomposition_residual": -1.3969838619232178e-09
+      },
+      "original_step100": {
+        "loss": 0.33220094442367554,
+        "components": {
+          "vb": 0.006871230900287628,
+          "noise_mse": 0.2972787022590637,
+          "training_timestep": 60.0,
+          "eye_mse_weighted": 0.06597653776407242,
+          "repa_negative_cosine": -0.3792552351951599,
+          "repa_weighted": -0.03792552277445793,
+          "mse": 0.3253297209739685,
+          "loss": 0.33220094442367554
+        },
+        "decomposition_residual": -3.725290298461914e-09
+      },
+      "native_initialzero": {
+        "loss": 0.27628523111343384,
+        "components": {
+          "vb": 0.005097432527691126,
+          "noise_mse": 0.2201269567012787,
+          "training_timestep": 60.0,
+          "eye_mse_weighted": 0.05106084793806076,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.27118781208992004,
+          "loss": 0.27628523111343384
+        },
+        "decomposition_residual": -6.05359673500061e-09
+      },
+      "native_step100": {
+        "loss": 0.23846687376499176,
+        "components": {
+          "vb": 0.005100531503558159,
+          "noise_mse": 0.22026121616363525,
+          "training_timestep": 60.0,
+          "eye_mse_weighted": 0.05103062838315964,
+          "repa_negative_cosine": -0.3792552351951599,
+          "repa_weighted": -0.03792552277445793,
+          "mse": 0.23336634039878845,
+          "loss": 0.23846687376499176
+        },
+        "decomposition_residual": 2.0489096641540527e-08
+      }
+    },
+    {
+      "sample": "WDA_BenCardin1_000_2268_2348",
+      "seed": 9003,
+      "original_initialzero": {
+        "loss": 0.041067901998758316,
+        "components": {
+          "vb": 0.00022360708680935204,
+          "noise_mse": 0.028707321733236313,
+          "training_timestep": 359.0,
+          "eye_mse_weighted": 0.012136971578001976,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.04084429517388344,
+          "loss": 0.041067901998758316
+        },
+        "decomposition_residual": 1.6007106751203537e-09
+      },
+      "original_step100": {
+        "loss": 0.002873440505936742,
+        "components": {
+          "vb": 0.00020154287631157786,
+          "noise_mse": 0.025642164051532745,
+          "training_timestep": 359.0,
+          "eye_mse_weighted": 0.01132125686854124,
+          "repa_negative_cosine": -0.34291523694992065,
+          "repa_weighted": -0.034291524440050125,
+          "mse": 0.002671897644177079,
+          "loss": 0.002873440505936742
+        },
+        "decomposition_residual": 1.1496013030409813e-09
+      },
+      "native_initialzero": {
+        "loss": 0.01575390063226223,
+        "components": {
+          "vb": 8.611547673353925e-05,
+          "noise_mse": 0.009594444185495377,
+          "training_timestep": 359.0,
+          "eye_mse_weighted": 0.006073339842259884,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.015667784959077835,
+          "loss": 0.01575390063226223
+        },
+        "decomposition_residual": 1.127773430198431e-09
+      },
+      "native_step100": {
+        "loss": -0.0184408538043499,
+        "components": {
+          "vb": 8.635885751573369e-05,
+          "noise_mse": 0.009643233381211758,
+          "training_timestep": 359.0,
+          "eye_mse_weighted": 0.006121078506112099,
+          "repa_negative_cosine": -0.34291523694992065,
+          "repa_weighted": -0.034291524440050125,
+          "mse": -0.018527213484048843,
+          "loss": -0.0184408538043499
+        },
+        "decomposition_residual": -1.0913936421275139e-10
+      }
+    },
+    {
+      "sample": "WRA_DebFischer1_000_486_566",
+      "seed": 9004,
+      "original_initialzero": {
+        "loss": 0.2140391618013382,
+        "components": {
+          "vb": 0.001906325574964285,
+          "noise_mse": 0.1829231232404709,
+          "training_timestep": 155.0,
+          "eye_mse_weighted": 0.029209718108177185,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.21213284134864807,
+          "loss": 0.2140391618013382
+        },
+        "decomposition_residual": -5.122274160385132e-09
+      },
+      "original_step100": {
+        "loss": 0.15918800234794617,
+        "components": {
+          "vb": 0.0017643134342506528,
+          "noise_mse": 0.1691599041223526,
+          "training_timestep": 155.0,
+          "eye_mse_weighted": 0.026288220658898354,
+          "repa_negative_cosine": -0.3802443742752075,
+          "repa_weighted": -0.03802443668246269,
+          "mse": 0.1574236899614334,
+          "loss": 0.15918800234794617
+        },
+        "decomposition_residual": 8.149072527885437e-10
+      },
+      "native_initialzero": {
+        "loss": 0.08856240659952164,
+        "components": {
+          "vb": 0.0007475506281480193,
+          "noise_mse": 0.0702391266822815,
+          "training_timestep": 155.0,
+          "eye_mse_weighted": 0.017575731500983238,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.08781485259532928,
+          "loss": 0.08856240659952164
+        },
+        "decomposition_residual": -2.2118911147117615e-09
+      },
+      "native_step100": {
+        "loss": 0.05057630315423012,
+        "components": {
+          "vb": 0.0007475793827325106,
+          "noise_mse": 0.07025096565485,
+          "training_timestep": 155.0,
+          "eye_mse_weighted": 0.017602188512682915,
+          "repa_negative_cosine": -0.3802443742752075,
+          "repa_weighted": -0.03802443668246269,
+          "mse": 0.049828723073005676,
+          "loss": 0.05057630315423012
+        },
+        "decomposition_residual": 6.28642737865448e-09
+      }
+    },
+    {
+      "sample": "RD_Radio49_000_972_1052",
+      "seed": 9005,
+      "original_initialzero": {
+        "loss": 0.1494300812482834,
+        "components": {
+          "vb": 0.001079122070223093,
+          "noise_mse": 0.12844642996788025,
+          "training_timestep": 219.0,
+          "eye_mse_weighted": 0.019904520362615585,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.14835095405578613,
+          "loss": 0.1494300812482834
+        },
+        "decomposition_residual": 8.847564458847046e-09
+      },
+      "original_step100": {
+        "loss": 0.10781139135360718,
+        "components": {
+          "vb": 0.0009606609819456935,
+          "noise_mse": 0.11407027393579483,
+          "training_timestep": 219.0,
+          "eye_mse_weighted": 0.018432796001434326,
+          "repa_negative_cosine": -0.2565233111381531,
+          "repa_weighted": -0.025652332231402397,
+          "mse": 0.10685072839260101,
+          "loss": 0.10781139135360718
+        },
+        "decomposition_residual": -7.334165275096893e-09
+      },
+      "native_initialzero": {
+        "loss": 0.047698888927698135,
+        "components": {
+          "vb": 0.00034006478381343186,
+          "noise_mse": 0.03861412778496742,
+          "training_timestep": 219.0,
+          "eye_mse_weighted": 0.008744698949158192,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.04735882580280304,
+          "loss": 0.047698888927698135
+        },
+        "decomposition_residual": -2.5902409106492996e-09
+      },
+      "native_step100": {
+        "loss": 0.02223329246044159,
+        "components": {
+          "vb": 0.00034121752833016217,
+          "noise_mse": 0.038746971637010574,
+          "training_timestep": 219.0,
+          "eye_mse_weighted": 0.00879743229597807,
+          "repa_negative_cosine": -0.2565233111381531,
+          "repa_weighted": -0.025652332231402397,
+          "mse": 0.02189207449555397,
+          "loss": 0.02223329246044159
+        },
+        "decomposition_residual": 3.230525180697441e-09
+      }
+    },
+    {
+      "sample": "WRA_RogerWicker1_001_4617_4697",
+      "seed": 9006,
+      "original_initialzero": {
+        "loss": 0.013283268548548222,
+        "components": {
+          "vb": 0.0001008779217954725,
+          "noise_mse": 0.010613065212965012,
+          "training_timestep": 522.0,
+          "eye_mse_weighted": 0.002569326665252447,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.013182390481233597,
+          "loss": 0.013283268548548222
+        },
+        "decomposition_residual": -1.2514647096395493e-09
+      },
+      "original_step100": {
+        "loss": -0.022919263690710068,
+        "components": {
+          "vb": 9.351265180157498e-05,
+          "noise_mse": 0.009723890572786331,
+          "training_timestep": 522.0,
+          "eye_mse_weighted": 0.0024647919926792383,
+          "repa_negative_cosine": -0.35201460123062134,
+          "repa_weighted": -0.035201460123062134,
+          "mse": -0.02301277592778206,
+          "loss": -0.022919263690710068
+        },
+        "decomposition_residual": 1.2150849215686321e-09
+      },
+      "native_initialzero": {
+        "loss": 0.003116294974461198,
+        "components": {
+          "vb": 3.3006115700118244e-05,
+          "noise_mse": 0.0023014829494059086,
+          "training_timestep": 522.0,
+          "eye_mse_weighted": 0.0007818060694262385,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.0030832889024168253,
+          "loss": 0.003116294974461198
+        },
+        "decomposition_residual": -1.6007106751203537e-10
+      },
+      "native_step100": {
+        "loss": -0.032093215733766556,
+        "components": {
+          "vb": 3.3124262699857354e-05,
+          "noise_mse": 0.002304396592080593,
+          "training_timestep": 522.0,
+          "eye_mse_weighted": 0.0007707223994657397,
+          "repa_negative_cosine": -0.35201460123062134,
+          "repa_weighted": -0.035201460123062134,
+          "mse": -0.03212634101510048,
+          "loss": -0.032093215733766556
+        },
+        "decomposition_residual": 1.1350493878126144e-09
+      }
+    },
+    {
+      "sample": "WDA_DebbieDingell0_000_2430_2510",
+      "seed": 9007,
+      "original_initialzero": {
+        "loss": 0.5586938858032227,
+        "components": {
+          "vb": 0.010669959709048271,
+          "noise_mse": 0.42850184440612793,
+          "training_timestep": 55.0,
+          "eye_mse_weighted": 0.1195220947265625,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.5480239391326904,
+          "loss": 0.5586938858032227
+        },
+        "decomposition_residual": -1.30385160446167e-08
+      },
+      "original_step100": {
+        "loss": 0.49836617708206177,
+        "components": {
+          "vb": 0.010355725884437561,
+          "noise_mse": 0.4157864451408386,
+          "training_timestep": 55.0,
+          "eye_mse_weighted": 0.11778122931718826,
+          "repa_negative_cosine": -0.4555724263191223,
+          "repa_weighted": -0.04555724188685417,
+          "mse": 0.4880104660987854,
+          "loss": 0.49836617708206177
+        },
+        "decomposition_residual": 1.862645149230957e-08
+      },
+      "native_initialzero": {
+        "loss": 0.4391040802001953,
+        "components": {
+          "vb": 0.008128223940730095,
+          "noise_mse": 0.32577821612358093,
+          "training_timestep": 55.0,
+          "eye_mse_weighted": 0.10519765317440033,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.43097585439682007,
+          "loss": 0.4391040802001953
+        },
+        "decomposition_residual": -1.30385160446167e-08
+      },
+      "native_step100": {
+        "loss": 0.3933940529823303,
+        "components": {
+          "vb": 0.008126689121127129,
+          "noise_mse": 0.32567575573921204,
+          "training_timestep": 55.0,
+          "eye_mse_weighted": 0.10514886677265167,
+          "repa_negative_cosine": -0.4555724263191223,
+          "repa_weighted": -0.04555724188685417,
+          "mse": 0.38526737689971924,
+          "loss": 0.3933940529823303
+        },
+        "decomposition_residual": -1.6763806343078613e-08
+      }
+    },
+    {
+      "sample": "RD_Radio31_000_1215_1295",
+      "seed": 9008,
+      "original_initialzero": {
+        "loss": 0.016321396455168724,
+        "components": {
+          "vb": 0.00013438316818792373,
+          "noise_mse": 0.014331535436213017,
+          "training_timestep": 545.0,
+          "eye_mse_weighted": 0.0018554776906967163,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.016187014058232307,
+          "loss": 0.016321396455168724
+        },
+        "decomposition_residual": 1.6007106751203537e-10
+      },
+      "original_step100": {
+        "loss": -0.006994010880589485,
+        "components": {
+          "vb": 0.0001274481473956257,
+          "noise_mse": 0.013520121574401855,
+          "training_timestep": 545.0,
+          "eye_mse_weighted": 0.0017811788711696863,
+          "repa_negative_cosine": -0.22422760725021362,
+          "repa_weighted": -0.022422760725021362,
+          "mse": -0.007121459115296602,
+          "loss": -0.006994010880589485
+        },
+        "decomposition_residual": 1.2514647096395493e-09
+      },
+      "native_initialzero": {
+        "loss": 0.003973583225160837,
+        "components": {
+          "vb": 4.1296760173281655e-05,
+          "noise_mse": 0.0032785004004836082,
+          "training_timestep": 545.0,
+          "eye_mse_weighted": 0.0006537861772812903,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.003932286519557238,
+          "loss": 0.003973583225160837
+        },
+        "decomposition_residual": -1.127773430198431e-10
+      },
+      "native_step100": {
+        "loss": -0.018448924645781517,
+        "components": {
+          "vb": 4.1236417018808424e-05,
+          "noise_mse": 0.0032715564593672752,
+          "training_timestep": 545.0,
+          "eye_mse_weighted": 0.0006610427517443895,
+          "repa_negative_cosine": -0.22422760725021362,
+          "repa_weighted": -0.022422760725021362,
+          "mse": -0.01849016174674034,
+          "loss": -0.018448924645781517
+        },
+        "decomposition_residual": 4.511093720793724e-10
+      }
+    },
+    {
+      "sample": "WRA_JuddGregg_001_810_890",
+      "seed": 9009,
+      "original_initialzero": {
+        "loss": 0.002113738562911749,
+        "components": {
+          "vb": 2.917663186963182e-05,
+          "noise_mse": 0.0018980769673362374,
+          "training_timestep": 758.0,
+          "eye_mse_weighted": 0.00018648480181582272,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.0020845618564635515,
+          "loss": 0.002113738562911749
+        },
+        "decomposition_residual": 1.6189005691558123e-10
+      },
+      "original_step100": {
+        "loss": -0.028764430433511734,
+        "components": {
+          "vb": 2.8268010282772593e-05,
+          "noise_mse": 0.0018205377273261547,
+          "training_timestep": 758.0,
+          "eye_mse_weighted": 0.000182931253220886,
+          "repa_negative_cosine": -0.307961642742157,
+          "repa_weighted": -0.030796164646744728,
+          "mse": -0.028792697936296463,
+          "loss": -0.028764430433511734
+        },
+        "decomposition_residual": -2.777596819214523e-09
+      },
+      "native_initialzero": {
+        "loss": 0.0003656086337286979,
+        "components": {
+          "vb": 1.1157865628774744e-05,
+          "noise_mse": 0.00027604360366240144,
+          "training_timestep": 758.0,
+          "eye_mse_weighted": 7.84071598900482e-05,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.00035445077810436487,
+          "loss": 0.0003656086337286979
+        },
+        "decomposition_residual": 4.547473508864641e-12
+      },
+      "native_step100": {
+        "loss": -0.030430804938077927,
+        "components": {
+          "vb": 1.1096851267211605e-05,
+          "noise_mse": 0.0002773473388515413,
+          "training_timestep": 758.0,
+          "eye_mse_weighted": 7.691495557082817e-05,
+          "repa_negative_cosine": -0.307961642742157,
+          "repa_weighted": -0.030796164646744728,
+          "mse": -0.030441902577877045,
+          "loss": -0.030430804938077927
+        },
+        "decomposition_residual": 5.629772203974426e-10
+      }
+    },
+    {
+      "sample": "WDA_LloydDoggett0_000_4617_4697",
+      "seed": 9010,
+      "original_initialzero": {
+        "loss": 0.03800951689481735,
+        "components": {
+          "vb": 0.00021320368978194892,
+          "noise_mse": 0.026993583887815475,
+          "training_timestep": 327.0,
+          "eye_mse_weighted": 0.010802730917930603,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.03779631480574608,
+          "loss": 0.03800951689481735
+        },
+        "decomposition_residual": -1.6007106751203537e-09
+      },
+      "original_step100": {
+        "loss": -0.006515188608318567,
+        "components": {
+          "vb": 0.0001967321295524016,
+          "noise_mse": 0.0247443076223135,
+          "training_timestep": 327.0,
+          "eye_mse_weighted": 0.010021582245826721,
+          "repa_negative_cosine": -0.41477811336517334,
+          "repa_weighted": -0.041477810591459274,
+          "mse": -0.006711920723319054,
+          "loss": -0.006515188608318567
+        },
+        "decomposition_residual": -1.4551915228366852e-11
+      },
+      "native_initialzero": {
+        "loss": 0.018124127760529518,
+        "components": {
+          "vb": 0.00011304869985906407,
+          "noise_mse": 0.013147186487913132,
+          "training_timestep": 327.0,
+          "eye_mse_weighted": 0.0048638926818966866,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.018011078238487244,
+          "loss": 0.018124127760529518
+        },
+        "decomposition_residual": -1.0913936421275139e-10
+      },
+      "native_step100": {
+        "loss": -0.023385608568787575,
+        "components": {
+          "vb": 0.00011284066567895934,
+          "noise_mse": 0.013136989437043667,
+          "training_timestep": 327.0,
+          "eye_mse_weighted": 0.00484237028285861,
+          "repa_negative_cosine": -0.41477811336517334,
+          "repa_weighted": -0.041477810591459274,
+          "mse": -0.023498449474573135,
+          "loss": -0.023385608568787575
+        },
+        "decomposition_residual": 1.6370904631912708e-09
+      }
+    },
+    {
+      "sample": "WDA_MichelleLujanGrisham_000_6399_6479",
+      "seed": 9011,
+      "original_initialzero": {
+        "loss": 0.00251720380038023,
+        "components": {
+          "vb": 3.21486804750748e-05,
+          "noise_mse": 0.002161315642297268,
+          "training_timestep": 723.0,
+          "eye_mse_weighted": 0.00032373948488384485,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.002485055010765791,
+          "loss": 0.00251720380038023
+        },
+        "decomposition_residual": -7.275957614183426e-12
+      },
+      "original_step100": {
+        "loss": -0.03772957995533943,
+        "components": {
+          "vb": 3.095263309660368e-05,
+          "noise_mse": 0.0020552799105644226,
+          "training_timestep": 723.0,
+          "eye_mse_weighted": 0.00031885382486507297,
+          "repa_negative_cosine": -0.40134668350219727,
+          "repa_weighted": -0.04013466835021973,
+          "mse": -0.03776053339242935,
+          "loss": -0.03772957995533943
+        },
+        "decomposition_residual": 2.026354195550084e-09
+      },
+      "native_initialzero": {
+        "loss": 0.0006876467377878726,
+        "components": {
+          "vb": 1.5577508747810498e-05,
+          "noise_mse": 0.0005275567527860403,
+          "training_timestep": 723.0,
+          "eye_mse_weighted": 0.00014451246534008533,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.0006720692035742104,
+          "loss": 0.0006876467377878726
+        },
+        "decomposition_residual": 1.0913936421275139e-11
+      },
+      "native_step100": {
+        "loss": -0.03944145143032074,
+        "components": {
+          "vb": 1.5511661331402138e-05,
+          "noise_mse": 0.0005340269999578595,
+          "training_timestep": 723.0,
+          "eye_mse_weighted": 0.00014367958647198975,
+          "repa_negative_cosine": -0.40134668350219727,
+          "repa_weighted": -0.04013466835021973,
+          "mse": -0.039456963539123535,
+          "loss": -0.03944145143032074
+        },
+        "decomposition_residual": -1.3278622645884752e-09
+      }
+    },
+    {
+      "sample": "WRA_DanNewhouse_000_2511_2591",
+      "seed": 9012,
+      "original_initialzero": {
+        "loss": 0.006759416777640581,
+        "components": {
+          "vb": 6.972875416977331e-05,
+          "noise_mse": 0.005976654589176178,
+          "training_timestep": 651.0,
+          "eye_mse_weighted": 0.0007130337180569768,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.006689688190817833,
+          "loss": 0.006759416777640581
+        },
+        "decomposition_residual": -2.837623469531536e-10
+      },
+      "original_step100": {
+        "loss": -0.027829190716147423,
+        "components": {
+          "vb": 6.620360363740474e-05,
+          "noise_mse": 0.005617375485599041,
+          "training_timestep": 651.0,
+          "eye_mse_weighted": 0.0006866960902698338,
+          "repa_negative_cosine": -0.34199464321136475,
+          "repa_weighted": -0.034199465066194534,
+          "mse": -0.02789539471268654,
+          "loss": -0.027829190716147423
+        },
+        "decomposition_residual": -8.294591680169106e-10
+      },
+      "native_initialzero": {
+        "loss": 0.0010912149446085095,
+        "components": {
+          "vb": 1.8733380784397013e-05,
+          "noise_mse": 0.0007570916786789894,
+          "training_timestep": 651.0,
+          "eye_mse_weighted": 0.00031538994517177343,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.001072481507435441,
+          "loss": 0.0010912149446085095
+        },
+        "decomposition_residual": -6.002665031701326e-11
+      },
+      "native_step100": {
+        "loss": -0.033089205622673035,
+        "components": {
+          "vb": 1.8863584045902826e-05,
+          "noise_mse": 0.0007705278694629669,
+          "training_timestep": 651.0,
+          "eye_mse_weighted": 0.0003208694397471845,
+          "repa_negative_cosine": -0.34199464321136475,
+          "repa_weighted": -0.034199465066194534,
+          "mse": -0.033108070492744446,
+          "loss": -0.033089205622673035
+        },
+        "decomposition_residual": -1.4497345546260476e-09
+      }
+    },
+    {
+      "sample": "WDA_AlexandriaOcasioCortez_000_1863_1943",
+      "seed": 9013,
+      "original_initialzero": {
+        "loss": 0.004734902177006006,
+        "components": {
+          "vb": 5.099696136312559e-05,
+          "noise_mse": 0.004001685883849859,
+          "training_timestep": 676.0,
+          "eye_mse_weighted": 0.0006822192808613181,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.004683905281126499,
+          "loss": 0.004734902177006006
+        },
+        "decomposition_residual": 5.093170329928398e-11
+      },
+      "original_step100": {
+        "loss": -0.028820233419537544,
+        "components": {
+          "vb": 4.9264846893493086e-05,
+          "noise_mse": 0.0038318743463605642,
+          "training_timestep": 676.0,
+          "eye_mse_weighted": 0.0006627558032050729,
+          "repa_negative_cosine": -0.33364129066467285,
+          "repa_weighted": -0.033364128321409225,
+          "mse": -0.028869498521089554,
+          "loss": -0.028820233419537544
+        },
+        "decomposition_residual": -9.458744898438454e-11
+      },
+      "native_initialzero": {
+        "loss": 0.001048138365149498,
+        "components": {
+          "vb": 1.8185786757385358e-05,
+          "noise_mse": 0.0006901582237333059,
+          "training_timestep": 676.0,
+          "eye_mse_weighted": 0.0003397944092284888,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.0010299525456503034,
+          "loss": 0.001048138365149498
+        },
+        "decomposition_residual": -5.4569682106375694e-11
+      },
+      "native_step100": {
+        "loss": -0.03231439366936684,
+        "components": {
+          "vb": 1.8143098714062944e-05,
+          "noise_mse": 0.0006866438779979944,
+          "training_timestep": 676.0,
+          "eye_mse_weighted": 0.0003449487849138677,
+          "repa_negative_cosine": -0.33364129066467285,
+          "repa_weighted": -0.033364128321409225,
+          "mse": -0.032332535833120346,
+          "loss": -0.03231439366936684
+        },
+        "decomposition_residual": -1.1095835361629725e-09
+      }
+    },
+    {
+      "sample": "WRA_DebFischer0_000_3807_3887",
+      "seed": 9014,
+      "original_initialzero": {
+        "loss": 0.019709745422005653,
+        "components": {
+          "vb": 0.0001374163548462093,
+          "noise_mse": 0.01610659621655941,
+          "training_timestep": 456.0,
+          "eye_mse_weighted": 0.003465731395408511,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.01957232877612114,
+          "loss": 0.019709745422005653
+        },
+        "decomposition_residual": 1.4551915228366852e-09
+      },
+      "original_step100": {
+        "loss": -0.027469847351312637,
+        "components": {
+          "vb": 0.0001246406463906169,
+          "noise_mse": 0.014422575011849403,
+          "training_timestep": 456.0,
+          "eye_mse_weighted": 0.003193566342815757,
+          "repa_negative_cosine": -0.4521062970161438,
+          "repa_weighted": -0.04521062970161438,
+          "mse": -0.027594488114118576,
+          "loss": -0.027469847351312637
+        },
+        "decomposition_residual": 3.4924596548080444e-10
+      },
+      "native_initialzero": {
+        "loss": 0.00526411971077323,
+        "components": {
+          "vb": 4.6600118366768584e-05,
+          "noise_mse": 0.004125121980905533,
+          "training_timestep": 456.0,
+          "eye_mse_weighted": 0.0010923969093710184,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.005217519588768482,
+          "loss": 0.00526411971077323
+        },
+        "decomposition_residual": 7.021299097687006e-10
+      },
+      "native_step100": {
+        "loss": -0.039923831820487976,
+        "components": {
+          "vb": 4.660472768591717e-05,
+          "noise_mse": 0.004135827533900738,
+          "training_timestep": 456.0,
+          "eye_mse_weighted": 0.0011043655686080456,
+          "repa_negative_cosine": -0.4521062970161438,
+          "repa_weighted": -0.04521062970161438,
+          "mse": -0.039970435202121735,
+          "loss": -0.039923831820487976
+        },
+        "decomposition_residual": 5.093170329928398e-11
+      }
+    },
+    {
+      "sample": "WDA_BernieSanders_000_1863_1943",
+      "seed": 9015,
+      "original_initialzero": {
+        "loss": 0.44981473684310913,
+        "components": {
+          "vb": 0.00835411623120308,
+          "noise_mse": 0.35128194093704224,
+          "training_timestep": 58.0,
+          "eye_mse_weighted": 0.09017869085073471,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.44146060943603516,
+          "loss": 0.44981473684310913
+        },
+        "decomposition_residual": -1.1175870895385742e-08
+      },
+      "original_step100": {
+        "loss": 0.3938160538673401,
+        "components": {
+          "vb": 0.007995499297976494,
+          "noise_mse": 0.33608946204185486,
+          "training_timestep": 58.0,
+          "eye_mse_weighted": 0.0874076709151268,
+          "repa_negative_cosine": -0.3767659366130829,
+          "repa_weighted": -0.03767659515142441,
+          "mse": 0.38582056760787964,
+          "loss": 0.3938160538673401
+        },
+        "decomposition_residual": 1.6763806343078613e-08
+      },
+      "native_initialzero": {
+        "loss": 0.3221372961997986,
+        "components": {
+          "vb": 0.0058501469902694225,
+          "noise_mse": 0.24531540274620056,
+          "training_timestep": 58.0,
+          "eye_mse_weighted": 0.07097174227237701,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.31628715991973877,
+          "loss": 0.3221372961997986
+        },
+        "decomposition_residual": 4.190951585769653e-09
+      },
+      "native_step100": {
+        "loss": 0.28487128019332886,
+        "components": {
+          "vb": 0.005858631804585457,
+          "noise_mse": 0.2456781268119812,
+          "training_timestep": 58.0,
+          "eye_mse_weighted": 0.07101112604141235,
+          "repa_negative_cosine": -0.3767659366130829,
+          "repa_weighted": -0.03767659515142441,
+          "mse": 0.27901265025138855,
+          "loss": 0.28487128019332886
+        },
+        "decomposition_residual": -9.313225746154785e-09
+      }
+    },
+    {
+      "sample": "WDA_EliotEngel_000_1377_1457",
+      "seed": 9016,
+      "original_initialzero": {
+        "loss": 0.06940904259681702,
+        "components": {
+          "vb": 0.00036798702785745263,
+          "noise_mse": 0.048718005418777466,
+          "training_timestep": 348.0,
+          "eye_mse_weighted": 0.02032305859029293,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.06904105842113495,
+          "loss": 0.06940904259681702
+        },
+        "decomposition_residual": -8.440110832452774e-09
+      },
+      "original_step100": {
+        "loss": 0.026722831651568413,
+        "components": {
+          "vb": 0.0003430265060160309,
+          "noise_mse": 0.04525230824947357,
+          "training_timestep": 348.0,
+          "eye_mse_weighted": 0.019444487988948822,
+          "repa_negative_cosine": -0.38316988945007324,
+          "repa_weighted": -0.0383169911801815,
+          "mse": 0.02637980505824089,
+          "loss": 0.026722831651568413
+        },
+        "decomposition_residual": 8.731149137020111e-11
+      },
+      "native_initialzero": {
+        "loss": 0.016344495117664337,
+        "components": {
+          "vb": 0.00010733363160397857,
+          "noise_mse": 0.012540997937321663,
+          "training_timestep": 348.0,
+          "eye_mse_weighted": 0.0036961636506021023,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.016237162053585052,
+          "loss": 0.016344495117664337
+        },
+        "decomposition_residual": -1.0186340659856796e-10
+      },
+      "native_step100": {
+        "loss": -0.021909691393375397,
+        "components": {
+          "vb": 0.00010753251990536228,
+          "noise_mse": 0.012599045410752296,
+          "training_timestep": 348.0,
+          "eye_mse_weighted": 0.0037007220089435577,
+          "repa_negative_cosine": -0.38316988945007324,
+          "repa_weighted": -0.0383169911801815,
+          "mse": -0.02201722376048565,
+          "loss": -0.021909691393375397
+        },
+        "decomposition_residual": -1.5279510989785194e-10
+      }
+    },
+    {
+      "sample": "WDA_AndyLevin_000_3726_3806",
+      "seed": 9017,
+      "original_initialzero": {
+        "loss": 0.208418607711792,
+        "components": {
+          "vb": 0.0016801075544208288,
+          "noise_mse": 0.17285537719726562,
+          "training_timestep": 171.0,
+          "eye_mse_weighted": 0.03388312831521034,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.20673850178718567,
+          "loss": 0.208418607711792
+        },
+        "decomposition_residual": -5.3551048040390015e-09
+      },
+      "original_step100": {
+        "loss": 0.14970621466636658,
+        "components": {
+          "vb": 0.001520543941296637,
+          "noise_mse": 0.1562270075082779,
+          "training_timestep": 171.0,
+          "eye_mse_weighted": 0.03125239908695221,
+          "repa_negative_cosine": -0.3929373025894165,
+          "repa_weighted": -0.03929373249411583,
+          "mse": 0.14818567037582397,
+          "loss": 0.14970621466636658
+        },
+        "decomposition_residual": -3.3760443329811096e-09
+      },
+      "native_initialzero": {
+        "loss": 0.09243041276931763,
+        "components": {
+          "vb": 0.0007151513709686697,
+          "noise_mse": 0.07179276645183563,
+          "training_timestep": 171.0,
+          "eye_mse_weighted": 0.019922498613595963,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.0917152613401413,
+          "loss": 0.09243041276931763
+        },
+        "decomposition_residual": -3.6670826375484467e-09
+      },
+      "native_step100": {
+        "loss": 0.05324640870094299,
+        "components": {
+          "vb": 0.0007147256401367486,
+          "noise_mse": 0.07178045064210892,
+          "training_timestep": 171.0,
+          "eye_mse_weighted": 0.0200449600815773,
+          "repa_negative_cosine": -0.3929373025894165,
+          "repa_weighted": -0.03929373249411583,
+          "mse": 0.05253168195486069,
+          "loss": 0.05324640870094299
+        },
+        "decomposition_residual": 4.831235855817795e-09
+      }
+    },
+    {
+      "sample": "WDA_RobinKelly_000_405_485",
+      "seed": 9018,
+      "original_initialzero": {
+        "loss": 0.4619206190109253,
+        "components": {
+          "vb": 0.00821466650813818,
+          "noise_mse": 0.38820773363113403,
+          "training_timestep": 66.0,
+          "eye_mse_weighted": 0.0654982477426529,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.45370596647262573,
+          "loss": 0.4619206190109253
+        },
+        "decomposition_residual": -2.8870999813079834e-08
+      },
+      "original_step100": {
+        "loss": 0.39880886673927307,
+        "components": {
+          "vb": 0.007829650305211544,
+          "noise_mse": 0.3699040412902832,
+          "training_timestep": 66.0,
+          "eye_mse_weighted": 0.06337279826402664,
+          "repa_negative_cosine": -0.42297589778900146,
+          "repa_weighted": -0.042297590523958206,
+          "mse": 0.39097923040390015,
+          "loss": 0.39880886673927307
+        },
+        "decomposition_residual": -3.259629011154175e-08
+      },
+      "native_initialzero": {
+        "loss": 0.28973427414894104,
+        "components": {
+          "vb": 0.005036737769842148,
+          "noise_mse": 0.23712146282196045,
+          "training_timestep": 66.0,
+          "eye_mse_weighted": 0.04757610335946083,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.2846975326538086,
+          "loss": 0.28973427414894104
+        },
+        "decomposition_residual": -2.9802322387695312e-08
+      },
+      "native_step100": {
+        "loss": 0.24749739468097687,
+        "components": {
+          "vb": 0.005036304239183664,
+          "noise_mse": 0.23712289333343506,
+          "training_timestep": 66.0,
+          "eye_mse_weighted": 0.04763578251004219,
+          "repa_negative_cosine": -0.42297589778900146,
+          "repa_weighted": -0.042297590523958206,
+          "mse": 0.24246108531951904,
+          "loss": 0.24749739468097687
+        },
+        "decomposition_residual": 5.122274160385132e-09
+      }
+    },
+    {
+      "sample": "WDA_JimmyGomez_000_1701_1781",
+      "seed": 9019,
+      "original_initialzero": {
+        "loss": 0.1607830971479416,
+        "components": {
+          "vb": 0.0011938664829358459,
+          "noise_mse": 0.12885913252830505,
+          "training_timestep": 185.0,
+          "eye_mse_weighted": 0.030730105936527252,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.1595892310142517,
+          "loss": 0.1607830971479416
+        },
+        "decomposition_residual": -7.799826562404633e-09
+      },
+      "original_step100": {
+        "loss": 0.11369229108095169,
+        "components": {
+          "vb": 0.001084171119146049,
+          "noise_mse": 0.11678151786327362,
+          "training_timestep": 185.0,
+          "eye_mse_weighted": 0.02883933112025261,
+          "repa_negative_cosine": -0.3301273286342621,
+          "repa_weighted": -0.03301273286342621,
+          "mse": 0.11260811984539032,
+          "loss": 0.11369229108095169
+        },
+        "decomposition_residual": 3.841705620288849e-09
+      },
+      "native_initialzero": {
+        "loss": 0.06766875088214874,
+        "components": {
+          "vb": 0.0004920379724353552,
+          "noise_mse": 0.051508307456970215,
+          "training_timestep": 185.0,
+          "eye_mse_weighted": 0.015668410807847977,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.0671767145395279,
+          "loss": 0.06766875088214874
+        },
+        "decomposition_residual": -5.3551048040390015e-09
+      },
+      "native_step100": {
+        "loss": 0.034865040332078934,
+        "components": {
+          "vb": 0.0004932705778628588,
+          "noise_mse": 0.05164143443107605,
+          "training_timestep": 185.0,
+          "eye_mse_weighted": 0.015743069350719452,
+          "repa_negative_cosine": -0.3301273286342621,
+          "repa_weighted": -0.03301273286342621,
+          "mse": 0.03437177091836929,
+          "loss": 0.034865040332078934
+        },
+        "decomposition_residual": -1.1641532182693481e-09
+      }
+    },
+    {
+      "sample": "WDA_KimSchrier_000_6480_6560",
+      "seed": 9020,
+      "original_initialzero": {
+        "loss": 0.09606310725212097,
+        "components": {
+          "vb": 0.0005913992063142359,
+          "noise_mse": 0.07648144662380219,
+          "training_timestep": 275.0,
+          "eye_mse_weighted": 0.01899026706814766,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.09547170996665955,
+          "loss": 0.09606310725212097
+        },
+        "decomposition_residual": -5.6461431086063385e-09
+      },
+      "original_step100": {
+        "loss": 0.045657556504011154,
+        "components": {
+          "vb": 0.000547925301361829,
+          "noise_mse": 0.07069754600524902,
+          "training_timestep": 275.0,
+          "eye_mse_weighted": 0.01756392791867256,
+          "repa_negative_cosine": -0.43151846528053284,
+          "repa_weighted": -0.0431518480181694,
+          "mse": 0.04510962963104248,
+          "loss": 0.045657556504011154
+        },
+        "decomposition_residual": 5.296897143125534e-09
+      },
+      "native_initialzero": {
+        "loss": 0.04573638737201691,
+        "components": {
+          "vb": 0.0002741167554631829,
+          "noise_mse": 0.034137919545173645,
+          "training_timestep": 275.0,
+          "eye_mse_weighted": 0.011324349790811539,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.045462269335985184,
+          "loss": 0.04573638737201691
+        },
+        "decomposition_residual": 1.280568540096283e-09
+      },
+      "native_step100": {
+        "loss": 0.002498222514986992,
+        "components": {
+          "vb": 0.00027411384508013725,
+          "noise_mse": 0.034116655588150024,
+          "training_timestep": 275.0,
+          "eye_mse_weighted": 0.011259302496910095,
+          "repa_negative_cosine": -0.43151846528053284,
+          "repa_weighted": -0.0431518480181694,
+          "mse": 0.0022241086699068546,
+          "loss": 0.002498222514986992
+        },
+        "decomposition_residual": -1.3969838619232178e-09
+      }
+    },
+    {
+      "sample": "WDA_TedLieu_000_2106_2186",
+      "seed": 9021,
+      "original_initialzero": {
+        "loss": 0.007631478365510702,
+        "components": {
+          "vb": 7.039952470222488e-05,
+          "noise_mse": 0.006250298582017422,
+          "training_timestep": 612.0,
+          "eye_mse_weighted": 0.0013107804115861654,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.0075610787607729435,
+          "loss": 0.007631478365510702
+        },
+        "decomposition_residual": -1.5279510989785194e-10
+      },
+      "original_step100": {
+        "loss": -0.023289484903216362,
+        "components": {
+          "vb": 6.624092202400789e-05,
+          "noise_mse": 0.005815440323203802,
+          "training_timestep": 612.0,
+          "eye_mse_weighted": 0.001249265274964273,
+          "repa_negative_cosine": -0.3042043149471283,
+          "repa_weighted": -0.03042043186724186,
+          "mse": -0.023355726152658463,
+          "loss": -0.023289484903216362
+        },
+        "decomposition_residual": 4.43833414465189e-10
+      },
+      "native_initialzero": {
+        "loss": 0.0018213081639260054,
+        "components": {
+          "vb": 2.340332321182359e-05,
+          "noise_mse": 0.0011392651358619332,
+          "training_timestep": 612.0,
+          "eye_mse_weighted": 0.0006586397066712379,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.0017979048425331712,
+          "loss": 0.0018213081639260054
+        },
+        "decomposition_residual": -1.8189894035458565e-12
+      },
+      "native_step100": {
+        "loss": -0.028596626594662666,
+        "components": {
+          "vb": 2.3408425477100536e-05,
+          "noise_mse": 0.0011409948347136378,
+          "training_timestep": 612.0,
+          "eye_mse_weighted": 0.000659402459859848,
+          "repa_negative_cosine": -0.3042043149471283,
+          "repa_weighted": -0.03042043186724186,
+          "mse": -0.028620034456253052,
+          "loss": -0.028596626594662666
+        },
+        "decomposition_residual": -4.474713932722807e-10
+      }
+    },
+    {
+      "sample": "WDA_KathyCastor1_000_1296_1376",
+      "seed": 9022,
+      "original_initialzero": {
+        "loss": 0.019911542534828186,
+        "components": {
+          "vb": 0.00014992032083682716,
+          "noise_mse": 0.01690671220421791,
+          "training_timestep": 506.0,
+          "eye_mse_weighted": 0.0028549106791615486,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.019761621952056885,
+          "loss": 0.019911542534828186
+        },
+        "decomposition_residual": -6.693881005048752e-10
+      },
+      "original_step100": {
+        "loss": -0.0219266414642334,
+        "components": {
+          "vb": 0.00013815282727591693,
+          "noise_mse": 0.015440705232322216,
+          "training_timestep": 506.0,
+          "eye_mse_weighted": 0.002814717125147581,
+          "repa_negative_cosine": -0.4032021760940552,
+          "repa_weighted": -0.04032021760940552,
+          "mse": -0.02206479385495186,
+          "loss": -0.0219266414642334
+        },
+        "decomposition_residual": 9.604264050722122e-10
+      },
+      "native_initialzero": {
+        "loss": 0.00551228504627943,
+        "components": {
+          "vb": 4.4483967940323055e-05,
+          "noise_mse": 0.0037588602863252163,
+          "training_timestep": 506.0,
+          "eye_mse_weighted": 0.001708940602838993,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.005467800889164209,
+          "loss": 0.00551228504627943
+        },
+        "decomposition_residual": 1.8917489796876907e-10
+      },
+      "native_step100": {
+        "loss": -0.03477662056684494,
+        "components": {
+          "vb": 4.478448681766167e-05,
+          "noise_mse": 0.0037919769529253244,
+          "training_timestep": 506.0,
+          "eye_mse_weighted": 0.001706835231743753,
+          "repa_negative_cosine": -0.4032021760940552,
+          "repa_weighted": -0.04032021760940552,
+          "mse": -0.03482140600681305,
+          "loss": -0.03477662056684494
+        },
+        "decomposition_residual": 3.710738383233547e-10
+      }
+    },
+    {
+      "sample": "WDA_AmyKlobuchar0_000_5589_5669",
+      "seed": 9023,
+      "original_initialzero": {
+        "loss": 0.03131254017353058,
+        "components": {
+          "vb": 0.00021415467199403793,
+          "noise_mse": 0.026855910196900368,
+          "training_timestep": 421.0,
+          "eye_mse_weighted": 0.00424247607588768,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.031098386272788048,
+          "loss": 0.03131254017353058
+        },
+        "decomposition_residual": -7.712515071034431e-10
+      },
+      "original_step100": {
+        "loss": -0.010601694695651531,
+        "components": {
+          "vb": 0.00019220753165427595,
+          "noise_mse": 0.023905310779809952,
+          "training_timestep": 421.0,
+          "eye_mse_weighted": 0.004121758043766022,
+          "repa_negative_cosine": -0.3882097005844116,
+          "repa_weighted": -0.03882097080349922,
+          "mse": -0.010793901979923248,
+          "loss": -0.010601694695651531
+        },
+        "decomposition_residual": -2.473825588822365e-10
+      },
+      "native_initialzero": {
+        "loss": 0.010750535875558853,
+        "components": {
+          "vb": 7.347394421231002e-05,
+          "noise_mse": 0.007810365408658981,
+          "training_timestep": 421.0,
+          "eye_mse_weighted": 0.0028666965663433075,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.010677061975002289,
+          "loss": 0.010750535875558853
+        },
+        "decomposition_residual": -4.3655745685100555e-11
+      },
+      "native_step100": {
+        "loss": -0.028001802042126656,
+        "components": {
+          "vb": 7.38650924176909e-05,
+          "noise_mse": 0.007857371121644974,
+          "training_timestep": 421.0,
+          "eye_mse_weighted": 0.0028879335150122643,
+          "repa_negative_cosine": -0.3882097005844116,
+          "repa_weighted": -0.03882097080349922,
+          "mse": -0.02807566709816456,
+          "loss": -0.028001802042126656
+        },
+        "decomposition_residual": -9.677023626863956e-10
+      }
+    },
+    {
+      "sample": "WDA_KatieHill_000_1134_1214",
+      "seed": 9024,
+      "original_initialzero": {
+        "loss": 0.05594644322991371,
+        "components": {
+          "vb": 0.0003339774557389319,
+          "noise_mse": 0.044092610478401184,
+          "training_timestep": 343.0,
+          "eye_mse_weighted": 0.01151985116302967,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.0556124672293663,
+          "loss": 0.05594644322991371
+        },
+        "decomposition_residual": 4.132743924856186e-09
+      },
+      "original_step100": {
+        "loss": 0.01430332288146019,
+        "components": {
+          "vb": 0.0003113817365374416,
+          "noise_mse": 0.040938787162303925,
+          "training_timestep": 343.0,
+          "eye_mse_weighted": 0.011168540455400944,
+          "repa_negative_cosine": -0.3811538517475128,
+          "repa_weighted": -0.03811538591980934,
+          "mse": 0.013991940766572952,
+          "loss": 0.01430332288146019
+        },
+        "decomposition_residual": -5.529727786779404e-10
+      },
+      "native_initialzero": {
+        "loss": 0.027720440179109573,
+        "components": {
+          "vb": 0.00017150770872831345,
+          "noise_mse": 0.021486083045601845,
+          "training_timestep": 343.0,
+          "eye_mse_weighted": 0.0060628484934568405,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.027548931539058685,
+          "loss": 0.027720440179109573
+        },
+        "decomposition_residual": 9.313225746154785e-10
+      },
+      "native_step100": {
+        "loss": -0.010444022715091705,
+        "components": {
+          "vb": 0.00017143218428827822,
+          "noise_mse": 0.02148614451289177,
+          "training_timestep": 343.0,
+          "eye_mse_weighted": 0.0060137854889035225,
+          "repa_negative_cosine": -0.3811538517475128,
+          "repa_weighted": -0.03811538591980934,
+          "mse": -0.010615454986691475,
+          "loss": -0.010444022715091705
+        },
+        "decomposition_residual": 1.0186340659856796e-09
+      }
+    },
+    {
+      "sample": "WDA_PattyMurray1_000_1620_1700",
+      "seed": 9025,
+      "original_initialzero": {
+        "loss": 0.001579268486239016,
+        "components": {
+          "vb": 2.3094675270840526e-05,
+          "noise_mse": 0.001361930975690484,
+          "training_timestep": 760.0,
+          "eye_mse_weighted": 0.00019424286438152194,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.001556173781864345,
+          "loss": 0.001579268486239016
+        },
+        "decomposition_residual": -2.9103830456733704e-11
+      },
+      "original_step100": {
+        "loss": -0.03902055695652962,
+        "components": {
+          "vb": 2.2557236661668867e-05,
+          "noise_mse": 0.001307183876633644,
+          "training_timestep": 760.0,
+          "eye_mse_weighted": 0.00018279303913004696,
+          "repa_negative_cosine": -0.4053308963775635,
+          "repa_weighted": -0.04053309187293053,
+          "mse": -0.039043113589286804,
+          "loss": -0.03902055695652962
+        },
+        "decomposition_residual": 7.639755494892597e-10
+      },
+      "native_initialzero": {
+        "loss": 0.00038876128382980824,
+        "components": {
+          "vb": 1.106335548684001e-05,
+          "noise_mse": 0.0002603432512842119,
+          "training_timestep": 760.0,
+          "eye_mse_weighted": 0.00011735472071450204,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.0003776979283429682,
+          "loss": 0.00038876128382980824
+        },
+        "decomposition_residual": -4.3655745685100555e-11
+      },
+      "native_step100": {
+        "loss": -0.04014039412140846,
+        "components": {
+          "vb": 1.1001507118635345e-05,
+          "noise_mse": 0.000262452638708055,
+          "training_timestep": 760.0,
+          "eye_mse_weighted": 0.00011924556747544557,
+          "repa_negative_cosine": -0.4053308963775635,
+          "repa_weighted": -0.04053309187293053,
+          "mse": -0.04015139490365982,
+          "loss": -0.04014039412140846
+        },
+        "decomposition_residual": -1.9617800717242062e-09
+      }
+    },
+    {
+      "sample": "WDA_LucilleRoybal-Allard_000_1296_1376",
+      "seed": 9026,
+      "original_initialzero": {
+        "loss": 0.007213785778731108,
+        "components": {
+          "vb": 7.263539737323299e-05,
+          "noise_mse": 0.006316265091300011,
+          "training_timestep": 644.0,
+          "eye_mse_weighted": 0.0008248850936070085,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.007141150534152985,
+          "loss": 0.007213785778731108
+        },
+        "decomposition_residual": 1.964508555829525e-10
+      },
+      "original_step100": {
+        "loss": -0.03307883068919182,
+        "components": {
+          "vb": 6.92951216478832e-05,
+          "noise_mse": 0.005971589125692844,
+          "training_timestep": 644.0,
+          "eye_mse_weighted": 0.0007851568516343832,
+          "repa_negative_cosine": -0.39904874563217163,
+          "repa_weighted": -0.0399048738181591,
+          "mse": -0.03314812481403351,
+          "loss": -0.03307883068919182
+        },
+        "decomposition_residual": 2.029992174357176e-09
+      },
+      "native_initialzero": {
+        "loss": 0.0012245792895555496,
+        "components": {
+          "vb": 1.9877561499015428e-05,
+          "noise_mse": 0.0008237272268161178,
+          "training_timestep": 644.0,
+          "eye_mse_weighted": 0.0003809744375757873,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.001204701722599566,
+          "loss": 0.0012245792895555496
+        },
+        "decomposition_residual": 6.366462912410498e-11
+      },
+      "native_step100": {
+        "loss": -0.03866374120116234,
+        "components": {
+          "vb": 1.99158166651614e-05,
+          "noise_mse": 0.0008329246193170547,
+          "training_timestep": 644.0,
+          "eye_mse_weighted": 0.00038829405093565583,
+          "repa_negative_cosine": -0.39904874563217163,
+          "repa_weighted": -0.0399048738181591,
+          "mse": -0.038683656603097916,
+          "loss": -0.03866374120116234
+        },
+        "decomposition_residual": -1.8699211068451405e-09
+      }
+    },
+    {
+      "sample": "WDA_BobCasey0_000_810_890",
+      "seed": 9027,
+      "original_initialzero": {
+        "loss": 0.32464736700057983,
+        "components": {
+          "vb": 0.0039544240571558475,
+          "noise_mse": 0.26379257440567017,
+          "training_timestep": 98.0,
+          "eye_mse_weighted": 0.056900378316640854,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.3206929564476013,
+          "loss": 0.32464736700057983
+        },
+        "decomposition_residual": -9.778887033462524e-09
+      },
+      "original_step100": {
+        "loss": 0.26684775948524475,
+        "components": {
+          "vb": 0.0036796515341848135,
+          "noise_mse": 0.24526803195476532,
+          "training_timestep": 98.0,
+          "eye_mse_weighted": 0.052794866263866425,
+          "repa_negative_cosine": -0.3489481210708618,
+          "repa_weighted": -0.03489481285214424,
+          "mse": 0.2631680965423584,
+          "loss": 0.26684775948524475
+        },
+        "decomposition_residual": 2.2584572434425354e-08
+      },
+      "native_initialzero": {
+        "loss": 0.1585032045841217,
+        "components": {
+          "vb": 0.001927614095620811,
+          "noise_mse": 0.12743061780929565,
+          "training_timestep": 98.0,
+          "eye_mse_weighted": 0.02914496883749962,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.15657559037208557,
+          "loss": 0.1585032045841217
+        },
+        "decomposition_residual": 3.841705620288849e-09
+      },
+      "native_step100": {
+        "loss": 0.1242067739367485,
+        "components": {
+          "vb": 0.0019334523240104318,
+          "noise_mse": 0.1278456747531891,
+          "training_timestep": 98.0,
+          "eye_mse_weighted": 0.029322464019060135,
+          "repa_negative_cosine": -0.3489481210708618,
+          "repa_weighted": -0.03489481285214424,
+          "mse": 0.12227331846952438,
+          "loss": 0.1242067739367485
+        },
+        "decomposition_residual": -4.307366907596588e-09
+      }
+    },
+    {
+      "sample": "WDA_DanKildee1_000_3888_3968",
+      "seed": 9028,
+      "original_initialzero": {
+        "loss": 0.0003671650483738631,
+        "components": {
+          "vb": 1.0263581316394266e-05,
+          "noise_mse": 0.0002885419235099107,
+          "training_timestep": 889.0,
+          "eye_mse_weighted": 6.835954263806343e-05,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.00035690146614797413,
+          "loss": 0.0003671650483738631
+        },
+        "decomposition_residual": 9.094947017729282e-13
+      },
+      "original_step100": {
+        "loss": -0.03795580193400383,
+        "components": {
+          "vb": 1.0329419637855608e-05,
+          "noise_mse": 0.00028871395625174046,
+          "training_timestep": 889.0,
+          "eye_mse_weighted": 6.950442912057042e-05,
+          "repa_negative_cosine": -0.38324350118637085,
+          "repa_weighted": -0.038324352353811264,
+          "mse": -0.037966132164001465,
+          "loss": -0.03795580193400383
+        },
+        "decomposition_residual": 2.6147972675971687e-09
+      },
+      "native_initialzero": {
+        "loss": 0.0001624560245545581,
+        "components": {
+          "vb": 7.937630471133161e-06,
+          "noise_mse": 0.00011852076568175107,
+          "training_timestep": 889.0,
+          "eye_mse_weighted": 3.5997618397232145e-05,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.00015451839135494083,
+          "loss": 0.0001624560245545581
+        },
+        "decomposition_residual": 1.000444171950221e-11
+      },
+      "native_step100": {
+        "loss": -0.038156863301992416,
+        "components": {
+          "vb": 8.014822924451437e-06,
+          "noise_mse": 0.00012181281636003405,
+          "training_timestep": 889.0,
+          "eye_mse_weighted": 3.7664118281099945e-05,
+          "repa_negative_cosine": -0.38324350118637085,
+          "repa_weighted": -0.038324352353811264,
+          "mse": -0.03816487640142441,
+          "loss": -0.038156863301992416
+        },
+        "decomposition_residual": -2.7057467377744615e-09
+      }
+    },
+    {
+      "sample": "WRA_BobbySchilling_000_1458_1538",
+      "seed": 9029,
+      "original_initialzero": {
+        "loss": 0.024339763447642326,
+        "components": {
+          "vb": 0.0001506508415332064,
+          "noise_mse": 0.0183953195810318,
+          "training_timestep": 409.0,
+          "eye_mse_weighted": 0.005793795455247164,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.024189112707972527,
+          "loss": 0.024339763447642326
+        },
+        "decomposition_residual": -2.4301698431372643e-09
+      },
+      "original_step100": {
+        "loss": -0.01471382100135088,
+        "components": {
+          "vb": 0.00013619741366710514,
+          "noise_mse": 0.016417022794485092,
+          "training_timestep": 409.0,
+          "eye_mse_weighted": 0.005298411473631859,
+          "repa_negative_cosine": -0.36565452814102173,
+          "repa_weighted": -0.03656545281410217,
+          "mse": -0.014850018545985222,
+          "loss": -0.01471382100135088
+        },
+        "decomposition_residual": 1.3096723705530167e-10
+      },
+      "native_initialzero": {
+        "loss": 0.008541739545762539,
+        "components": {
+          "vb": 6.212147854967043e-05,
+          "noise_mse": 0.006321905180811882,
+          "training_timestep": 409.0,
+          "eye_mse_weighted": 0.0021577130537480116,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.008479618467390537,
+          "loss": 0.008541739545762539
+        },
+        "decomposition_residual": -1.673470251262188e-10
+      },
+      "native_step100": {
+        "loss": -0.02799559198319912,
+        "components": {
+          "vb": 6.241341179702431e-05,
+          "noise_mse": 0.006344920955598354,
+          "training_timestep": 409.0,
+          "eye_mse_weighted": 0.0021625254303216934,
+          "repa_negative_cosine": -0.36565452814102173,
+          "repa_weighted": -0.03656545281410217,
+          "mse": -0.02805800549685955,
+          "loss": -0.02799559198319912
+        },
+        "decomposition_residual": 1.0331859812140465e-09
+      }
+    },
+    {
+      "sample": "WDA_LaurenUnderwood_000_2754_2834",
+      "seed": 9030,
+      "original_initialzero": {
+        "loss": 0.0004250553611200303,
+        "components": {
+          "vb": 1.09818874989287e-05,
+          "noise_mse": 0.0003321533149573952,
+          "training_timestep": 908.0,
+          "eye_mse_weighted": 8.19201668491587e-05,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.00041407346725463867,
+          "loss": 0.0004250553611200303
+        },
+        "decomposition_residual": -8.185452315956354e-12
+      },
+      "original_step100": {
+        "loss": -0.027703747153282166,
+        "components": {
+          "vb": 1.0876966371142771e-05,
+          "noise_mse": 0.0003284193226136267,
+          "training_timestep": 908.0,
+          "eye_mse_weighted": 7.945460674818605e-05,
+          "repa_negative_cosine": -0.28122496604919434,
+          "repa_weighted": -0.028122497722506523,
+          "mse": -0.027714625000953674,
+          "loss": -0.027703747153282166
+        },
+        "decomposition_residual": -3.2650859793648124e-10
+      },
+      "native_initialzero": {
+        "loss": 0.00014939274115022272,
+        "components": {
+          "vb": 8.020712812140118e-06,
+          "noise_mse": 0.00011795653699664399,
+          "training_timestep": 908.0,
+          "eye_mse_weighted": 2.3415477699018084e-05,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.0001413720310665667,
+          "loss": 0.00014939274115022272
+        },
+        "decomposition_residual": 1.3642420526593924e-11
+      },
+      "native_step100": {
+        "loss": -0.027967432513833046,
+        "components": {
+          "vb": 8.097588761302177e-06,
+          "noise_mse": 0.0001229729678016156,
+          "training_timestep": 908.0,
+          "eye_mse_weighted": 2.3995824449229985e-05,
+          "repa_negative_cosine": -0.28122496604919434,
+          "repa_weighted": -0.028122497722506523,
+          "mse": -0.027975529432296753,
+          "loss": -0.027967432513833046
+        },
+        "decomposition_residual": -1.1723386705853045e-09
+      }
+    },
+    {
+      "sample": "WDA_SherrodBrown1_000_4212_4292",
+      "seed": 9031,
+      "original_initialzero": {
+        "loss": 0.04480748623609543,
+        "components": {
+          "vb": 0.0002934952499344945,
+          "noise_mse": 0.03834531456232071,
+          "training_timestep": 381.0,
+          "eye_mse_weighted": 0.0061686718836426735,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.04451398923993111,
+          "loss": 0.04480748623609543
+        },
+        "decomposition_residual": 4.540197551250458e-09
+      },
+      "original_step100": {
+        "loss": 0.013958980329334736,
+        "components": {
+          "vb": 0.0002746655372902751,
+          "noise_mse": 0.035741936415433884,
+          "training_timestep": 381.0,
+          "eye_mse_weighted": 0.006020949222147465,
+          "repa_negative_cosine": -0.2807857096195221,
+          "repa_weighted": -0.02807857096195221,
+          "mse": 0.013684314675629139,
+          "loss": 0.013958980329334736
+        },
+        "decomposition_residual": 1.1641532182693481e-10
+      },
+      "native_initialzero": {
+        "loss": 0.014104262925684452,
+        "components": {
+          "vb": 9.016133117256686e-05,
+          "noise_mse": 0.010212929919362068,
+          "training_timestep": 381.0,
+          "eye_mse_weighted": 0.0038011716678738594,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.014014101587235928,
+          "loss": 0.014104262925684452
+        },
+        "decomposition_residual": 7.275957614183426e-12
+      },
+      "native_step100": {
+        "loss": -0.013994279317557812,
+        "components": {
+          "vb": 9.002481237985194e-05,
+          "noise_mse": 0.010201624594628811,
+          "training_timestep": 381.0,
+          "eye_mse_weighted": 0.0037926419172436,
+          "repa_negative_cosine": -0.2807857096195221,
+          "repa_weighted": -0.02807857096195221,
+          "mse": -0.014084303751587868,
+          "loss": -0.013994279317557812
+        },
+        "decomposition_residual": 3.2014213502407074e-10
+      }
+    },
+    {
+      "sample": "WDA_JeffMerkley1_000_6399_6479",
+      "seed": 9032,
+      "original_initialzero": {
+        "loss": 0.27979567646980286,
+        "components": {
+          "vb": 0.002731310436502099,
+          "noise_mse": 0.21965020895004272,
+          "training_timestep": 123.0,
+          "eye_mse_weighted": 0.05741412937641144,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.27706435322761536,
+          "loss": 0.27979567646980286
+        },
+        "decomposition_residual": 2.7706846594810486e-08
+      },
+      "original_step100": {
+        "loss": 0.21941740810871124,
+        "components": {
+          "vb": 0.0025147171691060066,
+          "noise_mse": 0.2020537257194519,
+          "training_timestep": 123.0,
+          "eye_mse_weighted": 0.05273933708667755,
+          "repa_negative_cosine": -0.37890374660491943,
+          "repa_weighted": -0.03789037466049194,
+          "mse": 0.2169026881456375,
+          "loss": 0.21941740810871124
+        },
+        "decomposition_residual": 2.7939677238464355e-09
+      },
+      "native_initialzero": {
+        "loss": 0.13297255337238312,
+        "components": {
+          "vb": 0.001265994505956769,
+          "noise_mse": 0.10063658654689789,
+          "training_timestep": 123.0,
+          "eye_mse_weighted": 0.031069982796907425,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.13170656561851501,
+          "loss": 0.13297255337238312
+        },
+        "decomposition_residual": -1.0477378964424133e-08
+      },
+      "native_step100": {
+        "loss": 0.09524261951446533,
+        "components": {
+          "vb": 0.001267384272068739,
+          "noise_mse": 0.10076208412647247,
+          "training_timestep": 123.0,
+          "eye_mse_weighted": 0.031103532761335373,
+          "repa_negative_cosine": -0.37890374660491943,
+          "repa_weighted": -0.03789037466049194,
+          "mse": 0.0939752385020256,
+          "loss": 0.09524261951446533
+        },
+        "decomposition_residual": -6.984919309616089e-09
+      }
+    },
+    {
+      "sample": "WDA_DebbieWassermanSchultz_000_1782_1862",
+      "seed": 9033,
+      "original_initialzero": {
+        "loss": 0.005590373184531927,
+        "components": {
+          "vb": 5.999031418468803e-05,
+          "noise_mse": 0.004936716519296169,
+          "training_timestep": 659.0,
+          "eye_mse_weighted": 0.0005936665693297982,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.005530382972210646,
+          "loss": 0.005590373184531927
+        },
+        "decomposition_residual": -2.1827872842550278e-10
+      },
+      "original_step100": {
+        "loss": -0.031092336401343346,
+        "components": {
+          "vb": 5.514235817827284e-05,
+          "noise_mse": 0.004461064003407955,
+          "training_timestep": 659.0,
+          "eye_mse_weighted": 0.0005642642499879003,
+          "repa_negative_cosine": -0.36172807216644287,
+          "repa_weighted": -0.03617280721664429,
+          "mse": -0.03114747814834118,
+          "loss": -0.031092336401343346
+        },
+        "decomposition_residual": 2.0372681319713593e-10
+      },
+      "native_initialzero": {
+        "loss": 0.0014294924912974238,
+        "components": {
+          "vb": 2.1708729036618024e-05,
+          "noise_mse": 0.0010476280003786087,
+          "training_timestep": 659.0,
+          "eye_mse_weighted": 0.000360155594535172,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.0014077837113291025,
+          "loss": 0.0014294924912974238
+        },
+        "decomposition_residual": 1.673470251262188e-10
+      },
+      "native_step100": {
+        "loss": -0.0347382128238678,
+        "components": {
+          "vb": 2.159617179131601e-05,
+          "noise_mse": 0.0010487467516213655,
+          "training_timestep": 659.0,
+          "eye_mse_weighted": 0.0003642513765953481,
+          "repa_negative_cosine": -0.36172807216644287,
+          "repa_weighted": -0.03617280721664429,
+          "mse": -0.03475980833172798,
+          "loss": -0.0347382128238678
+        },
+        "decomposition_residual": 9.276845958083868e-11
+      }
+    },
+    {
+      "sample": "WDA_DianneFeinstein_000_4536_4616",
+      "seed": 9034,
+      "original_initialzero": {
+        "loss": 0.025613291189074516,
+        "components": {
+          "vb": 0.00016898127796594054,
+          "noise_mse": 0.02082637883722782,
+          "training_timestep": 417.0,
+          "eye_mse_weighted": 0.004617930389940739,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.025444310158491135,
+          "loss": 0.025613291189074516
+        },
+        "decomposition_residual": 6.83940015733242e-10
+      },
+      "original_step100": {
+        "loss": -0.018956009298563004,
+        "components": {
+          "vb": 0.0001549239968881011,
+          "noise_mse": 0.018901333212852478,
+          "training_timestep": 417.0,
+          "eye_mse_weighted": 0.004291517660021782,
+          "repa_negative_cosine": -0.4230378270149231,
+          "repa_weighted": -0.04230378195643425,
+          "mse": -0.01911093294620514,
+          "loss": -0.018956009298563004
+        },
+        "decomposition_residual": -2.2118911147117615e-09
+      },
+      "native_initialzero": {
+        "loss": 0.011859813705086708,
+        "components": {
+          "vb": 8.139930287143216e-05,
+          "noise_mse": 0.008909623138606548,
+          "training_timestep": 417.0,
+          "eye_mse_weighted": 0.0028687920421361923,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.011778414249420166,
+          "loss": 0.011859813705086708
+        },
+        "decomposition_residual": -7.785274647176266e-10
+      },
+      "native_step100": {
+        "loss": -0.030400969088077545,
+        "components": {
+          "vb": 8.148589404299855e-05,
+          "noise_mse": 0.008924933150410652,
+          "training_timestep": 417.0,
+          "eye_mse_weighted": 0.0028963941149413586,
+          "repa_negative_cosine": -0.4230378270149231,
+          "repa_weighted": -0.04230378195643425,
+          "mse": -0.030482454225420952,
+          "loss": -0.030400969088077545
+        },
+        "decomposition_residual": -2.9103830456733704e-10
+      }
+    },
+    {
+      "sample": "WDA_BarbaraLee0_000_1215_1295",
+      "seed": 9035,
+      "original_initialzero": {
+        "loss": 0.042757969349622726,
+        "components": {
+          "vb": 0.0002489624312147498,
+          "noise_mse": 0.0321492962539196,
+          "training_timestep": 387.0,
+          "eye_mse_weighted": 0.010359713807702065,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.04250900819897652,
+          "loss": 0.042757969349622726
+        },
+        "decomposition_residual": -3.14321368932724e-09
+      },
+      "original_step100": {
+        "loss": 0.006669444963335991,
+        "components": {
+          "vb": 0.00023598324332851917,
+          "noise_mse": 0.030329033732414246,
+          "training_timestep": 387.0,
+          "eye_mse_weighted": 0.009966881945729256,
+          "repa_negative_cosine": -0.3386245369911194,
+          "repa_weighted": -0.03386245295405388,
+          "mse": 0.006433461792767048,
+          "loss": 0.006669444963335991
+        },
+        "decomposition_residual": -1.0040821507573128e-09
+      },
+      "native_initialzero": {
+        "loss": 0.012993180193006992,
+        "components": {
+          "vb": 8.733871072763577e-05,
+          "noise_mse": 0.009804110042750835,
+          "training_timestep": 387.0,
+          "eye_mse_weighted": 0.003101730952039361,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.012905841693282127,
+          "loss": 0.012993180193006992
+        },
+        "decomposition_residual": 4.874891601502895e-10
+      },
+      "native_step100": {
+        "loss": -0.0209692120552063,
+        "components": {
+          "vb": 8.700385660631582e-05,
+          "noise_mse": 0.009760506451129913,
+          "training_timestep": 387.0,
+          "eye_mse_weighted": 0.0030457298271358013,
+          "repa_negative_cosine": -0.3386245369911194,
+          "repa_weighted": -0.03386245295405388,
+          "mse": -0.021056216210126877,
+          "loss": -0.0209692120552063
+        },
+        "decomposition_residual": 7.639755494892597e-10
+      }
+    },
+    {
+      "sample": "WDA_KirstenGillibrand_000_8181_8261",
+      "seed": 9036,
+      "original_initialzero": {
+        "loss": 0.0016784688923507929,
+        "components": {
+          "vb": 2.4591681722085923e-05,
+          "noise_mse": 0.0014794566668570042,
+          "training_timestep": 759.0,
+          "eye_mse_weighted": 0.0001744205510476604,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.0016538772033527493,
+          "loss": 0.0016784688923507929
+        },
+        "decomposition_residual": -7.275957614183426e-12
+      },
+      "original_step100": {
+        "loss": -0.041261352598667145,
+        "components": {
+          "vb": 2.4041808501351625e-05,
+          "noise_mse": 0.001439273590222001,
+          "training_timestep": 759.0,
+          "eye_mse_weighted": 0.00017188250785693526,
+          "repa_negative_cosine": -0.4289655089378357,
+          "repa_weighted": -0.04289655014872551,
+          "mse": -0.04128539562225342,
+          "loss": -0.041261352598667145
+        },
+        "decomposition_residual": -3.5652192309498787e-10
+      },
+      "native_initialzero": {
+        "loss": 0.00038662119186483324,
+        "components": {
+          "vb": 1.1464972885733005e-05,
+          "noise_mse": 0.0002708264801185578,
+          "training_timestep": 759.0,
+          "eye_mse_weighted": 0.00010432975250296295,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.00037515623262152076,
+          "loss": 0.00038662119186483324
+        },
+        "decomposition_residual": -1.3642420526593924e-11
+      },
+      "native_step100": {
+        "loss": -0.042506977915763855,
+        "components": {
+          "vb": 1.143510417023208e-05,
+          "noise_mse": 0.0002739355550147593,
+          "training_timestep": 759.0,
+          "eye_mse_weighted": 0.00010419812315376475,
+          "repa_negative_cosine": -0.4289655089378357,
+          "repa_weighted": -0.04289655014872551,
+          "mse": -0.04251841455698013,
+          "loss": -0.042506977915763855
+        },
+        "decomposition_residual": 3.4506228985264897e-09
+      }
+    },
+    {
+      "sample": "WDA_ScottPeters0_000_4455_4535",
+      "seed": 9037,
+      "original_initialzero": {
+        "loss": 0.013581997714936733,
+        "components": {
+          "vb": 0.00011392349551897496,
+          "noise_mse": 0.011710786260664463,
+          "training_timestep": 558.0,
+          "eye_mse_weighted": 0.0017572883516550064,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.01346807461231947,
+          "loss": 0.013581997714936733
+        },
+        "decomposition_residual": -3.92901711165905e-10
+      },
+      "original_step100": {
+        "loss": -0.024978401139378548,
+        "components": {
+          "vb": 0.00010252629726892337,
+          "noise_mse": 0.010382830165326595,
+          "training_timestep": 558.0,
+          "eye_mse_weighted": 0.0015975593123584986,
+          "repa_negative_cosine": -0.37061312794685364,
+          "repa_weighted": -0.03706131502985954,
+          "mse": -0.025080926716327667,
+          "loss": -0.024978401139378548
+        },
+        "decomposition_residual": -1.8844730220735073e-09
+      },
+      "native_initialzero": {
+        "loss": 0.0024778922088444233,
+        "components": {
+          "vb": 2.838644832081627e-05,
+          "noise_mse": 0.0017188970232382417,
+          "training_timestep": 558.0,
+          "eye_mse_weighted": 0.0007306087063625455,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.002449505729600787,
+          "loss": 0.0024778922088444233
+        },
+        "decomposition_residual": 3.092281986027956e-11
+      },
+      "native_step100": {
+        "loss": -0.03457473963499069,
+        "components": {
+          "vb": 2.8571979783009738e-05,
+          "noise_mse": 0.0017256352584809065,
+          "training_timestep": 558.0,
+          "eye_mse_weighted": 0.0007323650643229485,
+          "repa_negative_cosine": -0.37061312794685364,
+          "repa_weighted": -0.03706131502985954,
+          "mse": -0.034603312611579895,
+          "loss": -0.03457473963499069
+        },
+        "decomposition_residual": 3.092281986027956e-09
+      }
+    },
+    {
+      "sample": "WRA_MikeCrapo_000_486_566",
+      "seed": 9038,
+      "original_initialzero": {
+        "loss": 0.34930816292762756,
+        "components": {
+          "vb": 0.005146818235516548,
+          "noise_mse": 0.2612058222293854,
+          "training_timestep": 72.0,
+          "eye_mse_weighted": 0.0829555094242096,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.34416133165359497,
+          "loss": 0.34930816292762756
+        },
+        "decomposition_residual": 1.30385160446167e-08
+      },
+      "original_step100": {
+        "loss": 0.29540932178497314,
+        "components": {
+          "vb": 0.004945386666804552,
+          "noise_mse": 0.25087907910346985,
+          "training_timestep": 72.0,
+          "eye_mse_weighted": 0.07939624786376953,
+          "repa_negative_cosine": -0.3981143832206726,
+          "repa_weighted": -0.03981143981218338,
+          "mse": 0.290463924407959,
+          "loss": 0.29540932178497314
+        },
+        "decomposition_residual": 4.7963112592697144e-08
+      },
+      "native_initialzero": {
+        "loss": 0.22516612708568573,
+        "components": {
+          "vb": 0.0033680619671940804,
+          "noise_mse": 0.17074309289455414,
+          "training_timestep": 72.0,
+          "eye_mse_weighted": 0.05105496942996979,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.22179806232452393,
+          "loss": 0.22516612708568573
+        },
+        "decomposition_residual": 2.7939677238464355e-09
+      },
+      "native_step100": {
+        "loss": 0.185464009642601,
+        "components": {
+          "vb": 0.0033666384406387806,
+          "noise_mse": 0.17066580057144165,
+          "training_timestep": 72.0,
+          "eye_mse_weighted": 0.05124301463365555,
+          "repa_negative_cosine": -0.3981143832206726,
+          "repa_weighted": -0.03981143981218338,
+          "mse": 0.18209737539291382,
+          "loss": 0.185464009642601
+        },
+        "decomposition_residual": -4.190951585769653e-09
+      }
+    },
+    {
+      "sample": "WDA_NancyPelosi0_000_2268_2348",
+      "seed": 9039,
+      "original_initialzero": {
+        "loss": 0.045988358557224274,
+        "components": {
+          "vb": 0.0002601968008093536,
+          "noise_mse": 0.03370460122823715,
+          "training_timestep": 337.0,
+          "eye_mse_weighted": 0.012023558840155602,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.0457281619310379,
+          "loss": 0.045988358557224274
+        },
+        "decomposition_residual": 1.6880221664905548e-09
+      },
+      "original_step100": {
+        "loss": -0.00456320820376277,
+        "components": {
+          "vb": 0.00023814856831450015,
+          "noise_mse": 0.030659232288599014,
+          "training_timestep": 337.0,
+          "eye_mse_weighted": 0.010757800191640854,
+          "repa_negative_cosine": -0.4621838629245758,
+          "repa_weighted": -0.0462183877825737,
+          "mse": -0.004801356699317694,
+          "loss": -0.00456320820376277
+        },
+        "decomposition_residual": -1.469743438065052e-09
+      },
+      "native_initialzero": {
+        "loss": 0.01642521098256111,
+        "components": {
+          "vb": 0.00010627172741806135,
+          "noise_mse": 0.012309134006500244,
+          "training_timestep": 337.0,
+          "eye_mse_weighted": 0.004009805619716644,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.01631893962621689,
+          "loss": 0.01642521098256111
+        },
+        "decomposition_residual": -3.710738383233547e-10
+      },
+      "native_step100": {
+        "loss": -0.029756825417280197,
+        "components": {
+          "vb": 0.00010603742703096941,
+          "noise_mse": 0.012316782027482986,
+          "training_timestep": 337.0,
+          "eye_mse_weighted": 0.004038741812109947,
+          "repa_negative_cosine": -0.4621838629245758,
+          "repa_weighted": -0.0462183877825737,
+          "mse": -0.029862862080335617,
+          "loss": -0.029756825417280197
+        },
+        "decomposition_residual": 1.0986695997416973e-09
+      }
+    },
+    {
+      "sample": "WDA_JackReed0_000_2025_2105",
+      "seed": 9040,
+      "original_initialzero": {
+        "loss": 0.0006751667242497206,
+        "components": {
+          "vb": 1.3818911611451767e-05,
+          "noise_mse": 0.0005694213323295116,
+          "training_timestep": 813.0,
+          "eye_mse_weighted": 9.192649304168299e-05,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.000661347818095237,
+          "loss": 0.0006751667242497206
+        },
+        "decomposition_residual": -1.2732925824820995e-11
+      },
+      "original_step100": {
+        "loss": -0.03234171122312546,
+        "components": {
+          "vb": 1.3641830264532473e-05,
+          "noise_mse": 0.0005580560537055135,
+          "training_timestep": 813.0,
+          "eye_mse_weighted": 9.250389121007174e-05,
+          "repa_negative_cosine": -0.33005914092063904,
+          "repa_weighted": -0.03300591558218002,
+          "mse": -0.032355353236198425,
+          "loss": -0.03234171122312546
+        },
+        "decomposition_residual": 2.583874447736889e-09
+      },
+      "native_initialzero": {
+        "loss": 0.00028978328919038177,
+        "components": {
+          "vb": 9.677443813416176e-06,
+          "noise_mse": 0.00021255589672364295,
+          "training_timestep": 813.0,
+          "eye_mse_weighted": 6.754998321412131e-05,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.0002801058581098914,
+          "loss": 0.00028978328919038177
+        },
+        "decomposition_residual": -3.456079866737127e-11
+      },
+      "native_step100": {
+        "loss": -0.03271585702896118,
+        "components": {
+          "vb": 9.612580470275134e-06,
+          "noise_mse": 0.00021427939645946026,
+          "training_timestep": 813.0,
+          "eye_mse_weighted": 6.616899918299168e-05,
+          "repa_negative_cosine": -0.33005914092063904,
+          "repa_weighted": -0.03300591558218002,
+          "mse": -0.03272546827793121,
+          "loss": -0.03271585702896118
+        },
+        "decomposition_residual": -2.422893885523081e-09
+      }
+    },
+    {
+      "sample": "WDA_ZoeLofgren_000_3726_3806",
+      "seed": 9041,
+      "original_initialzero": {
+        "loss": 0.2767532169818878,
+        "components": {
+          "vb": 0.0025061017367988825,
+          "noise_mse": 0.2284223437309265,
+          "training_timestep": 144.0,
+          "eye_mse_weighted": 0.04582477733492851,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.27424710988998413,
+          "loss": 0.2767532169818878
+        },
+        "decomposition_residual": -5.820766091346741e-09
+      },
+      "original_step100": {
+        "loss": 0.20688825845718384,
+        "components": {
+          "vb": 0.0022832301910966635,
+          "noise_mse": 0.20790794491767883,
+          "training_timestep": 144.0,
+          "eye_mse_weighted": 0.04247158765792847,
+          "repa_negative_cosine": -0.4577450752258301,
+          "repa_weighted": -0.04577450826764107,
+          "mse": 0.20460502803325653,
+          "loss": 0.20688825845718384
+        },
+        "decomposition_residual": 3.958120942115784e-09
+      },
+      "native_initialzero": {
+        "loss": 0.12708672881126404,
+        "components": {
+          "vb": 0.0011252601398155093,
+          "noise_mse": 0.10123632848262787,
+          "training_timestep": 144.0,
+          "eye_mse_weighted": 0.024725135415792465,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.12596146762371063,
+          "loss": 0.12708672881126404
+        },
+        "decomposition_residual": 4.773028194904327e-09
+      },
+      "native_step100": {
+        "loss": 0.08117234706878662,
+        "components": {
+          "vb": 0.0011256919242441654,
+          "noise_mse": 0.10127580910921097,
+          "training_timestep": 144.0,
+          "eye_mse_weighted": 0.024545354768633842,
+          "repa_negative_cosine": -0.4577450752258301,
+          "repa_weighted": -0.04577450826764107,
+          "mse": 0.0800466537475586,
+          "loss": 0.08117234706878662
+        },
+        "decomposition_residual": -4.656612873077393e-10
+      }
+    },
+    {
+      "sample": "WRA_KristiNoem2_000_2349_2429",
+      "seed": 9042,
+      "original_initialzero": {
+        "loss": 0.243230938911438,
+        "components": {
+          "vb": 0.0022422668989747763,
+          "noise_mse": 0.17951735854148865,
+          "training_timestep": 123.0,
+          "eye_mse_weighted": 0.06147132068872452,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.24098867177963257,
+          "loss": 0.243230938911438
+        },
+        "decomposition_residual": -7.2177499532699585e-09
+      },
+      "original_step100": {
+        "loss": 0.19287094473838806,
+        "components": {
+          "vb": 0.0021125886123627424,
+          "noise_mse": 0.16903677582740784,
+          "training_timestep": 123.0,
+          "eye_mse_weighted": 0.05699628219008446,
+          "repa_negative_cosine": -0.3527470827102661,
+          "repa_weighted": -0.03527471050620079,
+          "mse": 0.1907583624124527,
+          "loss": 0.19287094473838806
+        },
+        "decomposition_residual": 8.614733815193176e-09
+      },
+      "native_initialzero": {
+        "loss": 0.11915583908557892,
+        "components": {
+          "vb": 0.0011126110330224037,
+          "noise_mse": 0.08815786242485046,
+          "training_timestep": 123.0,
+          "eye_mse_weighted": 0.029885374009609222,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.11804322898387909,
+          "loss": 0.11915583908557892
+        },
+        "decomposition_residual": -8.381903171539307e-09
+      },
+      "native_step100": {
+        "loss": 0.08429662138223648,
+        "components": {
+          "vb": 0.0011137141846120358,
+          "noise_mse": 0.0882539376616478,
+          "training_timestep": 123.0,
+          "eye_mse_weighted": 0.0302036851644516,
+          "repa_negative_cosine": -0.3527470827102661,
+          "repa_weighted": -0.03527471050620079,
+          "mse": 0.0831829085946083,
+          "loss": 0.08429662138223648
+        },
+        "decomposition_residual": -5.122274160385132e-09
+      }
+    },
+    {
+      "sample": "WRA_ReneeEllmers_000_1377_1457",
+      "seed": 9043,
+      "original_initialzero": {
+        "loss": 0.0067299529910087585,
+        "components": {
+          "vb": 6.250198202906176e-05,
+          "noise_mse": 0.0054601943120360374,
+          "training_timestep": 602.0,
+          "eye_mse_weighted": 0.0012072573881596327,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.006667451001703739,
+          "loss": 0.0067299529910087585
+        },
+        "decomposition_residual": -6.912159733474255e-10
+      },
+      "original_step100": {
+        "loss": -0.036477576941251755,
+        "components": {
+          "vb": 5.73967736272607e-05,
+          "noise_mse": 0.004889984615147114,
+          "training_timestep": 602.0,
+          "eye_mse_weighted": 0.0011159006971865892,
+          "repa_negative_cosine": -0.4254085421562195,
+          "repa_weighted": -0.04254085570573807,
+          "mse": -0.03653497248888016,
+          "loss": -0.036477576941251755
+        },
+        "decomposition_residual": -3.321474650874734e-09
+      },
+      "native_initialzero": {
+        "loss": 0.0017616868717595935,
+        "components": {
+          "vb": 2.3569584300275892e-05,
+          "noise_mse": 0.0011626103660091758,
+          "training_timestep": 602.0,
+          "eye_mse_weighted": 0.0005755070014856756,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.0017381173092871904,
+          "loss": 0.0017616868717595935
+        },
+        "decomposition_residual": -8.003553375601768e-11
+      },
+      "native_step100": {
+        "loss": -0.04074646532535553,
+        "components": {
+          "vb": 2.387346830801107e-05,
+          "noise_mse": 0.0011824427638202906,
+          "training_timestep": 602.0,
+          "eye_mse_weighted": 0.0005880750250071287,
+          "repa_negative_cosine": -0.4254085421562195,
+          "repa_weighted": -0.04254085570573807,
+          "mse": -0.040770336985588074,
+          "loss": -0.04074646532535553
+        },
+        "decomposition_residual": -8.767528925091028e-10
+      }
+    },
+    {
+      "sample": "WRA_AllenWest_000_4131_4211",
+      "seed": 9044,
+      "original_initialzero": {
+        "loss": 0.05912524834275246,
+        "components": {
+          "vb": 0.00034807331394404173,
+          "noise_mse": 0.04496513307094574,
+          "training_timestep": 306.0,
+          "eye_mse_weighted": 0.013812042772769928,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.05877717584371567,
+          "loss": 0.05912524834275246
+        },
+        "decomposition_residual": -8.149072527885437e-10
+      },
+      "original_step100": {
+        "loss": 0.022594565525650978,
+        "components": {
+          "vb": 0.00032460578950122,
+          "noise_mse": 0.04175731539726257,
+          "training_timestep": 306.0,
+          "eye_mse_weighted": 0.01339649222791195,
+          "repa_negative_cosine": -0.3288384675979614,
+          "repa_weighted": -0.03288384899497032,
+          "mse": 0.02226996049284935,
+          "loss": 0.022594565525650978
+        },
+        "decomposition_residual": 1.1059455573558807e-09
+      },
+      "native_initialzero": {
+        "loss": 0.017804622650146484,
+        "components": {
+          "vb": 0.00011312502465443686,
+          "noise_mse": 0.012889070436358452,
+          "training_timestep": 306.0,
+          "eye_mse_weighted": 0.004802425857633352,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.01769149675965309,
+          "loss": 0.017804622650146484
+        },
+        "decomposition_residual": 1.331500243395567e-09
+      },
+      "native_step100": {
+        "loss": -0.015156877227127552,
+        "components": {
+          "vb": 0.00011271524999756366,
+          "noise_mse": 0.0128451157361269,
+          "training_timestep": 306.0,
+          "eye_mse_weighted": 0.004769141785800457,
+          "repa_negative_cosine": -0.3288384675979614,
+          "repa_weighted": -0.03288384899497032,
+          "mse": -0.01526959240436554,
+          "loss": -0.015156877227127552
+        },
+        "decomposition_residual": -1.0040821507573128e-09
+      }
+    },
+    {
+      "sample": "RD_Radio25_000_1215_1295",
+      "seed": 9045,
+      "original_initialzero": {
+        "loss": 0.008411244489252567,
+        "components": {
+          "vb": 8.090426126727834e-05,
+          "noise_mse": 0.0074550677090883255,
+          "training_timestep": 607.0,
+          "eye_mse_weighted": 0.0008752730791456997,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.00833034049719572,
+          "loss": 0.008411244489252567
+        },
+        "decomposition_residual": -5.602487362921238e-10
+      },
+      "original_step100": {
+        "loss": -0.019431542605161667,
+        "components": {
+          "vb": 7.727816409897059e-05,
+          "noise_mse": 0.007068818435072899,
+          "training_timestep": 607.0,
+          "eye_mse_weighted": 0.0008323257206939161,
+          "repa_negative_cosine": -0.2740996479988098,
+          "repa_weighted": -0.02740996517241001,
+          "mse": -0.01950882002711296,
+          "loss": -0.019431542605161667
+        },
+        "decomposition_residual": 2.473825588822365e-10
+      },
+      "native_initialzero": {
+        "loss": 0.0018025945173576474,
+        "components": {
+          "vb": 2.5275769075960852e-05,
+          "noise_mse": 0.0013764887116849422,
+          "training_timestep": 607.0,
+          "eye_mse_weighted": 0.0004008301766589284,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.0017773187719285488,
+          "loss": 0.0018025945173576474
+        },
+        "decomposition_residual": -1.4006218407303095e-10
+      },
+      "native_step100": {
+        "loss": -0.025569351390004158,
+        "components": {
+          "vb": 2.5512115826131776e-05,
+          "noise_mse": 0.0014045173302292824,
+          "training_timestep": 607.0,
+          "eye_mse_weighted": 0.0004105835978407413,
+          "repa_negative_cosine": -0.2740996479988098,
+          "repa_weighted": -0.02740996517241001,
+          "mse": -0.025594864040613174,
+          "loss": -0.025569351390004158
+        },
+        "decomposition_residual": 7.385096978396177e-10
+      }
+    },
+    {
+      "sample": "RD_Radio59_000_162_242",
+      "seed": 9046,
+      "original_initialzero": {
+        "loss": 0.0002854557824321091,
+        "components": {
+          "vb": 9.822829269978683e-06,
+          "noise_mse": 0.00023879259242676198,
+          "training_timestep": 947.0,
+          "eye_mse_weighted": 3.684035618789494e-05,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.0002756329486146569,
+          "loss": 0.0002854557824321091
+        },
+        "decomposition_residual": 4.547473508864641e-12
+      },
+      "original_step100": {
+        "loss": -0.03731903061270714,
+        "components": {
+          "vb": 9.676610716269352e-06,
+          "noise_mse": 0.00023185669851955026,
+          "training_timestep": 947.0,
+          "eye_mse_weighted": 3.47761160810478e-05,
+          "repa_negative_cosine": -0.37595343589782715,
+          "repa_weighted": -0.037595342844724655,
+          "mse": -0.03732870891690254,
+          "loss": -0.03731903061270714
+        },
+        "decomposition_residual": 2.8067006496712565e-09
+      },
+      "native_initialzero": {
+        "loss": 0.00011654680565698072,
+        "components": {
+          "vb": 7.494175861211261e-06,
+          "noise_mse": 9.090777894016355e-05,
+          "training_timestep": 947.0,
+          "eye_mse_weighted": 1.814485585782677e-05,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.00010905262752203271,
+          "loss": 0.00011654680565698072
+        },
+        "decomposition_residual": -5.002220859751105e-12
+      },
+      "native_step100": {
+        "loss": -0.03747527673840523,
+        "components": {
+          "vb": 7.568079581687925e-06,
+          "noise_mse": 9.224288805853575e-05,
+          "training_timestep": 947.0,
+          "eye_mse_weighted": 2.0252216927474365e-05,
+          "repa_negative_cosine": -0.37595343589782715,
+          "repa_weighted": -0.037595342844724655,
+          "mse": -0.0374828465282917,
+          "loss": -0.03747527673840523
+        },
+        "decomposition_residual": 2.921751729445532e-09
+      }
+    },
+    {
+      "sample": "WDA_EmanuelCleaver_000_4536_4616",
+      "seed": 9047,
+      "original_initialzero": {
+        "loss": 0.0008243414340540767,
+        "components": {
+          "vb": 1.530631197965704e-05,
+          "noise_mse": 0.0006978559540584683,
+          "training_timestep": 822.0,
+          "eye_mse_weighted": 0.00011117918620584533,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.0008090351475402713,
+          "loss": 0.0008243414340540767
+        },
+        "decomposition_residual": -1.8189894035458565e-11
+      },
+      "original_step100": {
+        "loss": -0.02617243304848671,
+        "components": {
+          "vb": 1.5276586054824293e-05,
+          "noise_mse": 0.0006957761943340302,
+          "training_timestep": 822.0,
+          "eye_mse_weighted": 0.00010983645915985107,
+          "repa_negative_cosine": -0.2699332535266876,
+          "repa_weighted": -0.026993324980139732,
+          "mse": -0.026187710464000702,
+          "loss": -0.02617243304848671
+        },
+        "decomposition_residual": 2.6921043172478676e-09
+      },
+      "native_initialzero": {
+        "loss": 0.00022508599795401096,
+        "components": {
+          "vb": 9.183517249766737e-06,
+          "noise_mse": 0.00018431161879561841,
+          "training_timestep": 822.0,
+          "eye_mse_weighted": 3.159086190862581e-05,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.00021590248798020184,
+          "loss": 0.00022508599795401096
+        },
+        "decomposition_residual": 0.0
+      },
+      "native_step100": {
+        "loss": -0.026757195591926575,
+        "components": {
+          "vb": 9.340897122456226e-06,
+          "noise_mse": 0.0001956396154128015,
+          "training_timestep": 822.0,
+          "eye_mse_weighted": 3.114878563792445e-05,
+          "repa_negative_cosine": -0.2699332535266876,
+          "repa_weighted": -0.026993324980139732,
+          "mse": -0.026766536757349968,
+          "loss": -0.026757195591926575
+        },
+        "decomposition_residual": 9.00399754755199e-11
+      }
+    },
+    {
+      "sample": "RD_Radio7_000_1782_1862",
+      "seed": 9048,
+      "original_initialzero": {
+        "loss": 0.013073552399873734,
+        "components": {
+          "vb": 0.00010737713455455378,
+          "noise_mse": 0.011276613920927048,
+          "training_timestep": 532.0,
+          "eye_mse_weighted": 0.0016895615262910724,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.012966175563633442,
+          "loss": 0.013073552399873734
+        },
+        "decomposition_residual": -1.8189894035458565e-10
+      },
+      "original_step100": {
+        "loss": -0.023253468796610832,
+        "components": {
+          "vb": 0.00010132154420716688,
+          "noise_mse": 0.010548830032348633,
+          "training_timestep": 532.0,
+          "eye_mse_weighted": 0.001561853801831603,
+          "repa_negative_cosine": -0.3546547293663025,
+          "repa_weighted": -0.03546547517180443,
+          "mse": -0.02335479110479355,
+          "loss": -0.023253468796610832
+        },
+        "decomposition_residual": 9.968061931431293e-10
+      },
+      "native_initialzero": {
+        "loss": 0.003662106115370989,
+        "components": {
+          "vb": 3.749398092622869e-05,
+          "noise_mse": 0.0028353696689009666,
+          "training_timestep": 532.0,
+          "eye_mse_weighted": 0.0007892425055615604,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.003624612232670188,
+          "loss": 0.003662106115370989
+        },
+        "decomposition_residual": -4.001776687800884e-11
+      },
+      "native_step100": {
+        "loss": -0.031784091144800186,
+        "components": {
+          "vb": 3.753836790565401e-05,
+          "noise_mse": 0.0028458533342927694,
+          "training_timestep": 532.0,
+          "eye_mse_weighted": 0.0007979938527569175,
+          "repa_negative_cosine": -0.3546547293663025,
+          "repa_weighted": -0.03546547517180443,
+          "mse": -0.03182163089513779,
+          "loss": -0.031784091144800186
+        },
+        "decomposition_residual": -1.5279510989785194e-09
+      }
+    },
+    {
+      "sample": "WDA_JanSchakowsky1_000_5994_6074",
+      "seed": 9049,
+      "original_initialzero": {
+        "loss": 0.00782194547355175,
+        "components": {
+          "vb": 7.635018846485764e-05,
+          "noise_mse": 0.006803539581596851,
+          "training_timestep": 629.0,
+          "eye_mse_weighted": 0.0009420560672879219,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.007745595648884773,
+          "loss": 0.00782194547355175
+        },
+        "decomposition_residual": -3.637978807091713e-10
+      },
+      "original_step100": {
+        "loss": -0.03584663197398186,
+        "components": {
+          "vb": 7.340750016737729e-05,
+          "noise_mse": 0.006495130248367786,
+          "training_timestep": 629.0,
+          "eye_mse_weighted": 0.0009075415437109768,
+          "repa_negative_cosine": -0.4332270622253418,
+          "repa_weighted": -0.04332270845770836,
+          "mse": -0.03592003881931305,
+          "loss": -0.03584663197398186
+        },
+        "decomposition_residual": -2.8085196390748024e-09
+      },
+      "native_initialzero": {
+        "loss": 0.002372181508690119,
+        "components": {
+          "vb": 2.826985110004898e-05,
+          "noise_mse": 0.0016986289992928505,
+          "training_timestep": 629.0,
+          "eye_mse_weighted": 0.0006452828529290855,
+          "repa_negative_cosine": 0.0,
+          "repa_weighted": 0.0,
+          "mse": 0.0023439116775989532,
+          "loss": 0.002372181508690119
+        },
+        "decomposition_residual": -1.9463186617940664e-10
+      },
+      "native_step100": {
+        "loss": -0.04093487560749054,
+        "components": {
+          "vb": 2.8382915843394585e-05,
+          "noise_mse": 0.0017074891366064548,
+          "training_timestep": 629.0,
+          "eye_mse_weighted": 0.0006519597955048084,
+          "repa_negative_cosine": -0.4332270622253418,
+          "repa_weighted": -0.04332270845770836,
+          "mse": -0.04096325859427452,
+          "loss": -0.04093487560749054
+        },
+        "decomposition_residual": 1.002263161353767e-09
+      }
+    }
+  ]
+}
