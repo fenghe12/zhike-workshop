@@ -1,0 +1,30 @@
+[
+  {
+    "id": "WDA_KirstenGillibrand_000_8181_8261",
+    "file": "inputs/clips/WDA_KirstenGillibrand_000_8181_8261.mp4",
+    "bytes": 172167,
+    "archive_entry": "clips/WDA_KirstenGillibrand_000_8181_8261.mp4",
+    "dataset": "HDTF",
+    "split": "published_train",
+    "source": "https://huggingface.co/datasets/global-optima-research/HDTF",
+    "resolution": [
+      512,
+      512
+    ],
+    "training_steps_per_model": 200
+  },
+  {
+    "id": "WRA_DanSullivan_000_3240_3320",
+    "file": "inputs/clips/WRA_DanSullivan_000_3240_3320.mp4",
+    "bytes": 151450,
+    "archive_entry": "clips/WRA_DanSullivan_000_3240_3320.mp4",
+    "dataset": "HDTF",
+    "split": "published_train",
+    "source": "https://huggingface.co/datasets/global-optima-research/HDTF",
+    "resolution": [
+      512,
+      512
+    ],
+    "training_steps_per_model": 200
+  }
+]

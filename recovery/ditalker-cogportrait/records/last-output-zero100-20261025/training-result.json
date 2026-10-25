@@ -1,0 +1,139 @@
+{
+  "model": "ditalker",
+  "completed_steps": 100,
+  "data_count": 50,
+  "resolution": [
+    512,
+    512
+  ],
+  "frames": 16,
+  "initialization_mode": "paper_zero_residual_outputs",
+  "hardware": "Ascend910B2",
+  "learning_rate": 2e-05,
+  "actual_optimizer_updates": 100,
+  "optimizer_state_count": 908,
+  "nonzero_gradient_steps_by_group": {
+    "scale_adapter": 99,
+    "audio_attention": 100,
+    "style_attention": 100,
+    "emotion_cross_attention": 100,
+    "audio_projection": 99,
+    "style_model": 99,
+    "style_content_model": 99,
+    "style_content_decoder": 99,
+    "style_projection": 99,
+    "pose_adapter": 100,
+    "repa_proj": 100
+  },
+  "first_nonzero_gradient_step_by_group": {
+    "audio_attention": 1,
+    "style_attention": 1,
+    "emotion_cross_attention": 1,
+    "pose_adapter": 1,
+    "repa_proj": 1,
+    "scale_adapter": 2,
+    "audio_projection": 2,
+    "style_model": 2,
+    "style_content_model": 2,
+    "style_content_decoder": 2,
+    "style_projection": 2
+  },
+  "groups_with_no_nonzero_gradient": [],
+  "parameter_changes_by_group": {
+    "scale_adapter": {
+      "changed_tensor_count": 71,
+      "changed_elements": 63880038,
+      "delta_l2": 0.36672255808133647
+    },
+    "audio_attention": {
+      "changed_tensor_count": 224,
+      "changed_elements": 148758402,
+      "delta_l2": 1.7746813258107983
+    },
+    "style_attention": {
+      "changed_tensor_count": 224,
+      "changed_elements": 148735330,
+      "delta_l2": 1.7759709286733358
+    },
+    "emotion_cross_attention": {
+      "changed_tensor_count": 224,
+      "changed_elements": 148763556,
+      "delta_l2": 2.5467540845393377
+    },
+    "audio_projection": {
+      "changed_tensor_count": 6,
+      "changed_elements": 14575859,
+      "delta_l2": 0.7943207266402964
+    },
+    "style_model": {
+      "changed_tensor_count": 38,
+      "changed_elements": 2385498,
+      "delta_l2": 0.04652535727555847
+    },
+    "style_content_model": {
+      "changed_tensor_count": 39,
+      "changed_elements": 2411666,
+      "delta_l2": 0.07336748159116893
+    },
+    "style_content_decoder": {
+      "changed_tensor_count": 62,
+      "changed_elements": 3218017,
+      "delta_l2": 0.09213115800355302
+    },
+    "style_projection": {
+      "changed_tensor_count": 6,
+      "changed_elements": 476799,
+      "delta_l2": 0.18754762172904177
+    },
+    "pose_adapter": {
+      "changed_tensor_count": 8,
+      "changed_elements": 16044,
+      "delta_l2": 0.021488321098904247
+    },
+    "repa_proj": {
+      "changed_tensor_count": 6,
+      "changed_elements": 24650465,
+      "delta_l2": 1.7119684862496125
+    }
+  },
+  "tensor_gradient_coverage": {
+    "nonzero_gradient_tensors": 908,
+    "total_added_tensors": 908,
+    "tensors_with_no_nonzero_gradient": []
+  },
+  "all_11_groups_received_nonzero_gradients": true,
+  "all_11_groups_changed_parameters": true,
+  "base_parameters_frozen": true,
+  "frozen_parameters_without_gradients": true,
+  "frozen_sampled_values_unchanged": true,
+  "fixed_before": {
+    "vb": 0.000752308180772161,
+    "noise_mse": 0.04194373412101413,
+    "eye_mse_weighted": 0.01171872751434421,
+    "repa_negative_cosine": -0.005498573152581229,
+    "repa_weighted": -0.0005498573195473,
+    "mse": 0.05311260473001312,
+    "loss": 0.053864912474200534
+  },
+  "fixed_after": {
+    "vb": 0.0007535053842730122,
+    "noise_mse": 0.042036540202389006,
+    "eye_mse_weighted": 0.011686709534878902,
+    "repa_negative_cosine": -0.5311996990442276,
+    "repa_weighted": -0.05311997056007385,
+    "mse": 0.0006032795552164316,
+    "loss": 0.0013567852415144444
+  },
+  "fixed_pure_mse_relative_change_percent": 0.2212632788180402,
+  "checkpoint_inspection": {
+    "full_checkpoint_loaded_on_cpu": true,
+    "step": 100,
+    "optimizer_states": 908,
+    "optimizer_steps_min": 100,
+    "optimizer_steps_max": 100,
+    "all_added_weights_exactly_match": true
+  },
+  "historical_all_parameter_zero_run_was_misinterpretation": true,
+  "zero_residual_output_layers": 85,
+  "benchmark_or_convergence_claim": false
+}

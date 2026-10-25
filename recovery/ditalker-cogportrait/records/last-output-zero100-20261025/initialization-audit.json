@@ -1,0 +1,3732 @@
+{
+  "mode": "paper_zero_residual_outputs",
+  "zero_residual_outputs": [
+    "transformer_blocks.0.audio_attention.to_out.0",
+    "transformer_blocks.0.style_attention.to_out.0",
+    "transformer_blocks.0.emotion_cross_attention.to_out.0",
+    "transformer_blocks.1.audio_attention.to_out.0",
+    "transformer_blocks.1.style_attention.to_out.0",
+    "transformer_blocks.1.emotion_cross_attention.to_out.0",
+    "transformer_blocks.2.audio_attention.to_out.0",
+    "transformer_blocks.2.style_attention.to_out.0",
+    "transformer_blocks.2.emotion_cross_attention.to_out.0",
+    "transformer_blocks.3.audio_attention.to_out.0",
+    "transformer_blocks.3.style_attention.to_out.0",
+    "transformer_blocks.3.emotion_cross_attention.to_out.0",
+    "transformer_blocks.4.audio_attention.to_out.0",
+    "transformer_blocks.4.style_attention.to_out.0",
+    "transformer_blocks.4.emotion_cross_attention.to_out.0",
+    "transformer_blocks.5.audio_attention.to_out.0",
+    "transformer_blocks.5.style_attention.to_out.0",
+    "transformer_blocks.5.emotion_cross_attention.to_out.0",
+    "transformer_blocks.6.audio_attention.to_out.0",
+    "transformer_blocks.6.style_attention.to_out.0",
+    "transformer_blocks.6.emotion_cross_attention.to_out.0",
+    "transformer_blocks.7.audio_attention.to_out.0",
+    "transformer_blocks.7.style_attention.to_out.0",
+    "transformer_blocks.7.emotion_cross_attention.to_out.0",
+    "transformer_blocks.8.audio_attention.to_out.0",
+    "transformer_blocks.8.style_attention.to_out.0",
+    "transformer_blocks.8.emotion_cross_attention.to_out.0",
+    "transformer_blocks.9.audio_attention.to_out.0",
+    "transformer_blocks.9.style_attention.to_out.0",
+    "transformer_blocks.9.emotion_cross_attention.to_out.0",
+    "transformer_blocks.10.audio_attention.to_out.0",
+    "transformer_blocks.10.style_attention.to_out.0",
+    "transformer_blocks.10.emotion_cross_attention.to_out.0",
+    "transformer_blocks.11.audio_attention.to_out.0",
+    "transformer_blocks.11.style_attention.to_out.0",
+    "transformer_blocks.11.emotion_cross_attention.to_out.0",
+    "transformer_blocks.12.audio_attention.to_out.0",
+    "transformer_blocks.12.style_attention.to_out.0",
+    "transformer_blocks.12.emotion_cross_attention.to_out.0",
+    "transformer_blocks.13.audio_attention.to_out.0",
+    "transformer_blocks.13.style_attention.to_out.0",
+    "transformer_blocks.13.emotion_cross_attention.to_out.0",
+    "transformer_blocks.14.audio_attention.to_out.0",
+    "transformer_blocks.14.style_attention.to_out.0",
+    "transformer_blocks.14.emotion_cross_attention.to_out.0",
+    "transformer_blocks.15.audio_attention.to_out.0",
+    "transformer_blocks.15.style_attention.to_out.0",
+    "transformer_blocks.15.emotion_cross_attention.to_out.0",
+    "transformer_blocks.16.audio_attention.to_out.0",
+    "transformer_blocks.16.style_attention.to_out.0",
+    "transformer_blocks.16.emotion_cross_attention.to_out.0",
+    "transformer_blocks.17.audio_attention.to_out.0",
+    "transformer_blocks.17.style_attention.to_out.0",
+    "transformer_blocks.17.emotion_cross_attention.to_out.0",
+    "transformer_blocks.18.audio_attention.to_out.0",
+    "transformer_blocks.18.style_attention.to_out.0",
+    "transformer_blocks.18.emotion_cross_attention.to_out.0",
+    "transformer_blocks.19.audio_attention.to_out.0",
+    "transformer_blocks.19.style_attention.to_out.0",
+    "transformer_blocks.19.emotion_cross_attention.to_out.0",
+    "transformer_blocks.20.audio_attention.to_out.0",
+    "transformer_blocks.20.style_attention.to_out.0",
+    "transformer_blocks.20.emotion_cross_attention.to_out.0",
+    "transformer_blocks.21.audio_attention.to_out.0",
+    "transformer_blocks.21.style_attention.to_out.0",
+    "transformer_blocks.21.emotion_cross_attention.to_out.0",
+    "transformer_blocks.22.audio_attention.to_out.0",
+    "transformer_blocks.22.style_attention.to_out.0",
+    "transformer_blocks.22.emotion_cross_attention.to_out.0",
+    "transformer_blocks.23.audio_attention.to_out.0",
+    "transformer_blocks.23.style_attention.to_out.0",
+    "transformer_blocks.23.emotion_cross_attention.to_out.0",
+    "transformer_blocks.24.audio_attention.to_out.0",
+    "transformer_blocks.24.style_attention.to_out.0",
+    "transformer_blocks.24.emotion_cross_attention.to_out.0",
+    "transformer_blocks.25.audio_attention.to_out.0",
+    "transformer_blocks.25.style_attention.to_out.0",
+    "transformer_blocks.25.emotion_cross_attention.to_out.0",
+    "transformer_blocks.26.audio_attention.to_out.0",
+    "transformer_blocks.26.style_attention.to_out.0",
+    "transformer_blocks.26.emotion_cross_attention.to_out.0",
+    "transformer_blocks.27.audio_attention.to_out.0",
+    "transformer_blocks.27.style_attention.to_out.0",
+    "transformer_blocks.27.emotion_cross_attention.to_out.0",
+    "pose_adapter.conv_out"
+  ],
+  "zero_residual_output_layers": 85,
+  "internal_parameters_preserved": true,
+  "scale_gate_final_weights_zero": true,
+  "scale_gate_final_bias": 1,
+  "scale_gate_initial_value": "tanh(1)",
+  "layer_norm_scale": 1,
+  "auxiliary_REPA_projector": "normal initialization; auxiliary loss head, not a residual injection",
+  "all_added_parameters_zero": false,
+  "parameter_tensors": {
+    "scale_adapter.query_tokens": {
+      "elements": 32256,
+      "nonzero_elements": 32256
+    },
+    "scale_adapter.qformer_layers.0.norm_self.weight": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "scale_adapter.qformer_layers.0.norm_self.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "scale_adapter.qformer_layers.0.self_attn.in_proj_weight": {
+      "elements": 3981312,
+      "nonzero_elements": 3981312
+    },
+    "scale_adapter.qformer_layers.0.self_attn.in_proj_bias": {
+      "elements": 3456,
+      "nonzero_elements": 0
+    },
+    "scale_adapter.qformer_layers.0.self_attn.out_proj.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "scale_adapter.qformer_layers.0.self_attn.out_proj.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "scale_adapter.qformer_layers.0.norm_cross_q.weight": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "scale_adapter.qformer_layers.0.norm_cross_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "scale_adapter.qformer_layers.0.norm_cross_kv.weight": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "scale_adapter.qformer_layers.0.norm_cross_kv.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "scale_adapter.qformer_layers.0.cross_attn.in_proj_weight": {
+      "elements": 3981312,
+      "nonzero_elements": 3981312
+    },
+    "scale_adapter.qformer_layers.0.cross_attn.in_proj_bias": {
+      "elements": 3456,
+      "nonzero_elements": 0
+    },
+    "scale_adapter.qformer_layers.0.cross_attn.out_proj.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "scale_adapter.qformer_layers.0.cross_attn.out_proj.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "scale_adapter.qformer_layers.0.norm_ffn.weight": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "scale_adapter.qformer_layers.0.norm_ffn.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "scale_adapter.qformer_layers.0.ffn.0.weight": {
+      "elements": 5308416,
+      "nonzero_elements": 5308416
+    },
+    "scale_adapter.qformer_layers.0.ffn.0.bias": {
+      "elements": 4608,
+      "nonzero_elements": 4608
+    },
+    "scale_adapter.qformer_layers.0.ffn.2.weight": {
+      "elements": 5308416,
+      "nonzero_elements": 5308415
+    },
+    "scale_adapter.qformer_layers.0.ffn.2.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "scale_adapter.qformer_layers.1.norm_self.weight": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "scale_adapter.qformer_layers.1.norm_self.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "scale_adapter.qformer_layers.1.self_attn.in_proj_weight": {
+      "elements": 3981312,
+      "nonzero_elements": 3981310
+    },
+    "scale_adapter.qformer_layers.1.self_attn.in_proj_bias": {
+      "elements": 3456,
+      "nonzero_elements": 0
+    },
+    "scale_adapter.qformer_layers.1.self_attn.out_proj.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "scale_adapter.qformer_layers.1.self_attn.out_proj.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "scale_adapter.qformer_layers.1.norm_cross_q.weight": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "scale_adapter.qformer_layers.1.norm_cross_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "scale_adapter.qformer_layers.1.norm_cross_kv.weight": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "scale_adapter.qformer_layers.1.norm_cross_kv.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "scale_adapter.qformer_layers.1.cross_attn.in_proj_weight": {
+      "elements": 3981312,
+      "nonzero_elements": 3981312
+    },
+    "scale_adapter.qformer_layers.1.cross_attn.in_proj_bias": {
+      "elements": 3456,
+      "nonzero_elements": 0
+    },
+    "scale_adapter.qformer_layers.1.cross_attn.out_proj.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "scale_adapter.qformer_layers.1.cross_attn.out_proj.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "scale_adapter.qformer_layers.1.norm_ffn.weight": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "scale_adapter.qformer_layers.1.norm_ffn.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "scale_adapter.qformer_layers.1.ffn.0.weight": {
+      "elements": 5308416,
+      "nonzero_elements": 5308416
+    },
+    "scale_adapter.qformer_layers.1.ffn.0.bias": {
+      "elements": 4608,
+      "nonzero_elements": 4608
+    },
+    "scale_adapter.qformer_layers.1.ffn.2.weight": {
+      "elements": 5308416,
+      "nonzero_elements": 5308416
+    },
+    "scale_adapter.qformer_layers.1.ffn.2.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "scale_adapter.qformer_layers.2.norm_self.weight": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "scale_adapter.qformer_layers.2.norm_self.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "scale_adapter.qformer_layers.2.self_attn.in_proj_weight": {
+      "elements": 3981312,
+      "nonzero_elements": 3981312
+    },
+    "scale_adapter.qformer_layers.2.self_attn.in_proj_bias": {
+      "elements": 3456,
+      "nonzero_elements": 0
+    },
+    "scale_adapter.qformer_layers.2.self_attn.out_proj.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "scale_adapter.qformer_layers.2.self_attn.out_proj.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "scale_adapter.qformer_layers.2.norm_cross_q.weight": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "scale_adapter.qformer_layers.2.norm_cross_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "scale_adapter.qformer_layers.2.norm_cross_kv.weight": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "scale_adapter.qformer_layers.2.norm_cross_kv.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "scale_adapter.qformer_layers.2.cross_attn.in_proj_weight": {
+      "elements": 3981312,
+      "nonzero_elements": 3981311
+    },
+    "scale_adapter.qformer_layers.2.cross_attn.in_proj_bias": {
+      "elements": 3456,
+      "nonzero_elements": 0
+    },
+    "scale_adapter.qformer_layers.2.cross_attn.out_proj.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "scale_adapter.qformer_layers.2.cross_attn.out_proj.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "scale_adapter.qformer_layers.2.norm_ffn.weight": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "scale_adapter.qformer_layers.2.norm_ffn.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "scale_adapter.qformer_layers.2.ffn.0.weight": {
+      "elements": 5308416,
+      "nonzero_elements": 5308416
+    },
+    "scale_adapter.qformer_layers.2.ffn.0.bias": {
+      "elements": 4608,
+      "nonzero_elements": 4608
+    },
+    "scale_adapter.qformer_layers.2.ffn.2.weight": {
+      "elements": 5308416,
+      "nonzero_elements": 5308415
+    },
+    "scale_adapter.qformer_layers.2.ffn.2.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "scale_adapter.output_norm.weight": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "scale_adapter.output_norm.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "scale_adapter.style_head.0.weight": {
+      "elements": 36864,
+      "nonzero_elements": 36864
+    },
+    "scale_adapter.style_head.0.bias": {
+      "elements": 32,
+      "nonzero_elements": 32
+    },
+    "scale_adapter.style_head.2.weight": {
+      "elements": 32,
+      "nonzero_elements": 0
+    },
+    "scale_adapter.style_head.2.bias": {
+      "elements": 1,
+      "nonzero_elements": 1
+    },
+    "scale_adapter.audio_head.0.weight": {
+      "elements": 36864,
+      "nonzero_elements": 36864
+    },
+    "scale_adapter.audio_head.0.bias": {
+      "elements": 32,
+      "nonzero_elements": 32
+    },
+    "scale_adapter.audio_head.2.weight": {
+      "elements": 32,
+      "nonzero_elements": 0
+    },
+    "scale_adapter.audio_head.2.bias": {
+      "elements": 1,
+      "nonzero_elements": 1
+    },
+    "transformer_blocks.0.audio_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.0.audio_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.0.audio_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.0.audio_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.0.audio_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.0.audio_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.0.audio_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.0.audio_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.0.style_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.0.style_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.0.style_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.0.style_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.0.style_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.0.style_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.0.style_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.0.style_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.0.emotion_cross_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.0.emotion_cross_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.0.emotion_cross_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.0.emotion_cross_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.0.emotion_cross_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.0.emotion_cross_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.0.emotion_cross_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.0.emotion_cross_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.1.audio_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327103
+    },
+    "transformer_blocks.1.audio_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.1.audio_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327103
+    },
+    "transformer_blocks.1.audio_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.1.audio_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.1.audio_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.1.audio_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.1.audio_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.1.style_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.1.style_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.1.style_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.1.style_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.1.style_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.1.style_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.1.style_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.1.style_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.1.emotion_cross_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.1.emotion_cross_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.1.emotion_cross_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.1.emotion_cross_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.1.emotion_cross_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.1.emotion_cross_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.1.emotion_cross_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.1.emotion_cross_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.2.audio_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.2.audio_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.2.audio_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.2.audio_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.2.audio_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.2.audio_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.2.audio_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.2.audio_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.2.style_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.2.style_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.2.style_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.2.style_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.2.style_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.2.style_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.2.style_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.2.style_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.2.emotion_cross_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.2.emotion_cross_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.2.emotion_cross_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.2.emotion_cross_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.2.emotion_cross_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.2.emotion_cross_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.2.emotion_cross_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.2.emotion_cross_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.3.audio_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.3.audio_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.3.audio_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.3.audio_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.3.audio_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.3.audio_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.3.audio_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.3.audio_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.3.style_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.3.style_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.3.style_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.3.style_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.3.style_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327103
+    },
+    "transformer_blocks.3.style_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.3.style_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.3.style_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.3.emotion_cross_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.3.emotion_cross_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.3.emotion_cross_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.3.emotion_cross_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.3.emotion_cross_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.3.emotion_cross_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.3.emotion_cross_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.3.emotion_cross_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.4.audio_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327103
+    },
+    "transformer_blocks.4.audio_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.4.audio_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.4.audio_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.4.audio_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.4.audio_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.4.audio_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.4.audio_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.4.style_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.4.style_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.4.style_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.4.style_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.4.style_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.4.style_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.4.style_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.4.style_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.4.emotion_cross_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.4.emotion_cross_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.4.emotion_cross_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.4.emotion_cross_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.4.emotion_cross_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.4.emotion_cross_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.4.emotion_cross_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.4.emotion_cross_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.5.audio_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.5.audio_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.5.audio_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.5.audio_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.5.audio_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.5.audio_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.5.audio_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.5.audio_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.5.style_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.5.style_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.5.style_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.5.style_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.5.style_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.5.style_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.5.style_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.5.style_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.5.emotion_cross_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.5.emotion_cross_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.5.emotion_cross_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.5.emotion_cross_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.5.emotion_cross_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.5.emotion_cross_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.5.emotion_cross_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.5.emotion_cross_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.6.audio_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.6.audio_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.6.audio_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.6.audio_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.6.audio_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.6.audio_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.6.audio_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.6.audio_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.6.style_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.6.style_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.6.style_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.6.style_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.6.style_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.6.style_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.6.style_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.6.style_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.6.emotion_cross_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.6.emotion_cross_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.6.emotion_cross_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.6.emotion_cross_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.6.emotion_cross_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.6.emotion_cross_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.6.emotion_cross_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.6.emotion_cross_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.7.audio_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.7.audio_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.7.audio_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.7.audio_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.7.audio_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.7.audio_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.7.audio_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.7.audio_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.7.style_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.7.style_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.7.style_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.7.style_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.7.style_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.7.style_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.7.style_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.7.style_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.7.emotion_cross_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.7.emotion_cross_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.7.emotion_cross_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.7.emotion_cross_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.7.emotion_cross_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.7.emotion_cross_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.7.emotion_cross_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.7.emotion_cross_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.8.audio_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.8.audio_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.8.audio_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.8.audio_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.8.audio_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.8.audio_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.8.audio_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.8.audio_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.8.style_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.8.style_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.8.style_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.8.style_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.8.style_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.8.style_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.8.style_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.8.style_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.8.emotion_cross_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327103
+    },
+    "transformer_blocks.8.emotion_cross_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.8.emotion_cross_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.8.emotion_cross_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.8.emotion_cross_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.8.emotion_cross_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.8.emotion_cross_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.8.emotion_cross_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.9.audio_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.9.audio_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.9.audio_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.9.audio_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.9.audio_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.9.audio_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.9.audio_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.9.audio_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.9.style_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.9.style_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.9.style_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.9.style_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.9.style_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.9.style_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.9.style_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.9.style_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.9.emotion_cross_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.9.emotion_cross_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.9.emotion_cross_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.9.emotion_cross_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.9.emotion_cross_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327103
+    },
+    "transformer_blocks.9.emotion_cross_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.9.emotion_cross_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.9.emotion_cross_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.10.audio_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.10.audio_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.10.audio_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.10.audio_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.10.audio_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.10.audio_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.10.audio_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.10.audio_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.10.style_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.10.style_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.10.style_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327103
+    },
+    "transformer_blocks.10.style_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.10.style_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.10.style_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.10.style_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.10.style_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.10.emotion_cross_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.10.emotion_cross_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.10.emotion_cross_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.10.emotion_cross_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.10.emotion_cross_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.10.emotion_cross_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.10.emotion_cross_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.10.emotion_cross_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.11.audio_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.11.audio_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.11.audio_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.11.audio_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.11.audio_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.11.audio_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.11.audio_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.11.audio_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.11.style_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.11.style_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.11.style_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.11.style_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.11.style_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.11.style_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.11.style_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.11.style_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.11.emotion_cross_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.11.emotion_cross_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.11.emotion_cross_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.11.emotion_cross_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.11.emotion_cross_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.11.emotion_cross_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.11.emotion_cross_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.11.emotion_cross_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.12.audio_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.12.audio_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.12.audio_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.12.audio_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.12.audio_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.12.audio_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.12.audio_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.12.audio_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.12.style_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.12.style_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.12.style_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.12.style_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.12.style_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.12.style_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.12.style_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.12.style_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.12.emotion_cross_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.12.emotion_cross_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.12.emotion_cross_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.12.emotion_cross_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.12.emotion_cross_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.12.emotion_cross_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.12.emotion_cross_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.12.emotion_cross_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.13.audio_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.13.audio_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.13.audio_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.13.audio_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.13.audio_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.13.audio_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.13.audio_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.13.audio_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.13.style_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327103
+    },
+    "transformer_blocks.13.style_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.13.style_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.13.style_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.13.style_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.13.style_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.13.style_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.13.style_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.13.emotion_cross_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327103
+    },
+    "transformer_blocks.13.emotion_cross_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.13.emotion_cross_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.13.emotion_cross_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.13.emotion_cross_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.13.emotion_cross_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.13.emotion_cross_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.13.emotion_cross_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.14.audio_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.14.audio_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.14.audio_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.14.audio_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.14.audio_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.14.audio_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.14.audio_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.14.audio_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.14.style_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.14.style_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.14.style_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.14.style_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.14.style_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.14.style_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.14.style_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.14.style_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.14.emotion_cross_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.14.emotion_cross_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.14.emotion_cross_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.14.emotion_cross_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.14.emotion_cross_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.14.emotion_cross_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.14.emotion_cross_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.14.emotion_cross_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.15.audio_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.15.audio_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.15.audio_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.15.audio_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.15.audio_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.15.audio_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.15.audio_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.15.audio_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.15.style_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.15.style_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.15.style_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.15.style_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.15.style_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.15.style_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.15.style_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.15.style_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.15.emotion_cross_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.15.emotion_cross_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.15.emotion_cross_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.15.emotion_cross_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.15.emotion_cross_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.15.emotion_cross_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.15.emotion_cross_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.15.emotion_cross_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.16.audio_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.16.audio_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.16.audio_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.16.audio_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.16.audio_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.16.audio_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.16.audio_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.16.audio_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.16.style_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.16.style_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.16.style_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.16.style_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.16.style_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.16.style_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.16.style_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.16.style_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.16.emotion_cross_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.16.emotion_cross_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.16.emotion_cross_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.16.emotion_cross_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.16.emotion_cross_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.16.emotion_cross_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.16.emotion_cross_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.16.emotion_cross_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.17.audio_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.17.audio_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.17.audio_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.17.audio_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.17.audio_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.17.audio_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.17.audio_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.17.audio_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.17.style_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.17.style_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.17.style_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.17.style_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.17.style_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.17.style_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.17.style_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.17.style_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.17.emotion_cross_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327103
+    },
+    "transformer_blocks.17.emotion_cross_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.17.emotion_cross_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.17.emotion_cross_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.17.emotion_cross_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.17.emotion_cross_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.17.emotion_cross_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.17.emotion_cross_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.18.audio_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.18.audio_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.18.audio_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.18.audio_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.18.audio_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.18.audio_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.18.audio_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.18.audio_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.18.style_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.18.style_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.18.style_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.18.style_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.18.style_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327103
+    },
+    "transformer_blocks.18.style_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.18.style_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.18.style_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.18.emotion_cross_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.18.emotion_cross_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.18.emotion_cross_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.18.emotion_cross_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.18.emotion_cross_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.18.emotion_cross_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.18.emotion_cross_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.18.emotion_cross_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.19.audio_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.19.audio_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.19.audio_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.19.audio_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.19.audio_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.19.audio_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.19.audio_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.19.audio_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.19.style_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.19.style_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.19.style_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.19.style_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.19.style_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.19.style_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.19.style_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.19.style_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.19.emotion_cross_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.19.emotion_cross_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.19.emotion_cross_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327103
+    },
+    "transformer_blocks.19.emotion_cross_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.19.emotion_cross_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.19.emotion_cross_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.19.emotion_cross_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.19.emotion_cross_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.20.audio_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327103
+    },
+    "transformer_blocks.20.audio_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.20.audio_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.20.audio_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.20.audio_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.20.audio_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.20.audio_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.20.audio_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.20.style_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.20.style_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.20.style_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.20.style_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.20.style_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.20.style_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.20.style_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.20.style_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.20.emotion_cross_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.20.emotion_cross_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.20.emotion_cross_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.20.emotion_cross_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.20.emotion_cross_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.20.emotion_cross_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.20.emotion_cross_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.20.emotion_cross_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.21.audio_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.21.audio_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.21.audio_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.21.audio_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.21.audio_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.21.audio_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.21.audio_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.21.audio_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.21.style_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.21.style_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.21.style_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.21.style_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.21.style_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.21.style_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.21.style_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.21.style_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.21.emotion_cross_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.21.emotion_cross_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.21.emotion_cross_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.21.emotion_cross_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.21.emotion_cross_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.21.emotion_cross_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.21.emotion_cross_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.21.emotion_cross_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.22.audio_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.22.audio_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.22.audio_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.22.audio_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.22.audio_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.22.audio_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.22.audio_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.22.audio_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.22.style_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.22.style_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.22.style_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327102
+    },
+    "transformer_blocks.22.style_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.22.style_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.22.style_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.22.style_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.22.style_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.22.emotion_cross_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.22.emotion_cross_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.22.emotion_cross_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.22.emotion_cross_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.22.emotion_cross_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.22.emotion_cross_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.22.emotion_cross_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.22.emotion_cross_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.23.audio_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327103
+    },
+    "transformer_blocks.23.audio_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.23.audio_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.23.audio_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.23.audio_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.23.audio_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.23.audio_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.23.audio_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.23.style_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.23.style_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.23.style_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.23.style_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.23.style_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.23.style_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.23.style_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.23.style_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.23.emotion_cross_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.23.emotion_cross_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.23.emotion_cross_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.23.emotion_cross_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.23.emotion_cross_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.23.emotion_cross_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.23.emotion_cross_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.23.emotion_cross_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.24.audio_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.24.audio_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.24.audio_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.24.audio_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.24.audio_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.24.audio_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.24.audio_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.24.audio_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.24.style_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.24.style_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.24.style_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.24.style_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.24.style_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.24.style_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.24.style_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.24.style_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.24.emotion_cross_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.24.emotion_cross_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.24.emotion_cross_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.24.emotion_cross_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.24.emotion_cross_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.24.emotion_cross_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.24.emotion_cross_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.24.emotion_cross_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.25.audio_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.25.audio_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.25.audio_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.25.audio_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.25.audio_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.25.audio_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.25.audio_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.25.audio_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.25.style_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.25.style_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.25.style_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.25.style_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.25.style_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327103
+    },
+    "transformer_blocks.25.style_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.25.style_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.25.style_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.25.emotion_cross_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.25.emotion_cross_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.25.emotion_cross_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.25.emotion_cross_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.25.emotion_cross_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.25.emotion_cross_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.25.emotion_cross_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.25.emotion_cross_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.26.audio_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.26.audio_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.26.audio_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.26.audio_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.26.audio_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.26.audio_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.26.audio_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.26.audio_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.26.style_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.26.style_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.26.style_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.26.style_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.26.style_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.26.style_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.26.style_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.26.style_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.26.emotion_cross_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.26.emotion_cross_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.26.emotion_cross_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.26.emotion_cross_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.26.emotion_cross_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.26.emotion_cross_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.26.emotion_cross_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.26.emotion_cross_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.27.audio_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.27.audio_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.27.audio_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.27.audio_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.27.audio_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.27.audio_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.27.audio_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.27.audio_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.27.style_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.27.style_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.27.style_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.27.style_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.27.style_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.27.style_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.27.style_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.27.style_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.27.emotion_cross_attention.to_q.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.27.emotion_cross_attention.to_q.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.27.emotion_cross_attention.to_k.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327103
+    },
+    "transformer_blocks.27.emotion_cross_attention.to_k.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.27.emotion_cross_attention.to_v.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 1327104
+    },
+    "transformer_blocks.27.emotion_cross_attention.to_v.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "transformer_blocks.27.emotion_cross_attention.to_out.0.weight": {
+      "elements": 1327104,
+      "nonzero_elements": 0
+    },
+    "transformer_blocks.27.emotion_cross_attention.to_out.0.bias": {
+      "elements": 1152,
+      "nonzero_elements": 0
+    },
+    "audio_projection.conv1.weight": {
+      "elements": 409600,
+      "nonzero_elements": 409600
+    },
+    "audio_projection.conv1.bias": {
+      "elements": 128,
+      "nonzero_elements": 128
+    },
+    "audio_projection.fc1.weight": {
+      "elements": 3538944,
+      "nonzero_elements": 3538944
+    },
+    "audio_projection.fc1.bias": {
+      "elements": 9216,
+      "nonzero_elements": 9216
+    },
+    "audio_projection.fc2.weight": {
+      "elements": 10616832,
+      "nonzero_elements": 10616830
+    },
+    "audio_projection.fc2.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "style_model.encoder.layers.0.self_attn.in_proj_weight": {
+      "elements": 196608,
+      "nonzero_elements": 196608
+    },
+    "style_model.encoder.layers.0.self_attn.in_proj_bias": {
+      "elements": 768,
+      "nonzero_elements": 0
+    },
+    "style_model.encoder.layers.0.self_attn.out_proj.weight": {
+      "elements": 65536,
+      "nonzero_elements": 65536
+    },
+    "style_model.encoder.layers.0.self_attn.out_proj.bias": {
+      "elements": 256,
+      "nonzero_elements": 0
+    },
+    "style_model.encoder.layers.0.linear1.weight": {
+      "elements": 262144,
+      "nonzero_elements": 262144
+    },
+    "style_model.encoder.layers.0.linear1.bias": {
+      "elements": 1024,
+      "nonzero_elements": 1024
+    },
+    "style_model.encoder.layers.0.linear2.weight": {
+      "elements": 262144,
+      "nonzero_elements": 262144
+    },
+    "style_model.encoder.layers.0.linear2.bias": {
+      "elements": 256,
+      "nonzero_elements": 256
+    },
+    "style_model.encoder.layers.0.norm1.weight": {
+      "elements": 256,
+      "nonzero_elements": 256
+    },
+    "style_model.encoder.layers.0.norm1.bias": {
+      "elements": 256,
+      "nonzero_elements": 0
+    },
+    "style_model.encoder.layers.0.norm2.weight": {
+      "elements": 256,
+      "nonzero_elements": 256
+    },
+    "style_model.encoder.layers.0.norm2.bias": {
+      "elements": 256,
+      "nonzero_elements": 0
+    },
+    "style_model.encoder.layers.1.self_attn.in_proj_weight": {
+      "elements": 196608,
+      "nonzero_elements": 196608
+    },
+    "style_model.encoder.layers.1.self_attn.in_proj_bias": {
+      "elements": 768,
+      "nonzero_elements": 0
+    },
+    "style_model.encoder.layers.1.self_attn.out_proj.weight": {
+      "elements": 65536,
+      "nonzero_elements": 65536
+    },
+    "style_model.encoder.layers.1.self_attn.out_proj.bias": {
+      "elements": 256,
+      "nonzero_elements": 0
+    },
+    "style_model.encoder.layers.1.linear1.weight": {
+      "elements": 262144,
+      "nonzero_elements": 262144
+    },
+    "style_model.encoder.layers.1.linear1.bias": {
+      "elements": 1024,
+      "nonzero_elements": 1024
+    },
+    "style_model.encoder.layers.1.linear2.weight": {
+      "elements": 262144,
+      "nonzero_elements": 262144
+    },
+    "style_model.encoder.layers.1.linear2.bias": {
+      "elements": 256,
+      "nonzero_elements": 256
+    },
+    "style_model.encoder.layers.1.norm1.weight": {
+      "elements": 256,
+      "nonzero_elements": 256
+    },
+    "style_model.encoder.layers.1.norm1.bias": {
+      "elements": 256,
+      "nonzero_elements": 0
+    },
+    "style_model.encoder.layers.1.norm2.weight": {
+      "elements": 256,
+      "nonzero_elements": 256
+    },
+    "style_model.encoder.layers.1.norm2.bias": {
+      "elements": 256,
+      "nonzero_elements": 0
+    },
+    "style_model.encoder.layers.2.self_attn.in_proj_weight": {
+      "elements": 196608,
+      "nonzero_elements": 196608
+    },
+    "style_model.encoder.layers.2.self_attn.in_proj_bias": {
+      "elements": 768,
+      "nonzero_elements": 0
+    },
+    "style_model.encoder.layers.2.self_attn.out_proj.weight": {
+      "elements": 65536,
+      "nonzero_elements": 65536
+    },
+    "style_model.encoder.layers.2.self_attn.out_proj.bias": {
+      "elements": 256,
+      "nonzero_elements": 0
+    },
+    "style_model.encoder.layers.2.linear1.weight": {
+      "elements": 262144,
+      "nonzero_elements": 262144
+    },
+    "style_model.encoder.layers.2.linear1.bias": {
+      "elements": 1024,
+      "nonzero_elements": 1024
+    },
+    "style_model.encoder.layers.2.linear2.weight": {
+      "elements": 262144,
+      "nonzero_elements": 262144
+    },
+    "style_model.encoder.layers.2.linear2.bias": {
+      "elements": 256,
+      "nonzero_elements": 256
+    },
+    "style_model.encoder.layers.2.norm1.weight": {
+      "elements": 256,
+      "nonzero_elements": 256
+    },
+    "style_model.encoder.layers.2.norm1.bias": {
+      "elements": 256,
+      "nonzero_elements": 0
+    },
+    "style_model.encoder.layers.2.norm2.weight": {
+      "elements": 256,
+      "nonzero_elements": 256
+    },
+    "style_model.encoder.layers.2.norm2.bias": {
+      "elements": 256,
+      "nonzero_elements": 0
+    },
+    "style_model.increase_embed_dim.weight": {
+      "elements": 16384,
+      "nonzero_elements": 16384
+    },
+    "style_model.increase_embed_dim.bias": {
+      "elements": 256,
+      "nonzero_elements": 256
+    },
+    "style_content_model.encoder.layers.0.self_attn.in_proj_weight": {
+      "elements": 196608,
+      "nonzero_elements": 196608
+    },
+    "style_content_model.encoder.layers.0.self_attn.in_proj_bias": {
+      "elements": 768,
+      "nonzero_elements": 0
+    },
+    "style_content_model.encoder.layers.0.self_attn.out_proj.weight": {
+      "elements": 65536,
+      "nonzero_elements": 65536
+    },
+    "style_content_model.encoder.layers.0.self_attn.out_proj.bias": {
+      "elements": 256,
+      "nonzero_elements": 0
+    },
+    "style_content_model.encoder.layers.0.linear1.weight": {
+      "elements": 262144,
+      "nonzero_elements": 262144
+    },
+    "style_content_model.encoder.layers.0.linear1.bias": {
+      "elements": 1024,
+      "nonzero_elements": 1024
+    },
+    "style_content_model.encoder.layers.0.linear2.weight": {
+      "elements": 262144,
+      "nonzero_elements": 262144
+    },
+    "style_content_model.encoder.layers.0.linear2.bias": {
+      "elements": 256,
+      "nonzero_elements": 256
+    },
+    "style_content_model.encoder.layers.0.norm1.weight": {
+      "elements": 256,
+      "nonzero_elements": 256
+    },
+    "style_content_model.encoder.layers.0.norm1.bias": {
+      "elements": 256,
+      "nonzero_elements": 0
+    },
+    "style_content_model.encoder.layers.0.norm2.weight": {
+      "elements": 256,
+      "nonzero_elements": 256
+    },
+    "style_content_model.encoder.layers.0.norm2.bias": {
+      "elements": 256,
+      "nonzero_elements": 0
+    },
+    "style_content_model.encoder.layers.1.self_attn.in_proj_weight": {
+      "elements": 196608,
+      "nonzero_elements": 196608
+    },
+    "style_content_model.encoder.layers.1.self_attn.in_proj_bias": {
+      "elements": 768,
+      "nonzero_elements": 0
+    },
+    "style_content_model.encoder.layers.1.self_attn.out_proj.weight": {
+      "elements": 65536,
+      "nonzero_elements": 65536
+    },
+    "style_content_model.encoder.layers.1.self_attn.out_proj.bias": {
+      "elements": 256,
+      "nonzero_elements": 0
+    },
+    "style_content_model.encoder.layers.1.linear1.weight": {
+      "elements": 262144,
+      "nonzero_elements": 262144
+    },
+    "style_content_model.encoder.layers.1.linear1.bias": {
+      "elements": 1024,
+      "nonzero_elements": 1024
+    },
+    "style_content_model.encoder.layers.1.linear2.weight": {
+      "elements": 262144,
+      "nonzero_elements": 262144
+    },
+    "style_content_model.encoder.layers.1.linear2.bias": {
+      "elements": 256,
+      "nonzero_elements": 256
+    },
+    "style_content_model.encoder.layers.1.norm1.weight": {
+      "elements": 256,
+      "nonzero_elements": 256
+    },
+    "style_content_model.encoder.layers.1.norm1.bias": {
+      "elements": 256,
+      "nonzero_elements": 0
+    },
+    "style_content_model.encoder.layers.1.norm2.weight": {
+      "elements": 256,
+      "nonzero_elements": 256
+    },
+    "style_content_model.encoder.layers.1.norm2.bias": {
+      "elements": 256,
+      "nonzero_elements": 0
+    },
+    "style_content_model.encoder.layers.2.self_attn.in_proj_weight": {
+      "elements": 196608,
+      "nonzero_elements": 196608
+    },
+    "style_content_model.encoder.layers.2.self_attn.in_proj_bias": {
+      "elements": 768,
+      "nonzero_elements": 0
+    },
+    "style_content_model.encoder.layers.2.self_attn.out_proj.weight": {
+      "elements": 65536,
+      "nonzero_elements": 65536
+    },
+    "style_content_model.encoder.layers.2.self_attn.out_proj.bias": {
+      "elements": 256,
+      "nonzero_elements": 0
+    },
+    "style_content_model.encoder.layers.2.linear1.weight": {
+      "elements": 262144,
+      "nonzero_elements": 262144
+    },
+    "style_content_model.encoder.layers.2.linear1.bias": {
+      "elements": 1024,
+      "nonzero_elements": 1024
+    },
+    "style_content_model.encoder.layers.2.linear2.weight": {
+      "elements": 262144,
+      "nonzero_elements": 262144
+    },
+    "style_content_model.encoder.layers.2.linear2.bias": {
+      "elements": 256,
+      "nonzero_elements": 256
+    },
+    "style_content_model.encoder.layers.2.norm1.weight": {
+      "elements": 256,
+      "nonzero_elements": 256
+    },
+    "style_content_model.encoder.layers.2.norm1.bias": {
+      "elements": 256,
+      "nonzero_elements": 0
+    },
+    "style_content_model.encoder.layers.2.norm2.weight": {
+      "elements": 256,
+      "nonzero_elements": 256
+    },
+    "style_content_model.encoder.layers.2.norm2.bias": {
+      "elements": 256,
+      "nonzero_elements": 0
+    },
+    "style_content_model.ph_embedding.weight": {
+      "elements": 9600,
+      "nonzero_elements": 9600
+    },
+    "style_content_model.increase_embed_dim.weight": {
+      "elements": 32768,
+      "nonzero_elements": 32768
+    },
+    "style_content_model.increase_embed_dim.bias": {
+      "elements": 256,
+      "nonzero_elements": 256
+    },
+    "style_content_decoder.decoder.layers.0.self_attn.in_proj_weight": {
+      "elements": 196608,
+      "nonzero_elements": 196608
+    },
+    "style_content_decoder.decoder.layers.0.self_attn.in_proj_bias": {
+      "elements": 768,
+      "nonzero_elements": 0
+    },
+    "style_content_decoder.decoder.layers.0.self_attn.out_proj.weight": {
+      "elements": 65536,
+      "nonzero_elements": 65536
+    },
+    "style_content_decoder.decoder.layers.0.self_attn.out_proj.bias": {
+      "elements": 256,
+      "nonzero_elements": 0
+    },
+    "style_content_decoder.decoder.layers.0.multihead_attn.in_proj_weight": {
+      "elements": 196608,
+      "nonzero_elements": 196608
+    },
+    "style_content_decoder.decoder.layers.0.multihead_attn.in_proj_bias": {
+      "elements": 768,
+      "nonzero_elements": 0
+    },
+    "style_content_decoder.decoder.layers.0.multihead_attn.out_proj.weight": {
+      "elements": 65536,
+      "nonzero_elements": 65536
+    },
+    "style_content_decoder.decoder.layers.0.multihead_attn.out_proj.bias": {
+      "elements": 256,
+      "nonzero_elements": 0
+    },
+    "style_content_decoder.decoder.layers.0.linear1.weight": {
+      "elements": 262144,
+      "nonzero_elements": 262144
+    },
+    "style_content_decoder.decoder.layers.0.linear1.bias": {
+      "elements": 1024,
+      "nonzero_elements": 1024
+    },
+    "style_content_decoder.decoder.layers.0.linear2.weight": {
+      "elements": 262144,
+      "nonzero_elements": 262144
+    },
+    "style_content_decoder.decoder.layers.0.linear2.bias": {
+      "elements": 256,
+      "nonzero_elements": 256
+    },
+    "style_content_decoder.decoder.layers.0.norm1.weight": {
+      "elements": 256,
+      "nonzero_elements": 256
+    },
+    "style_content_decoder.decoder.layers.0.norm1.bias": {
+      "elements": 256,
+      "nonzero_elements": 0
+    },
+    "style_content_decoder.decoder.layers.0.norm2.weight": {
+      "elements": 256,
+      "nonzero_elements": 256
+    },
+    "style_content_decoder.decoder.layers.0.norm2.bias": {
+      "elements": 256,
+      "nonzero_elements": 0
+    },
+    "style_content_decoder.decoder.layers.0.norm3.weight": {
+      "elements": 256,
+      "nonzero_elements": 256
+    },
+    "style_content_decoder.decoder.layers.0.norm3.bias": {
+      "elements": 256,
+      "nonzero_elements": 0
+    },
+    "style_content_decoder.decoder.layers.1.self_attn.in_proj_weight": {
+      "elements": 196608,
+      "nonzero_elements": 196608
+    },
+    "style_content_decoder.decoder.layers.1.self_attn.in_proj_bias": {
+      "elements": 768,
+      "nonzero_elements": 0
+    },
+    "style_content_decoder.decoder.layers.1.self_attn.out_proj.weight": {
+      "elements": 65536,
+      "nonzero_elements": 65536
+    },
+    "style_content_decoder.decoder.layers.1.self_attn.out_proj.bias": {
+      "elements": 256,
+      "nonzero_elements": 0
+    },
+    "style_content_decoder.decoder.layers.1.multihead_attn.in_proj_weight": {
+      "elements": 196608,
+      "nonzero_elements": 196608
+    },
+    "style_content_decoder.decoder.layers.1.multihead_attn.in_proj_bias": {
+      "elements": 768,
+      "nonzero_elements": 0
+    },
+    "style_content_decoder.decoder.layers.1.multihead_attn.out_proj.weight": {
+      "elements": 65536,
+      "nonzero_elements": 65536
+    },
+    "style_content_decoder.decoder.layers.1.multihead_attn.out_proj.bias": {
+      "elements": 256,
+      "nonzero_elements": 0
+    },
+    "style_content_decoder.decoder.layers.1.linear1.weight": {
+      "elements": 262144,
+      "nonzero_elements": 262144
+    },
+    "style_content_decoder.decoder.layers.1.linear1.bias": {
+      "elements": 1024,
+      "nonzero_elements": 1024
+    },
+    "style_content_decoder.decoder.layers.1.linear2.weight": {
+      "elements": 262144,
+      "nonzero_elements": 262144
+    },
+    "style_content_decoder.decoder.layers.1.linear2.bias": {
+      "elements": 256,
+      "nonzero_elements": 256
+    },
+    "style_content_decoder.decoder.layers.1.norm1.weight": {
+      "elements": 256,
+      "nonzero_elements": 256
+    },
+    "style_content_decoder.decoder.layers.1.norm1.bias": {
+      "elements": 256,
+      "nonzero_elements": 0
+    },
+    "style_content_decoder.decoder.layers.1.norm2.weight": {
+      "elements": 256,
+      "nonzero_elements": 256
+    },
+    "style_content_decoder.decoder.layers.1.norm2.bias": {
+      "elements": 256,
+      "nonzero_elements": 0
+    },
+    "style_content_decoder.decoder.layers.1.norm3.weight": {
+      "elements": 256,
+      "nonzero_elements": 256
+    },
+    "style_content_decoder.decoder.layers.1.norm3.bias": {
+      "elements": 256,
+      "nonzero_elements": 0
+    },
+    "style_content_decoder.decoder.layers.2.self_attn.in_proj_weight": {
+      "elements": 196608,
+      "nonzero_elements": 196608
+    },
+    "style_content_decoder.decoder.layers.2.self_attn.in_proj_bias": {
+      "elements": 768,
+      "nonzero_elements": 0
+    },
+    "style_content_decoder.decoder.layers.2.self_attn.out_proj.weight": {
+      "elements": 65536,
+      "nonzero_elements": 65536
+    },
+    "style_content_decoder.decoder.layers.2.self_attn.out_proj.bias": {
+      "elements": 256,
+      "nonzero_elements": 0
+    },
+    "style_content_decoder.decoder.layers.2.multihead_attn.in_proj_weight": {
+      "elements": 196608,
+      "nonzero_elements": 196608
+    },
+    "style_content_decoder.decoder.layers.2.multihead_attn.in_proj_bias": {
+      "elements": 768,
+      "nonzero_elements": 0
+    },
+    "style_content_decoder.decoder.layers.2.multihead_attn.out_proj.weight": {
+      "elements": 65536,
+      "nonzero_elements": 65536
+    },
+    "style_content_decoder.decoder.layers.2.multihead_attn.out_proj.bias": {
+      "elements": 256,
+      "nonzero_elements": 0
+    },
+    "style_content_decoder.decoder.layers.2.linear1.weight": {
+      "elements": 262144,
+      "nonzero_elements": 262144
+    },
+    "style_content_decoder.decoder.layers.2.linear1.bias": {
+      "elements": 1024,
+      "nonzero_elements": 1024
+    },
+    "style_content_decoder.decoder.layers.2.linear2.weight": {
+      "elements": 262144,
+      "nonzero_elements": 262144
+    },
+    "style_content_decoder.decoder.layers.2.linear2.bias": {
+      "elements": 256,
+      "nonzero_elements": 256
+    },
+    "style_content_decoder.decoder.layers.2.norm1.weight": {
+      "elements": 256,
+      "nonzero_elements": 256
+    },
+    "style_content_decoder.decoder.layers.2.norm1.bias": {
+      "elements": 256,
+      "nonzero_elements": 0
+    },
+    "style_content_decoder.decoder.layers.2.norm2.weight": {
+      "elements": 256,
+      "nonzero_elements": 256
+    },
+    "style_content_decoder.decoder.layers.2.norm2.bias": {
+      "elements": 256,
+      "nonzero_elements": 0
+    },
+    "style_content_decoder.decoder.layers.2.norm3.weight": {
+      "elements": 256,
+      "nonzero_elements": 256
+    },
+    "style_content_decoder.decoder.layers.2.norm3.bias": {
+      "elements": 256,
+      "nonzero_elements": 0
+    },
+    "style_content_decoder.decoder.norm.weight": {
+      "elements": 256,
+      "nonzero_elements": 256
+    },
+    "style_content_decoder.decoder.norm.bias": {
+      "elements": 256,
+      "nonzero_elements": 0
+    },
+    "style_content_decoder.tail_fc.0.weight": {
+      "elements": 32768,
+      "nonzero_elements": 32768
+    },
+    "style_content_decoder.tail_fc.0.bias": {
+      "elements": 128,
+      "nonzero_elements": 128
+    },
+    "style_content_decoder.tail_fc.2.weight": {
+      "elements": 16384,
+      "nonzero_elements": 16384
+    },
+    "style_content_decoder.tail_fc.2.bias": {
+      "elements": 128,
+      "nonzero_elements": 128
+    },
+    "style_content_decoder.tail_fc.4.weight": {
+      "elements": 8192,
+      "nonzero_elements": 8192
+    },
+    "style_content_decoder.tail_fc.4.bias": {
+      "elements": 64,
+      "nonzero_elements": 64
+    },
+    "style_projection.conv1.weight": {
+      "elements": 8192,
+      "nonzero_elements": 8192
+    },
+    "style_projection.conv1.bias": {
+      "elements": 128,
+      "nonzero_elements": 128
+    },
+    "style_projection.fc1.weight": {
+      "elements": 24576,
+      "nonzero_elements": 24576
+    },
+    "style_projection.fc1.bias": {
+      "elements": 384,
+      "nonzero_elements": 384
+    },
+    "style_projection.fc2.weight": {
+      "elements": 442368,
+      "nonzero_elements": 442368
+    },
+    "style_projection.fc2.bias": {
+      "elements": 1152,
+      "nonzero_elements": 1152
+    },
+    "pose_adapter.blocks.0.weight": {
+      "elements": 1296,
+      "nonzero_elements": 1296
+    },
+    "pose_adapter.blocks.0.bias": {
+      "elements": 16,
+      "nonzero_elements": 16
+    },
+    "pose_adapter.blocks.1.weight": {
+      "elements": 9216,
+      "nonzero_elements": 9216
+    },
+    "pose_adapter.blocks.1.bias": {
+      "elements": 32,
+      "nonzero_elements": 32
+    },
+    "pose_adapter.blocks.2.weight": {
+      "elements": 4608,
+      "nonzero_elements": 4608
+    },
+    "pose_adapter.blocks.2.bias": {
+      "elements": 8,
+      "nonzero_elements": 8
+    },
+    "pose_adapter.conv_out.weight": {
+      "elements": 864,
+      "nonzero_elements": 0
+    },
+    "pose_adapter.conv_out.bias": {
+      "elements": 4,
+      "nonzero_elements": 0
+    },
+    "repa_proj.0.weight": {
+      "elements": 4718592,
+      "nonzero_elements": 4718592
+    },
+    "repa_proj.0.bias": {
+      "elements": 4096,
+      "nonzero_elements": 4096
+    },
+    "repa_proj.2.weight": {
+      "elements": 16777216,
+      "nonzero_elements": 16777216
+    },
+    "repa_proj.2.bias": {
+      "elements": 4096,
+      "nonzero_elements": 4096
+    },
+    "repa_proj.4.weight": {
+      "elements": 3145728,
+      "nonzero_elements": 3145728
+    },
+    "repa_proj.4.bias": {
+      "elements": 768,
+      "nonzero_elements": 768
+    }
+  }
+}

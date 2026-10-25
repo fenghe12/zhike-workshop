@@ -1,0 +1,7 @@
+{
+  "step100_completed": "2026-10-25T16:03:30+08:00",
+  "checkpoint_verified": "2026-10-25T16:05:49+08:00",
+  "native_preview_metrics_completed": "2026-10-25T16:12:18+08:00",
+  "result_recovery_and_stop_checked_at": "2026-10-25T17:13:16.430555+08:00",
+  "collection_issue": "SSH timeout; persistent data recovered without restarting the100-step training"
+}

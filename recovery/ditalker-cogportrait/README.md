@@ -4,6 +4,10 @@ English | [简体中文](README.zh-CN.md)
 
 This folder preserves the executed preprocessing, full-model training, checkpoint, and inference adapters from October 25, 2026. Original backbone weights remain frozen. Runtime source is organized by the actual persistent session directory so that the cross-session imports remain reproducible.
 
+## Correct initialization and current result
+
+Zero initialization means the final residual output layers, with normal internal parameters. The earlier all-parameter-zero run was an implementation misunderstanding. The [corrected50-case/100-step run](sessions/ditalker-gradient-repair-50hdtf-100steps-20261025/README.md) verified nonzero gradients and parameter updates in all11 groups, with908/908 added tensors receiving gradients. Pure fixed-noise MSE increased0.221%, so this validates gradient flow rather than convergence. The unified local report retains both models' complete loss files and all historical diagnostics.
+
 ## Recorded experiments
 
 | Experiment | DiTalker | CogPortrait scope |
@@ -49,7 +53,7 @@ The 200-step, continuation, and preview scripts use their own dated plan names. 
 After restoring the required files and authorizing a bounded cloud session, the 100-step launcher is:
 
 ```bash
-bash /home/ma-user/work/npu-migration/recovery/ditalker-cogportrait-50hdtf-100steps-allzero-20261025/run_batch.sh
+bash /home/ma-user/work/npu-migration/recovery/ditalker-gradient-repair-50hdtf-100steps-20261025/run_batch.sh
 ```
 
 It performs both training runs before inference, skips already completed runs when recovering an interrupted session, and loads the new step-100 export explicitly. `run_cfg7_after_cog.sh` preserves the additional CFG 7 comparison after CogPortrait exits. Cloud start/stop and billing controls remain the caller's responsibility; stop compute after collection and retain the persistent volume and private backups.

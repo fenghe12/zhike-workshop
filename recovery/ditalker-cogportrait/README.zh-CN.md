@@ -41,3 +41,7 @@ bash /home/ma-user/work/npu-migration/recovery/ditalker-cogportrait-50hdtf-100st
 ## 2026-10-25 算子与预处理更正
 
 [完整检查与修正条件恢复步骤](sessions/ditalker-cogportrait-operator-audit-20261025/README.zh-CN.md)记录实际算子限制、CPU/NPU梯度对照、50例分项loss与单例质量指标。新训练和推理检查缓存版本，旧缓存用于历史对照时须显式设置选项。原100条loss与检查点保留。
+
+## 用户明确的初始化含义与当前结果
+
+零初始化指新增残差分支最后输出层为零，内部参数保留正常初始化。此前全部参数为零属于实现理解错误。[本次50例100步修复](sessions/ditalker-gradient-repair-50hdtf-100steps-20261025/README.zh-CN.md)已验证11/11组的非零梯度与参数更新，908/908个新增张量曾获得非零梯度。纯固定噪声MSE略升0.221%，当前完成梯度传播验证，未作收敛结论。统一HTML内嵌两模型完整loss、曲线、诊断、历史记录和新预览。

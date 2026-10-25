@@ -50,7 +50,7 @@ Qwen3.6 主模型、CosyVoice3 和 FlashHeadLite 使用 Ascend 910B。FFmpeg 合
 
 [视频训练适配文件](recovery/video-training/README.zh-CN.md)记录了昇腾单卡上的 EasyAnimate V3 与 Wan2.2 S2V 短程训练，包含反向传播、实际参数更新、原有条件分支及私有检查点恢复。
 
-[DiTalker/CogPortrait 适配代码与记录](recovery/ditalker-cogportrait/README.zh-CN.md)保存 50 个 case 的训练、200 至 220 步恢复训练，以及重新初始化的 100 步全零实验。后一实验两个模型各有100条loss，DiTalker有8组全程零梯度。[后续算子检查](recovery/ditalker-cogportrait/sessions/ditalker-cogportrait-operator-audit-20261025/README.zh-CN.md)已确认并修正其遮罩输入导致的预览问题，仍保留训练未有效完成的结论，并增加固定噪声训练检查与单例质量指标。CogPortrait 的范围为新增姿态分支，未包括代理规划或 KTO。
+[DiTalker/CogPortrait适配代码与记录](recovery/ditalker-cogportrait/README.zh-CN.md)现已加入[正确的最后输出层零初始化50例100步训练](recovery/ditalker-cogportrait/sessions/ditalker-gradient-repair-50hdtf-100steps-20261025/README.zh-CN.md)：11/11组均有非零梯度并实际更新，908/908个新增张量曾获得非零梯度。此前全部参数置零属于理解错误，历史记录保留。统一离线HTML合并完整loss、曲线、诊断和真实预览。CogPortrait仍限于姿态分支。
 
 [高教社配置归档](integrations/hep/README.zh-CN.md)保留已有智能体提示词与旧插件参数约定，不修改高教社平台，也不重新部署云端入口。
 

@@ -55,3 +55,6 @@ This audit ran one Ascend910B1 and stopped compute at11:06; both CPU and NPU not
 Machine-readable outputs are in [records/operator-audit-20261025](../../records/operator-audit-20261025/). The28-layer timing CSV is a single warm DiTalker training forward, not AgentHOI profiling: about0.592s across blocks,19.74ms median; no full per-layer backward timing is claimed. The historical100 loss rows and checkpoints remain separate.
 
 The teacher's requirement that all added parts learn is not satisfied by strict DiTalker all-zero initialization. Making the deep branches learn requires a separately identified initialization change. CogPortrait still needs its planner and KTO components. AscendBridge CLI initialization/model registration and native adapter trials were performed earlier; complete autonomous migration and benchmark evaluation were not executed and are not claimed here.
+
+
+Later clarification: only final residual outputs should be zero-initialized. The [corrected run](../ditalker-gradient-repair-50hdtf-100steps-20261025/README.md) subsequently validated all11 added groups. This page retains the earlier diagnostic record.

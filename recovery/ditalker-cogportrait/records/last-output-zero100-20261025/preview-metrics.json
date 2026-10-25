@@ -1,0 +1,39 @@
+{
+  "protocol": "RGB512, source frames0,4,...60; PSNR/SSIM and LPIPSv0.1 AlexNet, paired per-frame training-set diagnostic",
+  "variants": {
+    "ditalker-case1-cfg1": {
+      "sample": "WDA_KirstenGillibrand_000_8181_8261",
+      "split": "training",
+      "frames": 16,
+      "cfg": 1.0,
+      "psnr_db": 23.912333304568065,
+      "ssim_rgb": 0.8179415342687795,
+      "lpips": 0.14395312103442848,
+      "face_detected_frames": 16,
+      "face_detection_frames": 16
+    },
+    "ditalker-case1-cfg7": {
+      "sample": "WDA_KirstenGillibrand_000_8181_8261",
+      "split": "training",
+      "frames": 16,
+      "cfg": 7.0,
+      "psnr_db": 23.306146715492694,
+      "ssim_rgb": 0.7951277984214207,
+      "lpips": 0.17310231877490878,
+      "face_detected_frames": 16,
+      "face_detection_frames": 16
+    },
+    "ditalker-case2-cfg1": {
+      "sample": "WRA_DanSullivan_000_3240_3320",
+      "split": "training",
+      "frames": 16,
+      "cfg": 1.0,
+      "psnr_db": 24.7871348658342,
+      "ssim_rgb": 0.8651915786161755,
+      "lpips": 0.10250961454585195,
+      "face_detected_frames": 16,
+      "face_detection_frames": 16
+    }
+  },
+  "completed": true
+}
