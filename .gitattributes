@@ -1,2 +1,4 @@
 # Preserve upstream whitespace inside source patches.
 recovery/ditalker-cogportrait/patches/*.patch -whitespace
+
+*.pdf binary

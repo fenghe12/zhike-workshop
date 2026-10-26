@@ -224,6 +224,7 @@ class ServerTests(unittest.TestCase):
             browser = request.build_opener(request.HTTPCookieProcessor(CookieJar()))
 
             def cookie_post(path, body):
+                if path in {"/v1/auth/login","/v1/auth/register"}: body=self.auth_payload(body)
                 req = request.Request(self.base + path, data=json.dumps(body).encode(),
                                       headers={"Content-Type": "application/json"}, method="POST")
                 with browser.open(req, timeout=5) as response:
@@ -427,6 +428,7 @@ class ServerTests(unittest.TestCase):
             port=0,
         )
         application = SmartCourseApplication(settings, pipeline_runner=FakePipelineRunner())
+        cls.application = application
         cls.server = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(application))
         cls.thread = threading.Thread(target=cls.server.serve_forever, daemon=True)
         cls.thread.start()
@@ -442,7 +444,21 @@ class ServerTests(unittest.TestCase):
         cls.temporary.cleanup()
 
     @classmethod
+    def auth_payload(cls, value):
+        from app.account_policy import POLICY_VERSION
+        challenge = cls.application.account_security.issue('unit-test-fixture')
+        with cls.application.account_security.connect() as db:
+            answer = db.execute('SELECT answer FROM challenges WHERE id=?',(challenge['id'],)).fetchone()[0]
+        return {**value,'captchaId':challenge['id'],'captchaCode':answer,'termsAccepted':True,
+                'privacyAccepted':True,'policyVersion':POLICY_VERSION}
+
+    @classmethod
     def api(cls, method: str, path: str, value=None, token: str | None = None):
+        if path in {'/v1/auth/register','/v1/auth/login'} and value is not None:
+            value=cls.auth_payload(value)
+        if path=='/v1/uploads' and value and value.get('kind') in {'image','audio'}:
+            from app.account_policy import MEDIA_VERSION
+            value={**value,'mediaConsent':{'authorized':True,'version':MEDIA_VERSION}}
         data = None if value is None else json.dumps(value).encode("utf-8")
         headers = {"Content-Type": "application/json"}
         if token is None:

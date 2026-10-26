@@ -47,6 +47,7 @@ LANGUAGE_MODEL_NAMES = {
     "de-DE": "German",
     "fr-FR": "French",
     "ru-RU": "Russian",
+    "es-ES": "Spanish",
 }
 
 
@@ -58,6 +59,7 @@ LANGUAGE_NAMES = {
     "de": "German",
     "fr": "French",
     "ru": "Russian",
+    "es": "Spanish",
 }
 
 
@@ -1067,6 +1069,7 @@ Source page:
                     {"language": code, "processed": index, "total": len(codes)},
                 )
         finally:
+            getattr(agent.aligner, "close", lambda: None)()
             getattr(agent.tts_engine, "close", lambda: None)()
         result = {"languageCount": len(outputs), "languages": outputs}
         progress(3, "completed", 100, result)

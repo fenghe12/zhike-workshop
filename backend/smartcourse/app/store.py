@@ -10,6 +10,7 @@ import os
 import secrets
 import tempfile
 import threading
+from datetime import datetime, timedelta, timezone
 from contextlib import contextmanager
 from pathlib import Path
 from typing import Any
@@ -86,7 +87,7 @@ class JsonStore:
         return hmac.compare_digest(JsonStore._password_hash(password, salt), encoded)
 
     def register(
-        self, phone: str, password: str, display_name: str, institution: str = ""
+        self, phone: str, password: str, display_name: str, institution: str = "", policy_consent=None
     ) -> dict[str, Any]:
         phone = phone.strip()
         display_name = display_name.strip() or "智课用户"
@@ -109,17 +110,30 @@ class JsonStore:
                 "createdAt": utc_now(),
             }
             data["users"][phone] = user
+            if policy_consent is not None:
+                user['policyConsent'] = copy.deepcopy(policy_consent)
             return self._issue_token(data, user)
 
         return self.transact(operation)
 
-    def login(self, phone: str, password: str) -> dict[str, Any]:
+    def login(self, phone: str, password: str, policy_consent=None) -> dict[str, Any]:
         def operation(data):
             user = data["users"].get(phone.strip())
             if not user or not self._password_matches(password, user["passwordHash"]):
                 raise ValueError("账号或密码错误")
+            if policy_consent is not None:
+                user['policyConsent'] = copy.deepcopy(policy_consent)
             return self._issue_token(data, user)
 
+        return self.transact(operation)
+
+    def accept_policy(self, user_id, consent):
+        def operation(data):
+            user = next((x for x in data['users'].values() if x['id'] == user_id), None)
+            if user is None:
+                raise ValueError('账号不存在')
+            user['policyConsent'] = copy.deepcopy(consent)
+            return self._public_user(user)
         return self.transact(operation)
 
     @staticmethod
@@ -128,15 +142,29 @@ class JsonStore:
 
     def _issue_token(self, data: dict[str, Any], user: dict[str, Any]) -> dict[str, Any]:
         token = secrets.token_urlsafe(32)
-        data["tokens"][token] = {"userId": user["id"], "createdAt": utc_now()}
+        now = datetime.now(timezone.utc)
+        data["tokens"][token] = {"userId": user["id"], "createdAt": now.isoformat(),
+                                  'expiresAt':(now+timedelta(days=7)).isoformat()}
+        for old_token, record in list(data['tokens'].items()):
+            if not self._token_current(record):
+                del data['tokens'][old_token]
         return {"accessToken": token, "user": self._public_user(user)}
 
     def user_for_token(self, token: str) -> dict[str, Any] | None:
         data = self.snapshot()
         record = data["tokens"].get(token)
-        if not record:
+        if not record or not self._token_current(record):
             return None
         for user in data["users"].values():
             if user["id"] == record["userId"]:
                 return self._public_user(user)
         return None
+
+    @staticmethod
+    def _token_current(record):
+        try:
+            created = datetime.fromisoformat(record['createdAt'].replace('Z','+00:00'))
+            expires = datetime.fromisoformat(record['expiresAt'].replace('Z','+00:00')) if record.get('expiresAt') else created+timedelta(days=7)
+            return datetime.now(timezone.utc) < expires.replace(tzinfo=expires.tzinfo or timezone.utc)
+        except (KeyError, TypeError, ValueError):
+            return False

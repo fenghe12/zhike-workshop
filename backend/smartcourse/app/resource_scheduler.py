@@ -49,6 +49,15 @@ class ResourceScheduler:
             yield
         finally:
             if acquired is not None:
+                if resource == "composition" and os.environ.get("SMARTCOURSE_SERIAL_CPU_MEDIA") == "1":
+                    import gc
+                    gc.collect()
+                    import sys
+                    if sys.platform.startswith("linux"):
+                        import ctypes
+                        trim = getattr(ctypes.CDLL(None), "malloc_trim", None)
+                        if trim is not None:
+                            trim(0)
                 fcntl.flock(acquired, fcntl.LOCK_UN)
             for descriptor in descriptors:
                 descriptor.close()

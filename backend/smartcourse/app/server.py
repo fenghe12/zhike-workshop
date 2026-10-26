@@ -43,6 +43,8 @@ from .ai_intro_product import ai_intro_status, execute_fixed_ai_intro_interrupt
 from .interactive_course import execute_fixed_interrupt, list_interruptions
 from .pedagogical_ir import EXPERIMENT_CATALOG, build_e2_variants, compile_lesson_ir
 from .store import JsonStore
+from .account_security import AccountSecurity, AuthSecurityError
+from .account_policy import accepted_policy, policy_documents, validate_policy_consent, validate_media_consent
 from .task_queue import PersistentTaskQueue, TaskAlreadyQueued, with_queue_position
 from .uploads import save_upload
 from .translation_policy import validate_policy
@@ -81,6 +83,7 @@ class SmartCourseApplication:
         self.settings.artifact_root.mkdir(parents=True, exist_ok=True)
         self.task_template_path = self.settings.data_root / "recovered-task.json"
         self.store = JsonStore(self.settings.data_root / "state.json", self.task_template_path)
+        self.account_security = AccountSecurity(self.settings.data_root / 'account-security.sqlite3')
         from .task_recovery import recover_exited_workers
         self.store.transact(recover_exited_workers)
         self.rag = CourseRAGService(
@@ -283,7 +286,9 @@ class SmartCourseApplication:
     ) -> dict[str, Any]:
         task = self.get_task(task_id)
         from .remote_media import media_service_status
-        if start_stage < 5 and media_service_status() == "INACTIVE":
+        media_status = media_service_status()
+        require_owned = bool(os.environ.get('SMARTCOURSE_COMPUTE_OWNER'))
+        if start_stage < 5 and (media_status == "INACTIVE" or (require_owned and media_status != 'RUNNING')):
             raise ApiError(HTTPStatus.CONFLICT, "本项目计算服务当前已暂停，历史课程仍可播放。启动服务后可继续执行。")
         if start_stage not in range(1, 6):
             raise ApiError(HTTPStatus.BAD_REQUEST, "阶段编号必须为 1 至 5")
@@ -322,6 +327,7 @@ def make_handler(application: SmartCourseApplication):
             self._cors_headers()
             self.send_header("Content-Type", "application/json; charset=utf-8")
             self.send_header("Content-Length", str(len(body)))
+            self.send_header('Cache-Control', 'no-store')
             for key, value in (extra_headers or {}).items():
                 self.send_header(key, value)
             self.end_headers()
@@ -371,7 +377,45 @@ def make_handler(application: SmartCourseApplication):
                 self._task_owner(match.group(1))
 
         def _session_cookie(self, token):
-            return {"Set-Cookie": "smartcourse-session="+token+"; Path=/; HttpOnly; SameSite=Lax"}
+            return {"Set-Cookie": "smartcourse-session="+token+"; Path=/; HttpOnly; SameSite=Lax; Max-Age=604800"}
+
+        def _client_identity(self):
+            value = self.client_address[0]
+            if value in {'127.0.0.1','::1'}:
+                value = self.headers.get('X-Real-IP', value)
+            return value[:128]
+
+        def _agreement_user(self):
+            self._user_id(required=True)
+            user = application.store.user_for_token(self._token())
+            if not accepted_policy(user):
+                raise ApiError(HTTPStatus.FORBIDDEN, '请先阅读并同意用户协议和隐私说明。')
+            return user['id']
+
+        def _authorize_account(self, payload, registering):
+            account = payload.get('account', payload.get('phone',''))
+            password = payload.get('password','')
+            if not isinstance(account,str) or not isinstance(password,str):
+                raise ValueError('账号和密码必须为文本')
+            consent = validate_policy_consent(payload)
+            identity = self._client_identity()+'|'+account.strip()[:128]
+            application.account_security.check_attempts(identity)
+            try:
+                application.account_security.consume(payload.get('captchaId'),payload.get('captchaCode'))
+                if registering:
+                    name, institution = payload.get('name',''), payload.get('institution','')
+                    if not isinstance(name,str) or not isinstance(institution,str):
+                        raise ValueError('姓名和单位必须为文本')
+                    if payload.get('confirmPassword',password) != password:
+                        raise ValueError('两次输入的密码不一致')
+                    result = application.store.register(account,password,name,institution,policy_consent=consent)
+                else:
+                    result = application.store.login(account,password,policy_consent=consent)
+            except ValueError:
+                application.account_security.failed(identity)
+                raise
+            application.account_security.succeeded(identity)
+            return result
 
         def _uploaded_asset(self, value, kind):
             user_id = self._user_id(required=True)
@@ -385,7 +429,9 @@ def make_handler(application: SmartCourseApplication):
             asset = application.store.snapshot().get("uploads", {}).get(identifier)
             if not asset or asset.get("createdBy") != user_id or asset.get("path") != path:
                 raise ApiError(HTTPStatus.FORBIDDEN, "无权绑定此素材")
-            return {key: asset[key] for key in ["id", "name", "size", "path"]}
+            if kind in {'image','audio'} and not asset.get('consent',{}).get('authorized'):
+                raise ApiError(HTTPStatus.FORBIDDEN, '该素材尚未确认授权，请确认后重新上传。')
+            return {key: asset[key] for key in ["id", "name", "size", "path",'consent'] if key in asset}
 
         def _copy_task_asset(self, task_id, role, asset):
             artifact_root = application.settings.artifact_root.resolve()
@@ -530,6 +576,12 @@ def make_handler(application: SmartCourseApplication):
                 parsed = urlparse(self.path)
                 path = parsed.path.rstrip("/") or "/"
                 query = parse_qs(parsed.query)
+                if path == '/v1/auth/policies':
+                    self._json(HTTPStatus.OK, policy_documents())
+                    return
+                if path == '/v1/auth/captcha':
+                    self._json(HTTPStatus.OK, application.account_security.issue(self._client_identity()))
+                    return
                 if path == "/":
                     self.send_response(HTTPStatus.TEMPORARY_REDIRECT)
                     self.send_header("Location", "/course/")
@@ -769,8 +821,8 @@ def make_handler(application: SmartCourseApplication):
                 raise ApiError(HTTPStatus.NOT_FOUND, "接口不存在")
             except (BrokenPipeError, ConnectionResetError):
                 return
-            except ApiError as exc:
-                self._json(exc.status, {"message": exc.message})
+            except (ApiError, AuthSecurityError) as exc:
+                self._json(exc.status, {"message": str(exc)})
             except Exception as exc:
                 self._json(HTTPStatus.INTERNAL_SERVER_ERROR, {"message": str(exc)})
 
@@ -852,34 +904,23 @@ def make_handler(application: SmartCourseApplication):
                         except Exception as exc:result['remediationError']=str(exc)
                     self._json(HTTPStatus.OK,result); return
                 if path == "/v1/auth/register":
-                    account = payload.get("account", payload.get("phone", ""))
-                    password = payload.get("password", "")
-                    name = payload.get("name", "")
-                    institution = payload.get("institution", "")
-                    if not all(isinstance(value, str) for value in [account, password, name, institution]):
-                        raise ValueError("注册信息必须为文本")
-                    if "confirmPassword" in payload and payload["confirmPassword"] != password:
-                        raise ValueError("两次输入的密码不一致")
-                    result = application.store.register(
-                        account, password, name, institution,
-                    )
+                    result = self._authorize_account(payload, True)
                     self._json(HTTPStatus.CREATED, result, self._session_cookie(result["accessToken"]))
                     return
                 if path == "/v1/auth/login":
-                    account = payload.get("account", payload.get("phone", ""))
-                    password = payload.get("password", "")
-                    if not isinstance(account, str) or not isinstance(password, str):
-                        raise ValueError("账号和密码必须为文本")
-                    result = application.store.login(
-                        account, password,
-                    )
+                    result = self._authorize_account(payload, False)
                     self._json(HTTPStatus.OK, result, self._session_cookie(result["accessToken"]))
                     return
                 if path == "/v1/auth/session":
                     self._user_id(required=True)
                     user = application.store.user_for_token(self._token())
-                    public = {key: user[key] for key in ["id", "displayName", "phone", "institution"] if key in user}
-                    self._json(HTTPStatus.OK, {"user": public}, self._session_cookie(self._token()))
+                    public = {key: user[key] for key in ["id", "displayName", "phone", "institution",'policyConsent'] if key in user}
+                    self._json(HTTPStatus.OK, {"user": public,'agreementRequired':not accepted_policy(user)}, self._session_cookie(self._token()))
+                    return
+                if path == '/v1/auth/consent':
+                    user_id = self._user_id(required=True)
+                    public = application.store.accept_policy(user_id,validate_policy_consent(payload))
+                    self._json(HTTPStatus.OK, {'user':public,'agreementRequired':False})
                     return
                 if path == "/v1/auth/logout":
                     token = self._token()
@@ -899,14 +940,17 @@ def make_handler(application: SmartCourseApplication):
                     self._json(HTTPStatus.ACCEPTED, submit_interruption(application, task, payload))
                     return
                 if path == '/api/courses':
-                    user_id = self._user_id(required=True)
+                    user_id = self._agreement_user()
                     from .course_api import course_request, course_status
                     from .course_download import download_course_input
                     def resolve_asset(url, kind):
                         if isinstance(url, str) and url.startswith('/artifacts/'):
                             return self._uploaded_asset({'path': url}, kind)
+                        consent = validate_media_consent(payload.get('mediaConsent'),user_id) if kind in {'image','audio'} else None
                         filename, content = download_course_input(url, kind)
                         uploaded = save_upload(application.settings.artifact_root, filename, kind, content)
+                        if consent:
+                            uploaded['consent'] = consent
                         application.store.transact(lambda data: data.setdefault('uploads', {}).update(
                             {uploaded['id']: {**uploaded, 'createdBy': user_id}}))
                         return uploaded
@@ -919,6 +963,7 @@ def make_handler(application: SmartCourseApplication):
                     self._json(HTTPStatus.ACCEPTED, course_status(task))
                     return
                 if path == "/v1/tasks":
+                    self._agreement_user()
                     if payload.get("mode") == "upload":
                         inputs = payload.get("inputs") or {}
                         inputs["ppt"] = self._uploaded_asset(inputs.get("ppt"), "ppt")
@@ -1225,9 +1270,10 @@ def make_handler(application: SmartCourseApplication):
                     self._json(HTTPStatus.OK, result)
                     return
                 if path == "/v1/uploads":
-                    upload_user = self._user_id(required=True)
+                    upload_user = self._agreement_user()
                     filename = str(payload.get("filename", ""))
                     kind = str(payload.get("kind", "asset"))
+                    consent = validate_media_consent(payload.get('mediaConsent'),upload_user) if kind in {'image','audio'} else None
                     encoded = str(payload.get("contentBase64", ""))
                     if not filename or not encoded:
                         raise ApiError(HTTPStatus.BAD_REQUEST, "缺少文件名或文件内容")
@@ -1243,6 +1289,8 @@ def make_handler(application: SmartCourseApplication):
                     except ValueError as exc:
                         raise ApiError(HTTPStatus.BAD_REQUEST, str(exc)) from exc
                     def save_upload_owner(data):
+                        if consent:
+                            uploaded['consent'] = consent
                         data.setdefault("uploads", {})[uploaded["id"]] = {**uploaded, "createdBy": upload_user}
                     application.store.transact(save_upload_owner)
                     self._json(
@@ -1294,7 +1342,7 @@ def make_handler(application: SmartCourseApplication):
                     return
                 raise ApiError(HTTPStatus.NOT_FOUND, "接口不存在")
             except (ValueError, ApiError) as exc:
-                status = exc.status if isinstance(exc, ApiError) else HTTPStatus.BAD_REQUEST
+                status = exc.status if isinstance(exc, (ApiError, AuthSecurityError)) else HTTPStatus.BAD_REQUEST
                 message = exc.message if isinstance(exc, ApiError) else str(exc)
                 self._json(status, {"message": message})
             except Exception as exc:
@@ -1342,7 +1390,11 @@ def make_handler(application: SmartCourseApplication):
                     for key in allowed:
                         allowed[key] = self._uploaded_asset(allowed[key], "audio" if key == "referenceAudio" else "image")
                     def update_assets(task, _data):
-                        return replace_task_assets(task, allowed)
+                        updated = replace_task_assets(task, allowed)
+                        consents = [asset['consent'] for asset in allowed.values() if asset.get('consent')]
+                        if consents:
+                            updated['assets']['consent'] = consents[-1]
+                        return updated
                     task_id = match.group(1)
                     with application._execution_lock:
                         active = application._executions.get(task_id)

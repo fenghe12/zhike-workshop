@@ -234,11 +234,16 @@ class PPTVideoComposer:
             still=Path(folder)/'background.png';temporary=Path(folder)/'composed.mp4'
             if not cv2.imwrite(str(still),background):raise RuntimeError('无法保存课件合成背景')
             filters=f'[1:v]scale={width}:{height}:flags=lanczos,setsar=1[face];[0:v][face]overlay={x}:{y}:shortest=1,pad=ceil(iw/2)*2:ceil(ih/2)*2,format=yuv420p[v]'
+            threads=str(max(1,int(os.environ.get('SMARTCOURSE_COMPOSE_THREADS','4'))))
+            filter_threads=str(max(1,int(os.environ.get('SMARTCOURSE_COMPOSE_FILTER_THREADS','2'))))
+            preset=os.environ.get('SMARTCOURSE_COMPOSE_PRESET','veryfast')
+            timeout=max(int(os.environ.get('SMARTCOURSE_COMPOSE_MIN_TIMEOUT','300')),
+                        int(duration*float(os.environ.get('SMARTCOURSE_COMPOSE_TIMEOUT_FACTOR','5'))))
             command=[ffmpeg,'-y','-loop','1','-framerate',str(self.fps),'-i',str(still),'-ss',str(segment.start_time),
-                     '-i',self.config.face_video_path,'-filter_complex_threads','2','-filter_complex',filters,
+                     '-i',self.config.face_video_path,'-filter_complex_threads',filter_threads,'-filter_complex',filters,
                      '-map','[v]','-map','1:a:0','-t',str(duration),'-r',str(self.fps),'-c:v','libx264',
-                     '-preset','veryfast','-crf','20','-threads','4','-c:a','aac','-b:a','128k','-movflags','+faststart',str(temporary)]
-            subprocess.run(command,capture_output=True,check=True,timeout=max(300,int(duration*5)))
+                     '-preset',preset,'-crf','20','-threads',threads,'-c:a','aac','-b:a','128k','-movflags','+faststart',str(temporary)]
+            subprocess.run(command,capture_output=True,check=True,timeout=timeout)
             temporary.replace(output)
         self.cap.release()
 

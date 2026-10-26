@@ -13,6 +13,7 @@ SUPPORTED_LANGUAGES = {
     "de-DE": "德语",
     "fr-FR": "法语",
     "ru-RU": "俄语",
+    "es-ES": "西班牙语",
 }
 
 

@@ -10,3 +10,6 @@ PyMuPDF>=1.26,<2
 Pillow>=12,<13
 requests>=2.32,<3
 httpx>=0.28,<1
+faster-whisper==1.1.1
+av==18.1.0
+fonttools==4.64.0

@@ -44,9 +44,9 @@ def prepare_narration(structure, gateway, output, *, preserve_script=False, targ
         aliases = {'chinese':'zh', 'simplified chinese':'zh', '中文':'zh',
                    'korean':'ko', '韩语':'ko', 'japanese':'ja', '日语':'ja',
                    'english':'en', '英语':'en', 'german':'de', '德语':'de',
-                   'french':'fr', '法语':'fr'}
+                   'french':'fr', '法语':'fr', 'russian':'ru', '俄语':'ru', 'spanish':'es', '西班牙语':'es'}
         code = aliases.get(language, language.split('-')[0])
-        rate = {'zh':4.5,'ko':6,'ja':5,'en':12,'de':12,'fr':12,'ru':11}.get(code,6)
+        rate = {'zh':4.5,'ko':6,'ja':5,'en':12,'de':12,'fr':12,'ru':11,'es':12}.get(code,6)
         character_limit = max(80, round(target_duration_seconds / max(1,len(structure['pages'])) * rate))
         request['target_duration_seconds'] = target_duration_seconds
         request['maximum_characters_per_page'] = character_limit

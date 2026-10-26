@@ -101,6 +101,37 @@ def synchronize_slide_titles(path, pages):
     return changes
 
 
+def _month_week_quantities(text):
+    """Read explicit month/week durations, excluding ordinary calendar months."""
+    numbers = {
+        '一': 1, '二': 2, '两': 2, '兩': 2, '三': 3, '四': 4, '五': 5,
+        '六': 6, '七': 7, '八': 8, '九': 9, '十': 10, '十一': 11, '十二': 12,
+        'one': 1, 'two': 2, 'three': 3, 'four': 4, 'five': 5, 'six': 6,
+        'seven': 7, 'eight': 8, 'nine': 9, 'ten': 10, 'eleven': 11, 'twelve': 12,
+        'ein': 1, 'eine': 1, 'zwei': 2, 'drei': 3, 'vier': 4, 'fünf': 5,
+        'sechs': 6, 'sieben': 7, 'acht': 8, 'neun': 9, 'zehn': 10,
+        'un': 1, 'une': 1, 'deux': 2, 'trois': 3, 'quatre': 4, 'cinq': 5,
+        'uno': 1, 'una': 1, 'dos': 2, 'tres': 3, 'cuatro': 4, 'cinco': 5,
+        'seis': 6, 'siete': 7, 'ocho': 8, 'nueve': 9, 'diez': 10, 'once': 11, 'doce': 12,
+        'один': 1, 'одна': 1, 'два': 2, 'две': 2, 'три': 3, 'четыре': 4,
+        'пять': 5, 'шесть': 6, 'семь': 7, 'восемь': 8, 'девять': 9, 'десять': 10,
+        'одиннадцать': 11, 'двенадцать': 12,
+        '한': 1, '두': 2, '세': 3, '네': 4, '다섯': 5, '여섯': 6,
+    }
+    number = r'(?:\d+|' + '|'.join(re.escape(x) for x in sorted(numbers, key=len, reverse=True)) + ')'
+    units = {
+        'month': r'(?:个|個)\s*月|[ヶかカ箇]月(?:間)?|개월|달|months?|monat[a-zäöüß]*|mois|mes(?:es)?|месяц(?:а|ев)?',
+        'week': r'周|週(?:間)?|星期|주(?:일)?|weeks?|woche[n]?|semaines?|semanas?|недел(?:я|и|ь|ю)',
+    }
+    found = set()
+    for unit, pattern in units.items():
+        for match in re.finditer(r'(?<![A-Za-zА-Яа-яЁё])(' + number + r')[\s-]*(?:' + pattern + r')', text, re.I):
+            token = match.group(1).lower()
+            value = int(token) if token.isdigit() else numbers[token]
+            found.add((value, unit))
+    return found
+
+
 def _validate_answer(answer, inputs, part, target=None, protected_names=()):
     translated = answer.get("paragraphs") if isinstance(answer, dict) else None
     if not isinstance(translated, list) or len(translated) != len(inputs):
@@ -110,7 +141,11 @@ def _validate_answer(answer, inputs, part, target=None, protected_names=()):
             raise ValueError(f"PPT 格式文本段数量不匹配：{part}")
         if not all(isinstance(value, str) for value in values) or not any(value.strip() for value in values):
             raise ValueError(f"PPT 译文为空或格式错误：{part}")
-        if target in {'English', 'German', 'French', 'Russian', 'Korean'}:
+        expected_durations = _month_week_quantities(''.join(source['runs']))
+        actual_durations = _month_week_quantities(''.join(values))
+        if expected_durations and actual_durations and not expected_durations.issubset(actual_durations):
+            raise ValueError(f"PPT duration changed: preserve {sorted(expected_durations)}, received {sorted(actual_durations)}: {part}")
+        if target in {'English', 'German', 'French', 'Russian', 'Korean', 'Spanish'}:
             content = ''.join(values)
             for name in protected_names:
                 content = content.replace(name, '')

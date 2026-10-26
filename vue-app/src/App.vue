@@ -18,6 +18,9 @@ import DeckEditor from './DeckEditor.vue'
 import QuestionBank from './QuestionBank.vue'
 import ProductLanding from './ProductLanding.vue'
 import QueueNotice from './QueueNotice.vue'
+import AccountAccess from './AccountAccess.vue'
+import PolicyLinks from './PolicyLinks.vue'
+import AppLogo from './AppLogo.vue'
 import KnowledgeLibrary from './KnowledgeLibrary.vue'
 const lectureFile=ref<File>()
 const knowledgeReady=ref(false)
@@ -26,7 +29,7 @@ const route=useRoute(),router=useRouter()
 const privacy=ref(false)
 const screen=computed(()=>route.path.split('/')[1]||'landing')
 const labels:Record<string,string>={landing:'产品介绍',home:'任务工作台',create:'创建课程',code:'代码讲解与动画',teacher:'教学设计与练习',task:'任务详情',stage:'阶段详情',results:'结果中心',settings:'系统设置',login:'登录',register:'注册'}
-const languages=[{name:'中文',native:'简体中文',code:'ZH'},{name:'英语',native:'English',code:'EN'},{name:'日语',native:'日本語',code:'JA'},{name:'韩语',native:'한국어',code:'KO'},{name:'德语',native:'Deutsch',code:'DE'},{name:'法语',native:'Français',code:'FR'}]
+const languages=[{name:'中文',native:'简体中文',code:'ZH'},{name:'英语',native:'English',code:'EN'},{name:'日语',native:'日本語',code:'JA'},{name:'韩语',native:'한국어',code:'KO'},{name:'德语',native:'Deutsch',code:'DE'},{name:'法语',native:'Français',code:'FR'},{name:'俄语',native:'Русский',code:'RU'},{name:'西班牙语',native:'Español',code:'ES'}]
 const flow=[{code:'S1',title:'课程内容结构化',description:'读取课件，整理页面与讲稿',icon:Document},{code:'S2',title:'翻译与回译校验',description:'检查语义、术语、公式与数字',icon:Connection},{code:'S3',title:'声音与时间轴',description:'使用所选音色生成多语种讲解',icon:Headset},{code:'S4',title:'数字讲者与布局',description:'使用所选照片生成讲者画面',icon:User},{code:'S5',title:'视频与字幕输出',description:'合成课程，输出视频与 SRT',icon:VideoCamera}]
 const statusNames:Record<string,string>={processing:'生成中',running:'执行中',queued:'排队中',completed:'已完成',failed:'需处理',cancelled:'已取消',waiting:'等待执行',waiting_input:'等待上传素材',needs_review:'待审核',needs_regeneration:'待重新生成'}
 const tasks=ref<Task[]>([]),loading=ref(false),loadError=ref(''),filter=ref('all'),search=ref(''),connected=ref(false),mediaReady=ref(false),help=ref(false),menuOpen=ref(false)
@@ -66,7 +69,7 @@ function clearSession(){sessionStorage.removeItem('smartcourse-token');sessionSt
 watch(screen,()=>{authError.value='';auth.value.password='';auth.value.confirmPassword='';auth.value.agreed=false})
 watch(()=>route.fullPath,()=>{formError.value='';health();if(screen.value==='settings')loadPolicy();if(['home','results'].includes(screen.value))fetchTasks();if(['task','stage'].includes(screen.value))fetchTask()},{immediate:true})
 let poll:ReturnType<typeof setInterval>
-onMounted(()=>{health();post<any>('/v1/auth/session',{}).then(data=>{currentUser.value=data.user;sessionStorage.setItem('smartcourse-user',JSON.stringify(data.user));switchPrivateDraft();if(['home','results'].includes(screen.value))fetchTasks();if(['task','stage'].includes(screen.value))fetchTask();if(screen.value==='settings')loadPolicy()}).catch(e=>{if(e instanceof ApiError&&e.status===401)clearSession()}).finally(()=>{sessionReady.value=true});poll=setInterval(()=>{if(['task','stage'].includes(screen.value)&&selected.value&&!['completed','cancelled','failed','needs_regeneration'].includes(selected.value.status))fetchTask()},5000)})
+onMounted(()=>{health();post<any>('/v1/auth/session',{}).then(data=>{currentUser.value=data.user;if(data.agreementRequired)go('/login');sessionStorage.setItem('smartcourse-user',JSON.stringify(data.user));switchPrivateDraft();if(['home','results'].includes(screen.value))fetchTasks();if(['task','stage'].includes(screen.value))fetchTask();if(screen.value==='settings')loadPolicy()}).catch(e=>{if(e instanceof ApiError&&e.status===401)clearSession()}).finally(()=>{if(!currentUser.value&&!['login','register'].includes(screen.value))go('/register');sessionReady.value=true});poll=setInterval(()=>{if(['task','stage'].includes(screen.value)&&selected.value&&!['completed','cancelled','failed','needs_regeneration'].includes(selected.value.status))fetchTask()},5000)})
 onUnmounted(()=>clearInterval(poll))
 async function chooseFile(f?:File){
  if(!f)return
@@ -97,22 +100,9 @@ function bindDraftAudio(f:File){void bindDraftAsset(f,'audio')}
 function bindDraftImage(f:File){void bindDraftAsset(f,'image')}
 function next(){formError.value='';if(!draft.value.name.trim()){formError.value='先填写任务名称，便于后续查找。';return}if(draft.value.mode==='upload'&&!preview.value){formError.value='请先上传并读取课件。';return}if(draft.value.mode==='topic'&&!draft.value.topic.trim()){formError.value='请描述课程主题和教学范围。';return}if(step.value===1&&!draft.value.targetLanguages.length){formError.value='请至少选择一种输出语言。';return}if(step.value===0&&draft.value.mode==='topic'&&!knowledgeReady.value){formError.value='请先导入课程参考课件。';return}step.value=Math.min(2,step.value+1)}
 async function submit(){submitting.value=true;formError.value='';try{if(!currentUser.value)throw Error('请先登录。课程草稿已保存在当前浏览器。');let ppt:{path:string}|null=null,script:{path:string}|null=null;if(draft.value.mode==='upload'){ppt=await post<{path:string}>('/api/transfer-upload',{preview_id:preview.value.id});if(lectureFile.value){const contentBase64=await new Promise<string>((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(String(reader.result).split(',')[1]!);reader.onerror=reject;reader.readAsDataURL(lectureFile.value!)});script=await post<{path:string}>('/v1/uploads',{filename:lectureFile.value.name,kind:'script',contentBase64});}}const t=await post<{jobId:string}>('/api/courses',{...draft.value,pptUrl:ppt?.path,scriptUrl:script?.path,pageCount:draft.value.totalPages,audience:draft.value.targetLearners});go('/task?id='+t.jobId)}catch(e){formError.value=(e as Error).message}finally{submitting.value=false}}
-async function authenticate(){
- if(submitting.value||!sessionReady.value)return
- authError.value=''
- const a={...auth.value,account:auth.value.account.trim()},registering=screen.value==='register'
- if(registering&&(!a.name.trim()||!a.institution.trim())){authError.value='请填写姓名和所属单位。';return}
- if(a.account.length<6||a.password.length<6){authError.value='账号和密码均须至少 6 个字符。';return}
- if(registering&&(a.account.length>128||/\s/.test(a.account))){authError.value='账号不能包含空格，且不能超过 128 个字符。';return}
- if(registering&&(a.password.length>128||!a.password.trim())){authError.value='密码须为 6 至 128 个字符，且不能全部为空格。';return}
- if(registering&&a.password!==a.confirmPassword){authError.value='两次输入的密码不一致。';return}
- if(registering&&!a.agreed){authError.value='请先阅读素材处理说明。';return}
- submitting.value=true
- try{
-  const d=await post<any>('/v1/auth/'+(registering?'register':'login'),a)
-  if(!d.accessToken||!d.user)throw Error('服务未返回有效登录信息。')
-  resetAccountView();sessionStorage.setItem('smartcourse-token',d.accessToken);sessionStorage.setItem('smartcourse-user',JSON.stringify(d.user));currentUser.value=d.user;switchPrivateDraft(true);auth.value=emptyAuth();go('/home');ElMessage.success(registering?'注册成功，已进入你的工作台。':'登录成功。')
- }catch(e){authError.value=(e as Error).message}finally{submitting.value=false}
+async function accountAuthenticated(result:any){
+ resetAccountView();if(result.accessToken)sessionStorage.setItem('smartcourse-token',result.accessToken)
+ sessionStorage.setItem('smartcourse-user',JSON.stringify(result.user));currentUser.value=result.user;switchPrivateDraft(true);go('/home');await fetchTasks()
 }
 async function taskAction(action:string){if(!selected.value)return;try{const id=selected.value.id;if(action==='rename'){const {value}=await ElMessageBox.prompt('输入新的课程名称','修改名称',{inputValue:selected.value.name,inputValidator:v=>!!v.trim()||'名称不能为空'});await api('/v1/tasks/'+id,{method:'PUT',body:JSON.stringify({name:value})})}else{await ElMessageBox.confirm(action==='cancel'?'停止此任务的后续生成？':'删除此任务记录？','确认操作',{type:'warning'});await api('/v1/tasks/'+id+(action==='cancel'?'/cancel':''),{method:action==='cancel'?'POST':'DELETE'});if(action==='delete'){go('/home');return}}await fetchTask()}catch(e){if(e!=='cancel'&&e!=='close')ElMessage.error((e as Error).message)}}
 async function retry(){if(!selected.value)return;try{await post(`/v1/tasks/${selected.value.id}/stages/${selected.value.currentStage}/retry`,{});await fetchTask()}catch(e){ElMessage.error((e as Error).message)}}
@@ -142,7 +132,7 @@ function duration(s?:number){return s===undefined?'待计算':`${Math.floor(s/60
 
 <template>
  <div class="workspace-shell" :class="{'marketing-shell':screen==='landing'}">
-  <aside class="sidebar" :class="{open:menuOpen}"><a class="brand" @click="go('/landing')"><span class="brand-symbol"><el-icon><Document/></el-icon></span><span>智课工坊<small>SMARTCOURSE STUDIO</small></span></a><div class="workspace-label"><span class="workspace-avatar">课</span><div>课程工作空间<small>多语言教学视频</small></div></div><p class="nav-caption">工作空间</p><nav><button v-for="item in [{path:'home',name:'任务工作台',icon:Grid},{path:'create',name:'创建课程',icon:Plus},{path:'code',name:'代码讲解与动画',icon:MagicStick},{path:'teacher',name:'教学设计与练习',icon:Document},{path:'results',name:'结果中心',icon:VideoCamera}]" :key="item.path" :class="{active:screen===item.path}" @click="go('/'+item.path)"><el-icon><component :is="item.icon"/></el-icon>{{item.name}}<span v-if="screen===item.path" class="active-dot"/></button></nav><p class="nav-caption tools-caption">内容工具</p><nav class="secondary-nav"><a href="#/public" :class="{active:screen==='public'}" @click="menuOpen=false"><el-icon><Grid/></el-icon>公共课程</a><a href="#/planner" :class="{active:screen==='planner'}" @click="menuOpen=false"><el-icon><Document/></el-icon>课程方案</a><a href="#/editor" :class="{active:screen==='editor'}" @click="menuOpen=false"><el-icon><Document/></el-icon>课件编辑</a><a href="#/question-bank" :class="{active:screen==='question-bank'}" @click="menuOpen=false"><el-icon><Check/></el-icon>题库与练习</a></nav><div class="sidebar-foot"><button @click="help=true"><el-icon><QuestionFilled/></el-icon>使用指南</button><button @click="go('/settings')"><el-icon><Setting/></el-icon>系统设置</button><div class="account"><span class="avatar"><el-icon><User/></el-icon></span><div><strong>{{currentUser?.displayName||'访客'}}</strong><small>{{currentUser?.institution||'登录后管理课程'}}</small></div><el-button link @click="go(currentUser?'/settings':'/login')">{{currentUser?'账户':'登录'}}</el-button></div></div></aside>
+  <aside class="sidebar" :class="{open:menuOpen}"><a class="brand" @click="go('/landing')"><AppLogo compact /><span>智课工坊<small>SMARTCOURSE STUDIO</small></span></a><div class="workspace-label"><span class="workspace-avatar">课</span><div>课程工作空间<small>多语言教学视频</small></div></div><p class="nav-caption">工作空间</p><nav><button v-for="item in [{path:'home',name:'任务工作台',icon:Grid},{path:'create',name:'创建课程',icon:Plus},{path:'code',name:'代码讲解与动画',icon:MagicStick},{path:'teacher',name:'教学设计与练习',icon:Document},{path:'results',name:'结果中心',icon:VideoCamera}]" :key="item.path" :class="{active:screen===item.path}" @click="go('/'+item.path)"><el-icon><component :is="item.icon"/></el-icon>{{item.name}}<span v-if="screen===item.path" class="active-dot"/></button></nav><p class="nav-caption tools-caption">内容工具</p><nav class="secondary-nav"><a href="#/public" :class="{active:screen==='public'}" @click="menuOpen=false"><el-icon><Grid/></el-icon>公共课程</a><a href="#/planner" :class="{active:screen==='planner'}" @click="menuOpen=false"><el-icon><Document/></el-icon>课程方案</a><a href="#/editor" :class="{active:screen==='editor'}" @click="menuOpen=false"><el-icon><Document/></el-icon>课件编辑</a><a href="#/question-bank" :class="{active:screen==='question-bank'}" @click="menuOpen=false"><el-icon><Check/></el-icon>题库与练习</a></nav><div class="sidebar-foot"><button @click="help=true"><el-icon><QuestionFilled/></el-icon>使用指南</button><button @click="go('/settings')"><el-icon><Setting/></el-icon>系统设置</button><div class="account"><span class="avatar"><el-icon><User/></el-icon></span><div><strong>{{currentUser?.displayName||'访客'}}</strong><small>{{currentUser?.institution||'登录后管理课程'}}</small></div><el-button link @click="go(currentUser?'/settings':'/login')">{{currentUser?'账户':'登录'}}</el-button></div></div></aside>
   <div v-if="menuOpen" class="nav-backdrop" @click="menuOpen=false"/>
   <section class="main-shell"><header class="topbar"><el-button class="mobile-menu" aria-label="打开导航" text :icon="Menu" @click="menuOpen=!menuOpen"/><el-breadcrumb separator="/"><el-breadcrumb-item @click="go('/home')">工作空间</el-breadcrumb-item><el-breadcrumb-item>{{labels[screen]||'课程'}}</el-breadcrumb-item></el-breadcrumb><div class="top-actions"><span class="service-state" :class="{online:connected&&mediaReady}"><i/>{{!connected?'生成服务未连接':mediaReady?'生成服务已连接':'媒体计算已停止'}}</span><el-button aria-label="使用指南" text :icon="QuestionFilled" @click="help=true"/></div></header>
   <main :key="currentUser?.id||'guest'">
@@ -162,33 +152,11 @@ function duration(s?:number){return s===undefined?'待计算':`${Math.floor(s/60
 
    <template v-else-if="screen==='results'"><div class="heading"><div><p class="eyebrow">COURSE LIBRARY</p><h1>结果中心</h1><p>按课程查看多语种视频、字幕与生成报告。</p></div></div><el-alert v-if="loadError" :title="loadError" type="info" :closable="false"/><div v-else-if="!completed.length" class="empty"><el-icon><VideoCamera/></el-icon><h3>这里将保存你的课程成品</h3><p>任务完成后，按语言预览和下载视频与字幕。</p><el-button @click="go('/home')">查看任务工作台</el-button></div><article v-for="t in completed" class="panel result-row"><el-icon><VideoCamera/></el-icon><div><h3>{{t.name}}</h3><p>{{t.targetLanguages.join(' / ')}}</p></div><el-button @click="go('/stage?id='+t.id+'&stage=5')">查看结果</el-button></article></template>
 
-   <template v-else-if="screen==='settings'"><div class="heading"><div><p class="eyebrow">PREFERENCES</p><h1>系统设置</h1><p>管理当前账户的课程处理参数。</p></div></div><section class="panel settings-panel"><h2>账号与服务状态</h2><p>{{currentUser?.displayName||'尚未登录'}} · {{currentUser?.institution||'登录后显示所属单位'}}</p><p v-if="currentUser">登录账号：{{currentUser.phone}}</p><el-button v-if="currentUser" :loading="submitting" @click="logout">退出登录</el-button><el-button v-else @click="go('/login')">登录或注册</el-button><el-divider/><el-form label-position="top"><el-form-item label="生成服务状态"><span>{{connected?(mediaReady?'生成服务已连接':'媒体计算已停止'):'生成服务未连接'}}</span></el-form-item><el-divider/><h3>回译一致性校验参数</h3><p class="muted">修改后对新建任务生效。四项得分达到阈值后才进入下一阶段。</p><el-form-item v-for="(label,key) in policyLabels" :key="key" :label="label"><el-input-number v-model="translationPolicy[key]" :min="0" :max="1" :step="0.01" :precision="2"/></el-form-item><el-form-item label="自动修正次数上限"><el-input-number v-model="translationPolicy.maxRetries" :min="0" :max="3" :step="1"/></el-form-item><el-alert v-if="settingMessage" :title="settingMessage" :closable="false"/><el-button type="primary" @click="saveSettings">保存参数并检查连接</el-button></el-form></section></template>
+   <template v-else-if="screen==='settings'"><div class="heading"><div><p class="eyebrow">PREFERENCES</p><h1>系统设置</h1><p>管理当前账户的课程处理参数。</p></div></div><section class="panel settings-panel"><h2>账号与服务状态</h2><PolicyLinks /><p>{{currentUser?.displayName||'尚未登录'}} · {{currentUser?.institution||'登录后显示所属单位'}}</p><p v-if="currentUser">登录账号：{{currentUser.phone}}</p><el-button v-if="currentUser" :loading="submitting" @click="logout">退出登录</el-button><el-button v-else @click="go('/login')">登录或注册</el-button><el-divider/><el-form label-position="top"><el-form-item label="生成服务状态"><span>{{connected?(mediaReady?'生成服务已连接':'媒体计算已停止'):'生成服务未连接'}}</span></el-form-item><el-divider/><h3>回译一致性校验参数</h3><p class="muted">修改后对新建任务生效。四项得分达到阈值后才进入下一阶段。</p><el-form-item v-for="(label,key) in policyLabels" :key="key" :label="label"><el-input-number v-model="translationPolicy[key]" :min="0" :max="1" :step="0.01" :precision="2"/></el-form-item><el-form-item label="自动修正次数上限"><el-input-number v-model="translationPolicy.maxRetries" :min="0" :max="3" :step="1"/></el-form-item><el-alert v-if="settingMessage" :title="settingMessage" :closable="false"/><el-button type="primary" @click="saveSettings">保存参数并检查连接</el-button></el-form></section></template>
 
    <template v-else-if="screen==='login'||screen==='register'">
-    <section v-if="!sessionReady" class="auth-panel"><p class="muted">正在检查登录状态…</p></section>
-    <section v-else-if="currentUser" class="auth-panel">
-     <div class="auth-intro"><p class="eyebrow">YOUR ACCOUNT</p><h1>当前已登录</h1><p>{{currentUser.displayName}} · {{currentUser.institution}}</p></div>
-     <p class="muted">登录账号：{{currentUser.phone}}</p><p class="muted">切换账号或注册新账号前，请先退出当前账号。</p>
-     <el-button type="primary" class="auth-submit" @click="go('/home')">进入我的工作台</el-button><el-button :loading="submitting" @click="logout">退出当前账号</el-button>
-    </section>
-    <section v-else class="auth-panel">
-     <div class="auth-intro"><p class="eyebrow">{{screen==='login'?'WORKSPACE ACCESS':'CREATE ACCOUNT'}}</p><h1>{{screen==='login'?'欢迎回到智课工坊':'注册智课工坊'}}</h1><p>使用账号和密码登录，课件、知识库与任务按账号分别保存。</p></div>
-     <el-form label-position="top" :disabled="submitting" @submit.prevent="authenticate">
-      <template v-if="screen==='register'">
-       <el-form-item label="姓名" required><el-input v-model="auth.name" size="large" autocomplete="name" placeholder="请输入姓名"/></el-form-item>
-       <el-form-item label="所属单位" required><el-input v-model="auth.institution" size="large" autocomplete="organization" placeholder="请输入学校或单位名称"/></el-form-item>
-      </template>
-      <el-form-item label="登录账号" required><el-input v-model="auth.account" size="large" placeholder="邮箱或账号，至少 6 个字符" autocomplete="username" :spellcheck="false"/></el-form-item>
-      <el-form-item label="密码" required><el-input v-model="auth.password" type="password" show-password size="large" :autocomplete="screen==='register'?'new-password':'current-password'" placeholder="至少 6 个字符"/></el-form-item>
-      <template v-if="screen==='register'">
-       <el-form-item label="确认密码" required><el-input v-model="auth.confirmPassword" type="password" show-password size="large" autocomplete="new-password" placeholder="请再次输入密码"/></el-form-item>
-       <el-checkbox v-model="auth.agreed">已阅读素材处理说明</el-checkbox><el-button link type="primary" @click="privacy=true">查看说明</el-button>
-      </template>
-      <el-alert v-if="authError" :title="authError" type="warning" :closable="false" show-icon/>
-      <el-button type="primary" size="large" native-type="submit" :loading="submitting" class="auth-submit">{{screen==='login'?'进入工作台':'注册并进入'}}</el-button>
-      <el-button link @click="go(screen==='login'?'/register':'/login')">{{screen==='login'?'没有账号？注册新用户':'已有账号，前往登录'}}</el-button>
-     </el-form>
-    </section>
+    <section v-if="!sessionReady" class="auth-panel"><p>正在检查登录状态…</p></section>
+    <section v-else class="auth-panel"><AccountAccess :mode="screen==='register'?'register':'login'" :session-user="currentUser" @authenticated="accountAuthenticated" @mode="go('/'+$event)" @logout="logout" /></section>
    </template>
    <el-empty v-else description="请选择一个课程任务。"><el-button @click="go('/home')">返回工作台</el-button></el-empty>
   </main><footer class="app-footer">智课工坊 · 多语言教学视频工作空间</footer></section>

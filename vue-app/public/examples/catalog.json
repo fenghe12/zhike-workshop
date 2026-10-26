@@ -1,0 +1,212 @@
+[
+  {
+    "id": "ai",
+    "name": "人工智能入门",
+    "audience": "大学低年级",
+    "topic": "为大学低年级学生介绍人工智能、机器学习和深度学习的关系。结合垃圾邮件识别，说明数据、训练与预测，最后安排一道复习题。",
+    "pages": [
+      {
+        "title": "认识人工智能",
+        "points": [
+          "人工智能：完成识别、理解和决策等任务",
+          "机器学习：从数据中学习规律",
+          "深度学习：使用多层神经网络的一类方法"
+        ],
+        "script": "大家好，这节课介绍人工智能的基本概念。人工智能研究如何让计算机完成识别、理解和决策等任务。机器学习是其中的一类方法，它通过数据学习规律。深度学习属于机器学习，常使用多层神经网络。学习这些概念时，要注意它们之间的包含关系。"
+      },
+      {
+        "title": "例子 识别垃圾邮件",
+        "points": [
+          "数据：收集邮件并标注类别",
+          "训练：学习邮件内容与类别之间的关系",
+          "检查：用未参加训练的邮件观察误判"
+        ],
+        "script": "我们用垃圾邮件识别理解机器学习。首先收集邮件，并标注正常邮件和垃圾邮件。随后使用这些样本训练模型，让模型学习内容与类别之间的关系。最后用没有参加训练的邮件检查效果。如果正常邮件被误判为垃圾邮件，就需要检查数据和模型的判断。请思考，为什么不能只用训练过的邮件评价模型？"
+      }
+    ],
+    "voiceDurationSeconds": 24.85,
+    "sourceLanguage": "zh-CN",
+    "targetLanguages": [
+      "en-US"
+    ],
+    "languageLabel": "中文 → 英语",
+    "ppt": "/examples/ai.pptx",
+    "script": "/examples/ai.docx",
+    "slides": [
+      "/examples/ai-slide-1.png",
+      "/examples/ai-slide-2.png"
+    ],
+    "scriptPreview": "/examples/ai-script.png",
+    "image": "/examples/lecturer-1.png",
+    "audio": "/examples/ai-voice.wav",
+    "audioPreview": "/examples/ai-voice.svg"
+  },
+  {
+    "id": "water",
+    "name": "水循环与节约用水",
+    "audience": "初中学生",
+    "topic": "面向初中生讲解蒸发、凝结、降水与地表径流，并结合生活介绍节约用水的方法，最后提供一个复习问题。",
+    "pages": [
+      {
+        "title": "水在自然界中循环",
+        "points": [
+          "蒸发：液态水变成水蒸气",
+          "凝结：水蒸气遇冷形成小水滴",
+          "降水与径流：水返回地面并汇入河流"
+        ],
+        "script": "今天我们学习水循环。太阳提供的能量使地表水蒸发，液态水变成水蒸气进入空气。空气中的水蒸气在适当条件下遇冷凝结，形成小水滴或冰晶。水通过降雨、降雪等形式返回地面，其中一部分形成地表径流，汇入河流、湖泊和海洋。"
+      },
+      {
+        "title": "从日常生活节约用水",
+        "points": [
+          "刷牙和洗手时及时关闭水龙头",
+          "发现漏水后及时报告并修理",
+          "比较用水习惯，减少不必要的浪费"
+        ],
+        "script": "水会循环，但可以方便利用的淡水资源仍然有限。日常生活中，我们可以在刷牙时关闭水龙头，发现漏水后及时报告并修理。清洗物品时，也应避免让水长时间无目的地流走。请观察一天的生活，找出一种可以减少用水浪费的做法，并说明理由。"
+      }
+    ],
+    "voiceDurationSeconds": 22.82,
+    "sourceLanguage": "zh-CN",
+    "targetLanguages": [
+      "ja-JP"
+    ],
+    "languageLabel": "中文 → 日语",
+    "ppt": "/examples/water.pptx",
+    "script": "/examples/water.docx",
+    "slides": [
+      "/examples/water-slide-1.png",
+      "/examples/water-slide-2.png"
+    ],
+    "scriptPreview": "/examples/water-script.png",
+    "image": "/examples/lecturer-2.png",
+    "audio": "/examples/water-voice.wav",
+    "audioPreview": "/examples/water-voice.svg"
+  },
+  {
+    "id": "security",
+    "name": "网络安全与防诈骗",
+    "audience": "高校新生",
+    "topic": "面向高校新生介绍强密码、双重验证、钓鱼链接和个人信息保护，使用虚假中奖信息设计一个情境练习。",
+    "pages": [
+      {
+        "title": "保护个人账号",
+        "points": [
+          "不同重要账号使用不同密码",
+          "使用较长密码并启用双重验证",
+          "验证码和恢复码不提供给他人"
+        ],
+        "script": "这节课讨论个人账号安全。重要账号应使用不同的密码，并尽量采用较长、难以猜测的组合。支持双重验证的服务可以增加这一层保护。验证码和账号恢复码同样需要保管，不应提供给自称客服或熟人的其他人。"
+      },
+      {
+        "title": "识别可疑中奖信息",
+        "points": [
+          "先核对发送方和网站域名",
+          "不要通过陌生链接提交密码或验证码",
+          "通过官方网站确认消息"
+        ],
+        "script": "假设你收到一条中奖消息，要求点击链接并输入密码和验证码。此时应先暂停操作，核对消息来源和网站域名。不要在陌生页面提交这些信息，可以通过官方网站或已知的客服电话独立确认。请判断，页面上出现熟悉的标志，是否足以说明网站可靠？"
+      }
+    ],
+    "voiceDurationSeconds": 19.7,
+    "sourceLanguage": "zh-CN",
+    "targetLanguages": [
+      "ko-KR"
+    ],
+    "languageLabel": "中文 → 韩语",
+    "ppt": "/examples/security.pptx",
+    "script": "/examples/security.docx",
+    "slides": [
+      "/examples/security-slide-1.png",
+      "/examples/security-slide-2.png"
+    ],
+    "scriptPreview": "/examples/security-script.png",
+    "image": "/examples/lecturer-3.png",
+    "audio": "/examples/security-voice.wav",
+    "audioPreview": "/examples/security-voice.svg"
+  },
+  {
+    "id": "binary",
+    "name": "二进制与逻辑运算",
+    "audience": "计算机入门学生",
+    "topic": "为计算机入门学生说明二进制的位值和与运算。使用二进制一零一对应十进制五的例子，最后给出一个与运算练习。",
+    "pages": [
+      {
+        "title": "二进制的位值",
+        "points": [
+          "二进制只使用零和一",
+          "从右向左的位值是 一 二 四 八",
+          "例子：二进制 101 对应十进制 5"
+        ],
+        "script": "计算机中常用二进制表示信息。二进制只有零和一两个数码。从右向左，各位的位值依次是一、二、四、八，后一个位值是前一个的两倍。例如二进制的一零一，表示一个四、零个二和一个一，相加得到十进制的五。"
+      },
+      {
+        "title": "认识逻辑与运算",
+        "points": [
+          "两个输入都为一，结果才为一",
+          "一个输入为零，结果即为零",
+          "练习：一与一 一与零 零与零"
+        ],
+        "script": "接下来认识逻辑与运算。对于零和一两个输入，只有两个输入都为一时，结果才为一。只要存在一个零，结果就是零。因此，一与一得到一，一与零得到零，零与零也得到零。请用自己的话说明，这条规则与两个条件需要同时满足有什么关系？"
+      }
+    ],
+    "voiceDurationSeconds": 18.98,
+    "sourceLanguage": "zh-CN",
+    "targetLanguages": [
+      "de-DE"
+    ],
+    "languageLabel": "中文 → 德语",
+    "ppt": "/examples/binary.pptx",
+    "script": "/examples/binary.docx",
+    "slides": [
+      "/examples/binary-slide-1.png",
+      "/examples/binary-slide-2.png"
+    ],
+    "scriptPreview": "/examples/binary-script.png",
+    "image": "/examples/lecturer-4.png",
+    "audio": "/examples/binary-voice.wav",
+    "audioPreview": "/examples/binary-voice.svg"
+  },
+  {
+    "id": "plant",
+    "name": "植物的光合作用",
+    "audience": "初中学生",
+    "topic": "向初中生介绍光合作用的条件、原料和产物，说明二氧化碳、水、光、有机物和氧气之间的关系，并提出一个复习问题。",
+    "pages": [
+      {
+        "title": "光合作用需要什么",
+        "points": [
+          "绿色植物利用光能",
+          "原料主要包括二氧化碳和水",
+          "过程主要发生在叶绿体中"
+        ],
+        "script": "今天我们认识植物的光合作用。绿色植物可以利用光能，把二氧化碳和水转变为有机物，并释放氧气。这个过程主要发生在叶绿体中。理解光合作用时，可以分别记住所需的光、进入的原料和生成的物质。"
+      },
+      {
+        "title": "理解光合作用的作用",
+        "points": [
+          "生成有机物，储存化学能",
+          "释放氧气，与生物生活相关",
+          "区分光合作用与植物的呼吸作用"
+        ],
+        "script": "通过光合作用，植物生成有机物，并把一部分光能转化为储存在有机物中的化学能。同时释放的氧气与许多生物的生活有关。需要注意，植物也会进行呼吸作用，不能把这两个过程混为一谈。请回顾，光合作用的主要原料是什么，产生哪些物质？"
+      }
+    ],
+    "voiceDurationSeconds": 19.69,
+    "sourceLanguage": "zh-CN",
+    "targetLanguages": [
+      "fr-FR"
+    ],
+    "languageLabel": "中文 → 法语",
+    "ppt": "/examples/plant.pptx",
+    "script": "/examples/plant.docx",
+    "slides": [
+      "/examples/plant-slide-1.png",
+      "/examples/plant-slide-2.png"
+    ],
+    "scriptPreview": "/examples/plant-script.png",
+    "image": "/examples/lecturer-5.png",
+    "audio": "/examples/plant-voice.wav",
+    "audioPreview": "/examples/plant-voice.svg"
+  }
+]

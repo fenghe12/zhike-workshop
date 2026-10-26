@@ -40,7 +40,15 @@ def serve(root):
                             identifier=payload['id']
                             if not re.fullmatch('[a-f0-9]{32}',identifier):raise ValueError('invalid request identifier')
                             output=root/'outputs'/identifier/'output.wav';output.parent.mkdir(parents=True,exist_ok=True)
-                            duration=model.synthesize(payload['text'],str(root/'reference.wav'),str(output),payload['language'])
+                            if payload.get('sourceGuide'):
+                                if payload['language']!='ja':raise ValueError('guide mode requires Japanese')
+                                guide=root/'requests'/(identifier+'.guide.wav')
+                                timing=root/'requests'/(identifier+'.guide.timing.json')
+                                if str(guide)!=payload['sourceGuide'] or str(timing)!=payload['sourceGuideTiming']:
+                                    raise ValueError('invalid guide location')
+                                duration=model.convert_voice(guide,timing,root/'reference.wav',output)
+                            else:
+                                duration=model.synthesize(payload['text'],str(root/'reference.wav'),str(output),payload['language'])
                             result={'ok':True,'duration':duration,'output':str(output)}
                     except Exception as error:
                         result={'ok':False,'error':str(error)}

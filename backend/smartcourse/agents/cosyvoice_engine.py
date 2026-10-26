@@ -18,6 +18,7 @@ MATH_WORDS = {
     'ko': ['같다', '더하기', '빼기', '곱하기', '나누기', '괄호 열기', '괄호 닫기'],
     'zh': ['等于', '加', '减', '乘以', '除以', '左括号', '右括号'],
     'ru': ['равно', 'плюс', 'минус', 'умножить на', 'разделить на', 'открывающая скобка', 'закрывающая скобка'],
+    'es': ['igual a', 'más', 'menos', 'por', 'dividido entre', 'abre paréntesis', 'cierra paréntesis'],
 }
 
 LANGUAGE_INSTRUCTIONS = {
@@ -76,7 +77,7 @@ def normalize_language(language):
     if not isinstance(language, str):
         raise ValueError("目标语言格式无效")
     code = language.replace("_", "-").split("-")[0].lower()
-    if code not in {"zh", "en", "ja", "ko", "de", "fr", "ru"}:
+    if code not in {"zh", "en", "ja", "ko", "de", "fr", "ru", "es"}:
         raise ValueError("未配置该目标语言")
     return code
 
@@ -114,6 +115,8 @@ class CosyVoiceEngine:
         self._remote_session = None
         self._speaker_keys = {}
         self._speaker_reference = None
+        self._conversion_reference = None
+        self._conversion_conditioning = None
 
     def close(self):
         if self._remote_session is not None:
@@ -131,6 +134,82 @@ class CosyVoiceEngine:
         sys.path.insert(0, str(root / "third_party" / "Matcha-TTS"))
         from cosyvoice.cli.cosyvoice import AutoModel
         self._model = AutoModel(model_dir=str(model_dir))
+        tokenizer = self._model.frontend.speech_tokenizer_session
+        if tokenizer.get_providers() == ['CPUExecutionProvider']:
+            import onnxruntime as ort
+            options = tokenizer.get_session_options()
+            options.intra_op_num_threads = int(os.environ.get('SMARTCOURSE_COSYVOICE_TOKENIZER_THREADS', '4'))
+            self._model.frontend.speech_tokenizer_session = ort.InferenceSession(
+                tokenizer._model_path, sess_options=options, providers=['CPUExecutionProvider'])
+
+    def convert_voice(self, guide_path, timing_path, speaker_prompt, output_path):
+        """Convert complete guide spans while respecting the 30-second tokenizer limit."""
+        import numpy as np
+        import soundfile as sf
+        self._load()
+        reference_bytes = Path(speaker_prompt).read_bytes()
+        if reference_bytes != self._conversion_reference:
+            self._conversion_reference = reference_bytes
+            self._conversion_conditioning = None
+        source, source_rate = sf.read(str(guide_path), dtype='float32')
+        metadata = json.loads(Path(timing_path).read_text())
+        sentences = metadata['sentences']
+        groups = []
+        for sentence in sentences:
+            if sentence['end'] - sentence['start'] > 29:
+                raise ValueError('日语单句超过声音转换支持的长度')
+            if not groups or sentence['end'] - groups[-1][0]['start'] > 27:
+                groups.append([])
+            groups[-1].append(sentence)
+        destination = Path(output_path)
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        work = destination.parent / (destination.stem + '-guide-spans')
+        work.mkdir(exist_ok=True)
+        parts, timings, cursor, prior_end = [], [], 0, 0.0
+        reference_computations, reference_cache_uses = 0, 0
+        sample_rate = self._model.sample_rate
+        for index, group in enumerate(groups):
+            start, end = group[0]['start'], group[-1]['end']
+            guide = work / (str(index) + '.wav')
+            sf.write(guide, source[round(start*source_rate):round(end*source_rate)], source_rate)
+            converted = []
+            if self._conversion_conditioning is None:
+                reference_computations += 1
+                model_input = self._model.frontend.frontend_vc(str(guide),str(speaker_prompt),sample_rate)
+                self._conversion_conditioning = {key:value for key,value in model_input.items()
+                    if key not in {'source_speech_token','source_speech_token_len'}}
+            else:
+                reference_cache_uses += 1
+                tokens,length = self._model.frontend._extract_speech_token(str(guide))
+                model_input = {**self._conversion_conditioning,'source_speech_token':tokens,'source_speech_token_len':length}
+            for result in self._model.model.tts(**model_input,stream=False,speed=1.0):
+                converted.append(result['tts_speech'].detach().cpu().numpy().reshape(-1))
+            if not converted:
+                raise RuntimeError('日语声音转换未返回完整语音')
+            if parts:
+                pause = np.zeros(round((start-prior_end)*sample_rate), dtype=np.float32)
+                parts.append(pause); cursor += len(pause)
+            first, count = cursor, sum(len(part) for part in converted)
+            scale = (count/sample_rate)/(end-start)
+            for sentence in group:
+                begin = first/sample_rate + (sentence['start']-start)*scale
+                finish = first/sample_rate + (sentence['end']-start)*scale
+                timings.append({'text':sentence['text'],'start':begin,'end':finish,
+                    'startSample':round(begin*sample_rate),'endSample':round(finish*sample_rate)})
+            parts.extend(converted); cursor += count; prior_end = end
+        if not parts:
+            raise ValueError('日语读音文件没有有效语句')
+        audio = np.concatenate(parts)
+        if not np.isfinite(audio).all() or np.max(np.abs(audio)) < .001:
+            raise RuntimeError('日语声音转换产生了无效音频')
+        sf.write(destination, audio, sample_rate, subtype='PCM_16')
+        destination.with_suffix('.timing.json').write_text(json.dumps({
+            'source':'japanese_phoneme_guide_cosyvoice3_voice_conversion',
+            'inputText':metadata['inputText'],'sampleRate':sample_rate,'totalSamples':len(audio),
+            'sentences':timings,'guideGenerationSeconds':metadata.get('generationSeconds'),
+            'conversionGroups':len(groups),'referenceFeatureComputations':reference_computations,
+            'referenceCacheUses':reference_cache_uses},ensure_ascii=False,indent=2))
+        return len(audio)/sample_rate
 
     def synthesize(self, text: str, speaker_prompt: str, output_path: str, language: str = "en") -> float:
         language = normalize_language(language)

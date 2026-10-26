@@ -1,0 +1,7 @@
+<script setup lang="ts">
+import {uiLanguage,uiLanguages,t} from './ui-language'
+</script>
+<template><div class="language-control"><svg class="language-globe" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/></svg><select v-model="uiLanguage" class="ui-language-select" :aria-label="t('界面语言')" :title="t('界面语言')"><option v-for="item in uiLanguages" :key="item.code" :value="item.code">{{item.name}}</option></select><svg class="language-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg></div></template>
+<style scoped>
+.language-control{display:flex;align-items:center;position:relative;flex-shrink:0;margin-left:10px;color:#758b7a}.language-globe{height:14px;width:14px;position:absolute;left:10px;pointer-events:none;fill:none;stroke:currentColor;stroke-width:1.4}.language-chevron{height:13px;width:13px;position:absolute;right:9px;pointer-events:none;fill:none;stroke:currentColor;stroke-width:1.5}.ui-language-select{display:block;appearance:none;width:123px;min-height:34px;border:1px solid #dfe6df;border-radius:7px;background:transparent;color:#526a58;font-size:11px;padding:7px 25px 7px 32px;margin:0;cursor:pointer;flex-shrink:0}.ui-language-select:focus-visible{outline:2px solid #99b5a0;outline-offset:3px}@media(max-width:360px){.ui-language-select{width:114px}.language-control{margin-left:6px}}
+</style>

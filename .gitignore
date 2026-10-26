@@ -29,6 +29,7 @@ id_ed25519*
 *.onnx
 *.mp4
 *.wav
+!vue-app/public/examples/*-voice.wav
 *.sqlite*
 .DS_Store
 

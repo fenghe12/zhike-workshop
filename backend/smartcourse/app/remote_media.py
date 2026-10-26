@@ -23,6 +23,12 @@ def media_service_status():
         state = json.loads(Path(state_path).read_text())
     except (OSError, ValueError, TypeError):
         return "UNAVAILABLE"
+    expected_owner = os.environ.get('SMARTCOURSE_COMPUTE_OWNER')
+    if expected_owner and state.get('smartcourseOwner') != expected_owner:
+        return 'INACTIVE'
+    owned_deadline = state.get('smartcourseDeadline')
+    if expected_owner and owned_deadline and time.time() >= float(owned_deadline):
+        return 'LEASE_EXPIRED'
     lease = state.get('lease') or {}
     if lease.get('enable') and lease.get('type') == 'TIMING':
         deadline = (lease.get('create_at') or 0) + (lease.get('duration') or 0)

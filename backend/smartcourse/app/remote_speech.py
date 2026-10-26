@@ -59,6 +59,14 @@ class RemoteSpeechSession:
             if ping.returncode:self.start()
         output=Path(output);output.parent.mkdir(parents=True,exist_ok=True);identifier=uuid.uuid4().hex
         payload={'id':identifier,'text':text,'language':language}
+        if language == 'ja' and os.environ.get('SMARTCOURSE_JAPANESE_GUIDE_MODELS'):
+            from .japanese_guide import prepare
+            guide=prepare(text,output.with_name(output.stem+'.japanese-guide.wav'))
+            remote_guide=self.root+'/requests/'+identifier+'.guide.wav'
+            remote_timing=self.root+'/requests/'+identifier+'.guide.timing.json'
+            subprocess.run([*self.scp,str(guide),self.host+':'+remote_guide],check=True,capture_output=True,timeout=180)
+            subprocess.run([*self.scp,str(guide.with_suffix('.timing.json')),self.host+':'+remote_timing],check=True,capture_output=True,timeout=120)
+            payload.update(sourceGuide=remote_guide,sourceGuideTiming=remote_timing)
         with tempfile.TemporaryDirectory(prefix='speech-request-') as temporary:
             request=Path(temporary)/'request.json';request.write_text(json.dumps(payload,ensure_ascii=False))
             remote_request=self.root+'/requests/'+identifier+'.json'

@@ -58,6 +58,12 @@ def save_upload(root: Path, filename: str, kind: str, content: bytes) -> dict:
         }
         if not signatures[suffix]:
             raise ValueError("图片内容与扩展名不匹配")
+        try:
+            from PIL import Image
+            with Image.open(io.BytesIO(content)) as picture:
+                picture.verify()
+        except Exception as exc:
+            raise ValueError('图片文件损坏或无法读取，请重新选择。') from exc
     if kind == "audio":
         signatures = {
             ".wav": content.startswith(b"RIFF") and content[8:12] == b"WAVE",

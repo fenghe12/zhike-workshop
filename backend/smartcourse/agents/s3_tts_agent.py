@@ -235,6 +235,8 @@ class WhisperAligner:
             "ja": "ja", "japanese": "ja", "日语": "ja",
             "ko": "ko", "korean": "ko", "韩语": "ko",
             "de": "de", "german": "de", "fr": "fr", "french": "fr",
+            "ru": "ru", "russian": "ru", "俄语": "ru",
+            "es": "es", "spanish": "es", "西班牙语": "es",
         }
         return mapping.get(lang, None)
 
@@ -243,15 +245,36 @@ class WhisperAligner:
 # SRT Generator
 # =====================================================
 class FasterWhisperAligner(WhisperAligner):
+    def close(self):
+        self._model = None
+        import gc
+        gc.collect()
+        if sys.platform.startswith('linux'):
+            import ctypes
+            trim = getattr(ctypes.CDLL(None), 'malloc_trim', None)
+            if trim is not None:
+                trim(0)
+
     def _load(self):
         if self._model is None:
             from faster_whisper import WhisperModel
             path = os.environ.get("SMARTCOURSE_WHISPER_MODEL_PATH")
             if not path or not Path(path).is_dir():
                 raise ValueError("未配置实际语音对齐模型目录")
-            self._model = WhisperModel(path, device="cpu", compute_type="int8", cpu_threads=8)
+            self._model = WhisperModel(path, device="cpu", compute_type="int8",
+                                       cpu_threads=int(os.environ.get('SMARTCOURSE_ALIGNMENT_THREADS', '8')))
 
     def get_sentence_timestamps(self, wav_path: str, language: str = "en") -> List[Dict]:
+        if os.environ.get('SMARTCOURSE_SERIAL_CPU_MEDIA') == '1':
+            from app.resource_scheduler import ResourceScheduler
+            with ResourceScheduler(Path(os.environ['SMARTCOURSE_DATA_ROOT'])).acquire('composition'):
+                try:
+                    return self._transcribe_timestamps(wav_path, language)
+                finally:
+                    self.close()
+        return self._transcribe_timestamps(wav_path, language)
+
+    def _transcribe_timestamps(self, wav_path: str, language: str) -> List[Dict]:
         self._load()
         segments, _info = self._model.transcribe(wav_path, language=self._detect_lang_code(language),
                                                   beam_size=5, word_timestamps=True)
