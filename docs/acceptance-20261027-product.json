@@ -1,0 +1,111 @@
+{
+  "date": "2026-10-27",
+  "fixture": {
+    "source_language": "en-US",
+    "slides": 1,
+    "subject": "Threshold neuron, including equality at the threshold",
+    "portrait": "AI fictional lecturer, 512x512",
+    "voice": "synthetic example voice"
+  },
+  "languages": [
+    "zh-CN",
+    "en-US",
+    "ja-JP",
+    "ru-RU",
+    "fr-FR",
+    "es-ES",
+    "de-DE"
+  ],
+  "translation_checks": {
+    "fr-FR": true,
+    "de-DE": true,
+    "es-ES": true,
+    "ru-RU": true,
+    "ja-JP": true,
+    "zh-CN": true,
+    "en-US": true
+  },
+  "speech_checks": {
+    "fr-FR": {
+      "sourceCoverage": 1.0,
+      "recognizedLengthRatio": 1.0,
+      "passed": true,
+      "method": "ASR transcript character alignment; not a human listening score"
+    },
+    "de-DE": {
+      "sourceCoverage": 0.9932,
+      "recognizedLengthRatio": 0.9966,
+      "passed": true,
+      "method": "ASR transcript character alignment; not a human listening score"
+    },
+    "es-ES": {
+      "sourceCoverage": 0.9959,
+      "recognizedLengthRatio": 0.9959,
+      "passed": true,
+      "method": "ASR transcript character alignment; not a human listening score"
+    },
+    "ru-RU": {
+      "sourceCoverage": 1.0,
+      "recognizedLengthRatio": 1.0079,
+      "passed": true,
+      "method": "ASR transcript character alignment; not a human listening score"
+    },
+    "ja-JP": {
+      "sourceCoverage": 0.8571,
+      "recognizedLengthRatio": 1.1048,
+      "passed": true,
+      "method": "ASR transcript character alignment; not a human listening score"
+    },
+    "zh-CN": {
+      "sourceCoverage": 0.9302,
+      "recognizedLengthRatio": 1.0116,
+      "passed": true,
+      "method": "ASR transcript character alignment; not a human listening score"
+    },
+    "en-US": {
+      "sourceCoverage": 1.0,
+      "recognizedLengthRatio": 1.0,
+      "passed": true,
+      "method": "ASR transcript character alignment; not a human listening score"
+    }
+  },
+  "new_completed_videos": {
+    "ru-RU": {
+      "durationSeconds": 26.16,
+      "expectedSeconds": 26.16,
+      "width": 1920,
+      "height": 1080,
+      "codec": "h264",
+      "nativeAvatarModel": "FlashHeadLite on Huawei Ascend",
+      "composition": "existing application CPU composer",
+      "reference": "512x512 fictional lecturer and synthetic reference voice"
+    },
+    "es-ES": {
+      "durationSeconds": 21.92,
+      "expectedSeconds": 21.92,
+      "width": 1920,
+      "height": 1080,
+      "codec": "h264",
+      "nativeAvatarModel": "FlashHeadLite on Huawei Ascend",
+      "composition": "existing application CPU composer",
+      "reference": "512x512 fictional lecturer and synthetic reference voice"
+    }
+  },
+  "video_languages_not_regenerated_this_session": [
+    "zh-CN",
+    "en-US",
+    "ja-JP",
+    "fr-FR",
+    "de-DE"
+  ],
+  "backend_checks": 70,
+  "frontend_build_passed": true,
+  "mobile_width_360_all_seven_languages_no_horizontal_overflow": true,
+  "five_user_parallel_upload_isolation_passed": true,
+  "draft_restore_passed": true,
+  "real_email_delivery_enabled": false,
+  "email_dependency": "Operator SMTP configuration is still required",
+  "speech_runtime_fix": "Restore dedicated transformers 4.51.3; reject incompatible runtime before model load",
+  "avatar_runtime_fix": "Restore original npu-base plus independent avatar overlay and verify imports before accepting work",
+  "human_native_speaker_listening_completed": false
+}

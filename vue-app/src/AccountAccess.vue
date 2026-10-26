@@ -3,9 +3,11 @@ import {t} from './ui-language'
 import {computed,onMounted,ref,watch} from 'vue'
 import {api,post} from './api'
 import PolicyLinks from './PolicyLinks.vue'
+import PasswordReset from './PasswordReset.vue'
 const props=defineProps<{mode:'register'|'login';sessionUser?:any}>()
 const emit=defineEmits<{authenticated:[value:any];mode:[value:string];logout:[]}>()
-const values=ref({name:'',institution:'',account:'',password:'',confirmPassword:'',captchaCode:''})
+const values=ref({name:'',institution:'',account:'',password:'',confirmPassword:'',captchaCode:'',email:'',emailCode:''})
+const resetMode=ref(false),emailEnabled=ref(false),emailMessage=ref('')
 const policies=ref<any>(),captcha=ref<any>(),agreed=ref(false),busy=ref(false),error=ref(''),captchaBusy=ref(false),showPassword=ref(false)
 const needsConsent=computed(()=>props.sessionUser&&(props.sessionUser.policyConsent?.version!==policies.value?.version||props.sessionUser.policyConsent?.termsAccepted!==true||props.sessionUser.policyConsent?.privacyAccepted!==true))
 let captchaRequest=0
@@ -25,10 +27,12 @@ async function submit(){
   localStorage.setItem('smartcourse-known-browser','1');values.value.password='';values.value.confirmPassword='';emit('authenticated',result)
  }catch(e){error.value=(e as Error).message;if(!props.sessionUser)await refreshCaptcha()}finally{busy.value=false}
 }
-onMounted(async()=>{try{policies.value=await api<any>('/v1/auth/policies');if(!props.sessionUser)await refreshCaptcha()}catch(e){error.value=(e as Error).message}})
+async function sendEmail(){if(!captcha.value||!values.value.captchaCode){error.value='请填写图形验证码。';return}busy.value=true;error.value='';try{await post('/v1/auth/email/request',{email:values.value.email,purpose:'register',captchaId:captcha.value.id,captchaCode:values.value.captchaCode});emailMessage.value='验证码已发送，10 分钟内有效。'}catch(e){error.value=(e as Error).message}finally{await refreshCaptcha();busy.value=false}}
+onMounted(async()=>{try{const [policy,capabilities]=await Promise.all([api<any>('/v1/auth/policies'),api<any>('/v1/auth/capabilities')]);policies.value=policy;emailEnabled.value=capabilities.emailEnabled;if(!props.sessionUser)await refreshCaptcha()}catch(e){error.value=(e as Error).message}})
 </script>
 <template>
- <section class="account-card">
+ <PasswordReset v-if="resetMode" @close="resetMode=false" @authenticated="emit('authenticated',$event)" />
+ <section v-else class="account-card">
   <div v-if="!sessionUser" class="account-tabs" :aria-label="t('账号管理')"><button v-for="tab in ['register','login'] as const" :key="tab" type="button" :class="{selected:mode===tab}" :aria-current="mode===tab?'page':undefined" @click="emit('mode',tab)">{{t(tab==='register'?'注册':'登录')}}</button></div>
   <h2>{{sessionUser?(needsConsent?t("确认服务协议"):t("当前已登录")):mode==='register'?t("注册新用户"):t("登录工作台")}}</h2>
   <p class="account-intro">{{sessionUser?t("账号 ")+sessionUser.phone:t(mode==='register'?"创建账号，开始制作你的多语种课程。":"继续制作，管理你的课程与素材。")}}</p>
@@ -40,6 +44,7 @@ onMounted(async()=>{try{policies.value=await api<any>('/v1/auth/policies');if(!p
     <label>{{t("密码")}}<span class="account-password"><input v-model="values.password" :type="showPassword?'text':'password'" :autocomplete="mode==='register'?'new-password':'current-password'" :placeholder='t("请输入密码，至少 6 位")' minlength="6" maxlength="128" required><button type="button" @click="showPassword=!showPassword">{{showPassword?t("隐藏"):t("显示")}}</button></span></label>
     <label v-if="mode==='register'">{{t("确认密码")}}<input v-model="values.confirmPassword" type="password" autocomplete="new-password" :placeholder='t("再次输入密码")' minlength="6" maxlength="128" required></label>
     <label>{{t("图形验证码")}}<span class="captcha-row"><input v-model="values.captchaCode" :aria-label='t("图形验证码")' autocomplete="off" autocapitalize="characters" maxlength="5" :placeholder='t("输入图中字母数字")' required><button type="button" class="captcha-image" :disabled="captchaBusy" :aria-label='t("刷新图形验证码")' @click="refreshCaptcha"><img v-if="captcha&&!captchaBusy" :src="captcha.image" :alt='t("图形验证码")'><span v-else>{{captchaBusy?t("正在刷新…"):t("点击获取")}}</span></button></span></label><p class="captcha-help">{{t("不区分大小写，5 分钟内有效。看不清可点击图片刷新。")}}</p>
+    <template v-if="mode==='register'&&emailEnabled"><label>{{t('邮箱')}}<input v-model="values.email" type="email" autocomplete="email" required maxlength="254"></label><label>{{t('邮箱验证码')}}<span class="captcha-row"><input v-model="values.emailCode" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" required><button type="button" :disabled="busy||!values.email||!values.captchaCode" @click="sendEmail">{{t('获取邮箱验证码')}}</button></span></label><p class="captcha-help">{{t(emailMessage||'先填写图形验证码，再获取邮箱验证码。')}}</p></template>
    </template>
    <p v-else class="account-intro">{{t("请阅读本次更新的说明，确认后继续使用。人物照片与声音的处理会在上传前单独确认。")}}</p>
    <div class="account-agreement"><label><input v-model="agreed" type="checkbox" required><span>{{t("我已阅读并同意用户协议和隐私说明")}}</span></label><PolicyLinks /></div>
@@ -48,6 +53,7 @@ onMounted(async()=>{try{policies.value=await api<any>('/v1/auth/policies');if(!p
   <template v-else><p v-if="error" class="account-error" role="alert">{{t(error)}}</p><button class="account-submit" @click="emit('authenticated',{user:sessionUser})">{{t("进入我的工作台")}}</button></template>
   <p v-if="error&&!policies" class="account-error" role="alert">{{t(error)}}</p>
   <button v-if="sessionUser" type="button" class="account-switch" @click="emit('logout')">{{t("退出当前账号")}}</button>
+  <button v-if="!sessionUser&&mode==='login'" type="button" class="account-switch" @click="resetMode=true">{{t('忘记密码？')}}</button>
  </section>
 </template>
 <style scoped>

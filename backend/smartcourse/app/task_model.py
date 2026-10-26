@@ -168,6 +168,7 @@ def retry_stage(task: dict[str, Any], stage_index: int) -> dict[str, Any]:
     task["currentStage"] = stage_index
     total = 0
     outputs = task.setdefault("outputs", {})
+    outputs.pop('result', None)
     for stage in task.get("stages", []):
         if stage["index"] == stage_index:
             stage.update(status="running", progress=0)

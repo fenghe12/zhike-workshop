@@ -4,7 +4,7 @@ import socket
 import threading
 
 from .resource_scheduler import ResourceScheduler
-from .task_model import utc_now
+from .task_model import retry_stage, utc_now
 
 
 class TaskAlreadyQueued(ValueError):
@@ -29,6 +29,12 @@ class PersistentTaskQueue:
             task = data["tasks"][task_id]
             if task.get("status") == "processing" and task.get("queue", {}).get("state") in {"running", "waiting_resource"}:
                 raise TaskAlreadyQueued("任务正在执行")
+            if task.get('outputs'):
+                history = task.setdefault('executionHistory', [])
+                history.append({'savedAt': utc_now(), 'startStage': start_stage,
+                                'status': task.get('status'), 'outputs': task['outputs'].copy()})
+                del history[:-10]
+            retry_stage(task, start_stage)
             now = utc_now()
             messages.append({"taskId": task_id, "startStage": start_stage, "enqueuedAt": now})
             task.update(status="queued", currentStage=start_stage, updatedAt=now,
@@ -37,8 +43,6 @@ class PersistentTaskQueue:
                 task.pop(field, None)
             task["stages"][start_stage - 1].update(status="queued", progress=0,
                                                   detail={"step": "等待课程工作进程"})
-            for field in ("startedAt", "startedAtEpoch", "completedAt", "elapsedSeconds", "etaSeconds"):
-                task["stages"][start_stage - 1].pop(field, None)
         with self._condition:
             if self._closed:
                 raise RuntimeError("课程队列已关闭")

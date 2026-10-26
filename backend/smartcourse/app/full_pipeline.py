@@ -1036,7 +1036,7 @@ Source page:
                     progress(3, "running", min(99, round(((index-1)+completed/max(1,total))*100/max(1,len(codes)))),
                              {"language":code,"page":page_id,"processed":completed,"total":total,
                               "step":"语音合成" if phase=="synthesis" else "语音时间戳对齐"})
-                result = agent.run(code, str(source_json), language=code)
+                result = agent.run(code, str(source_json), language=code, progress_callback=speech_progress)
                 if result.get("error"):
                     raise RuntimeError(f"{code} 语音合成失败：{result['error']}")
                 requested_seconds = float(task.get('inputs',{}).get('durationMinutes',10))*60

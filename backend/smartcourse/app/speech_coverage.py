@@ -14,13 +14,14 @@ def coverage_report(expected, sentences):
     coverage = matched / max(1, len(source))
     multiset_overlap = sum((Counter(source) & Counter(actual)).values()) / max(1, len(source))
     length_ratio = len(actual) / max(1, len(source))
+    minimum = .65 if len(source) < 50 else .45
     passed = bool(actual) and (
-        len(source) < 50
-        or coverage >= .45
+        coverage >= minimum
         or (multiset_overlap >= .9 and .85 <= length_ratio <= 1.2)
     )
     return {'sourceCharacters': len(source), 'recognizedCharacters': len(actual),
             'sourceCoverage': round(coverage, 4), 'multisetOverlap': round(multiset_overlap, 4),
-            'recognizedLengthRatio': round(length_ratio, 4), 'minimumCoverage': .45,
+            'recognizedLengthRatio': round(length_ratio, 4), 'minimumCoverage': minimum,
+            'recognizedText': ' '.join(item['text'] for item in sentences),
             'passed': passed,
             'method': 'ASR transcript character alignment; not a human listening score'}

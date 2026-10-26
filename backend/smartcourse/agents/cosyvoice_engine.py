@@ -132,6 +132,10 @@ class CosyVoiceEngine:
             raise RuntimeError("未配置有效的 CosyVoice 3 模型目录")
         sys.path.insert(0, str(root))
         sys.path.insert(0, str(root / "third_party" / "Matcha-TTS"))
+        import transformers
+        if transformers.__version__ != '4.51.3':
+            raise RuntimeError('CosyVoice3 requires its dedicated transformers 4.51.3 environment; '
+                               'loaded '+transformers.__version__)
         from cosyvoice.cli.cosyvoice import AutoModel
         self._model = AutoModel(model_dir=str(model_dir))
         tokenizer = self._model.frontend.speech_tokenizer_session

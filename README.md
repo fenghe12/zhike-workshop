@@ -56,6 +56,8 @@ The [Higher Education Press configuration archive](integrations/hep/README.md) p
 
 The October 25 source update also includes account isolation, a persistent three-to-five-worker task queue with shared media slots, slide notes and font handling, subtitle wrapping, and the latest Korean/Japanese speech corrections. Teacher listening and final educational-content acceptance remain pending; see the dated recovery notes for the measured scope.
 
+The October 27 update adds resumable mobile uploads, per-account browser drafts, password and email verification tools, material retention, generation estimates and bounded compute requests. All70 backend checks and the frontend build passed. Seven languages passed slide/narration and speech checks; new Russian and Spanish short-course videos were completed. The other five video languages were not regenerated in this session. Real email delivery awaits SMTP configuration. See the [product operations guide](docs/PRODUCT_OPERATIONS.md) and [validation scope](docs/acceptance-20261027-product.json).
+
 ## Rights and licenses
 
 No repository-wide open-source license has been granted at this time. Third-party code and models remain subject to their respective licenses. Preserve the original licenses when restoring their source. Public access does not grant unrestricted redistribution rights.

@@ -1,6 +1,6 @@
 import {confirmMediaUse} from './media-consent'
 export interface Stage {index:number;code:string;title:string;status:string;progress?:number;elapsedSeconds?:number;etaSeconds?:number;detail?:Record<string,unknown>}
-export interface Task {id:string;name:string;status:string;targetLanguages:string[];currentStage:number;overallProgress:number;stages:Stage[];outputs?:Record<string,unknown>;assets?:Record<string,{name:string;path:string}|null>;requiredAsset?:string;error?:{message:string};updatedAt?:string;featuredForTeaching?:boolean;queue?:{state:string;position?:number;resource?:string;message?:string}}
+export interface Task {canResumeWithoutCompute?:boolean;id:string;name:string;status:string;targetLanguages:string[];currentStage:number;overallProgress:number;stages:Stage[];outputs?:Record<string,unknown>;assets?:Record<string,{name:string;path:string}|null>;requiredAsset?:string;error?:{message:string};updatedAt?:string;featuredForTeaching?:boolean;queue?:{state:string;position?:number;resource?:string;message?:string}}
 export class ApiError extends Error {constructor(message:string,public status:number){super(message)}}
 export async function api<T>(path:string,options:RequestInit={}):Promise<T>{
  if(path==='/v1/uploads'&&typeof options.body==='string'){

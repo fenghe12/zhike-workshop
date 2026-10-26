@@ -11,6 +11,30 @@ class FlashHeadAvatarAgent:
         self.root = Path(workspace_root)
         self.reference = Path(ref_image)
 
+    def cache_ready(self, task_id, timeline_json):
+        """Allow CPU normalization only when every original media input matches."""
+        from app.media_checkpoint import reference_version, read_record
+        try:
+            pages = json.loads(Path(timeline_json).read_text())['pages']
+            output = self.root/task_id/'s4_output/avatars'
+            if not pages or not output.is_dir() or not self.reference.is_file():
+                return False
+            version = reference_version(output, self.reference, 'photo')
+            for page in pages:
+                destination = output/f"page_{int(page['page_id']):03d}.mp4"
+                raw = output/'raw'/destination.name
+                audio = Path(page['wav_path'])
+                snapshot = output/'raw'/(destination.stem+'.audio.wav')
+                expected = {'taskRoot': str(self.root.resolve()), 'language': task_id,
+                            'page': page['page_id'], 'photoVersion': version, 'duration': page['duration']}
+                if not (raw.is_file() and raw.stat().st_size and audio.is_file() and snapshot.is_file()
+                        and read_record(destination.with_suffix('.input.json')).get('input') == expected
+                        and snapshot.read_bytes() == audio.read_bytes()):
+                    return False
+            return True
+        except (OSError, ValueError, KeyError, TypeError):
+            return False
+
     def run(self, task_id, timeline_json, progress_callback=None):
         if not self.reference.is_file():
             raise ValueError("当前任务缺少参考照片")

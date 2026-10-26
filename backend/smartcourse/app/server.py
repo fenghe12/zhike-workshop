@@ -44,6 +44,8 @@ from .interactive_course import execute_fixed_interrupt, list_interruptions
 from .pedagogical_ir import EXPERIMENT_CATALOG, build_e2_variants, compile_lesson_ir
 from .store import JsonStore
 from .account_security import AccountSecurity, AuthSecurityError
+from .product_services import ProductServices
+from .compute_control import ComputeControl
 from .account_policy import accepted_policy, policy_documents, validate_policy_consent, validate_media_consent
 from .task_queue import PersistentTaskQueue, TaskAlreadyQueued, with_queue_position
 from .uploads import save_upload
@@ -84,6 +86,8 @@ class SmartCourseApplication:
         self.task_template_path = self.settings.data_root / "recovered-task.json"
         self.store = JsonStore(self.settings.data_root / "state.json", self.task_template_path)
         self.account_security = AccountSecurity(self.settings.data_root / 'account-security.sqlite3')
+        self.product_services = ProductServices(self)
+        self.compute_control = ComputeControl(self)
         from .task_recovery import recover_exited_workers
         self.store.transact(recover_exited_workers)
         self.rag = CourseRAGService(
@@ -127,6 +131,8 @@ class SmartCourseApplication:
         task = data["tasks"].get(task_id)
         if not task:
             raise ApiError(HTTPStatus.NOT_FOUND, "任务不存在")
+        task['canResumeWithoutCompute'] = int(task.get('currentStage', 1)) >= 5 or (
+            task.get('currentStage') == 4 and self.cached_avatar_stage_ready(task))
         return with_queue_position(task, data)
 
     def add_task(self, payload: dict[str, Any], user_id: str | None, validated_assets=None) -> dict[str, Any]:
@@ -281,6 +287,31 @@ class SmartCourseApplication:
             with self._execution_lock:
                 self._executions.pop(task_id, None)
 
+    def cached_avatar_stage_ready(self, task):
+        if (task.get('inputs', {}).get('avatarEngine') or os.environ.get('SMARTCOURSE_AVATAR_ENGINE')) != 'flashhead':
+            return False
+        try:
+            reference = (task.get('assets', {}).get('referenceImage') or {})['path']
+            if not reference.startswith('/artifacts/'):
+                return False
+            photo = (self.settings.artifact_root/reference.removeprefix('/artifacts/')).resolve()
+            if not photo.is_relative_to(self.settings.artifact_root.resolve()):
+                return False
+            runtime = (self.settings.workspace_root or self.settings.artifact_root/'tasks')/task['id']/'runtime'
+            from agents.flashhead_agent import FlashHeadAvatarAgent
+            from .config import SUPPORTED_LANGUAGES
+            agent = FlashHeadAvatarAgent(runtime, photo)
+            languages = task.get('outputs', {}).get('s3', {}).get('languages', {})
+            for language in task['targetLanguages']:
+                code = next(k for k, v in SUPPORTED_LANGUAGES.items() if language in {k, v})
+                path = languages[code]['timeline']
+                timeline = self.settings.artifact_root/path.removeprefix('/artifacts/')
+                if not agent.cache_ready(code, timeline):
+                    return False
+            return bool(task['targetLanguages'])
+        except (OSError, ValueError, KeyError, TypeError, StopIteration):
+            return False
+
     def execute_task(
         self, task_id: str, start_stage: int = 1, asynchronous: bool = True
     ) -> dict[str, Any]:
@@ -288,12 +319,20 @@ class SmartCourseApplication:
         from .remote_media import media_service_status
         media_status = media_service_status()
         require_owned = bool(os.environ.get('SMARTCOURSE_COMPUTE_OWNER'))
-        if start_stage < 5 and (media_status == "INACTIVE" or (require_owned and media_status != 'RUNNING')):
+        cached_only = start_stage == 4 and self.cached_avatar_stage_ready(task)
+        if start_stage < 5 and not cached_only and (media_status == "INACTIVE" or (require_owned and media_status != 'RUNNING')):
             raise ApiError(HTTPStatus.CONFLICT, "本项目计算服务当前已暂停，历史课程仍可播放。启动服务后可继续执行。")
         if start_stage not in range(1, 6):
             raise ApiError(HTTPStatus.BAD_REQUEST, "阶段编号必须为 1 至 5")
         if any(not task.get("outputs", {}).get("s"+str(index)) for index in range(1, start_stage)):
             raise ApiError(HTTPStatus.CONFLICT, "前置阶段尚未完成")
+        preferences = self.store.snapshot().get('userPreferences', {}).get(task.get('createdBy'), {})
+        if start_stage < 5 and not cached_only and 'maxTaskBudgetCny' in preferences:
+            inputs = task.get('inputs') or {}
+            estimate = self.product_services.estimate({'durationMinutes': inputs.get('durationMinutes', 2),
+                'totalPages': inputs.get('totalPages', 2), 'targetLanguages': task.get('targetLanguages')})
+            if estimate['estimatedComputeCny'][1] > preferences['maxTaskBudgetCny']:
+                raise ApiError(HTTPStatus.CONFLICT, '估计费用超过单任务预算，请减少时长、语言或调整预算。')
         with self._execution_lock:
             active = self._executions.get(task_id)
             if active and active.is_alive():
@@ -408,7 +447,12 @@ def make_handler(application: SmartCourseApplication):
                         raise ValueError('姓名和单位必须为文本')
                     if payload.get('confirmPassword',password) != password:
                         raise ValueError('两次输入的密码不一致')
-                    result = application.store.register(account,password,name,institution,policy_consent=consent)
+                    verified_email = None
+                    if application.product_services.email.enabled:
+                        verified_email = application.product_services.email.consume(payload.get('email'), 'register', payload.get('emailCode'))
+                        if any(u.get('email') == verified_email for u in application.store.snapshot()['users'].values()):
+                            raise ValueError('该邮箱已绑定其他账号。')
+                    result = application.store.register(account,password,name,institution,policy_consent=consent,verified_email=verified_email)
                 else:
                     result = application.store.login(account,password,policy_consent=consent)
             except ValueError:
@@ -576,6 +620,8 @@ def make_handler(application: SmartCourseApplication):
                 parsed = urlparse(self.path)
                 path = parsed.path.rstrip("/") or "/"
                 query = parse_qs(parsed.query)
+                if application.compute_control.get(self, path) or application.product_services.get(self, path):
+                    return
                 if path == '/v1/auth/policies':
                     self._json(HTTPStatus.OK, policy_documents())
                     return
@@ -830,6 +876,8 @@ def make_handler(application: SmartCourseApplication):
             try:
                 path = urlparse(self.path).path.rstrip("/") or "/"
                 payload = self._body()
+                if application.compute_control.post(self, path, payload) or application.product_services.post(self, path, payload):
+                    return
                 self._guard_task_route(path)
                 match = re.fullmatch(r"/v1/courses/([^/]+)/blueprints", path)
                 if match:
@@ -1351,7 +1399,11 @@ def make_handler(application: SmartCourseApplication):
         def do_PUT(self) -> None:
             try:
                 path = urlparse(self.path).path.rstrip("/") or "/"
+                if application.product_services.put(self, path):
+                    return
                 payload = self._body()
+                if application.product_services.put(self, path, payload):
+                    return
                 self._guard_task_route(path)
                 match = re.fullmatch(r"/v1/blueprints/([^/]+)", path)
                 if match:
@@ -1411,7 +1463,7 @@ def make_handler(application: SmartCourseApplication):
                     return
                 raise ApiError(HTTPStatus.NOT_FOUND, "接口不存在")
             except (ValueError, ApiError) as exc:
-                status = exc.status if isinstance(exc, ApiError) else HTTPStatus.BAD_REQUEST
+                status = exc.status if isinstance(exc, (ApiError, AuthSecurityError)) else HTTPStatus.BAD_REQUEST
                 message = exc.message if isinstance(exc, ApiError) else str(exc)
                 self._json(status, {"message": message})
             except Exception as exc:
@@ -1420,6 +1472,8 @@ def make_handler(application: SmartCourseApplication):
         def do_DELETE(self) -> None:
             try:
                 path = urlparse(self.path).path.rstrip("/") or "/"
+                if application.product_services.delete(self, path):
+                    return
                 self._guard_task_route(path)
                 match = re.fullmatch(r"/v1/tasks/([^/]+)", path)
                 if not match:
@@ -1429,8 +1483,8 @@ def make_handler(application: SmartCourseApplication):
                     del data["tasks"][task_id]
                     return {"deleted": True, "id": task_id}
                 self._json(HTTPStatus.OK, application.mutate_task(task_id, remove))
-            except ApiError as exc:
-                self._json(exc.status, {"message": exc.message})
+            except (ApiError, AuthSecurityError, ValueError) as exc:
+                self._json(getattr(exc, 'status', HTTPStatus.BAD_REQUEST), {"message": str(exc)})
             except Exception as exc:
                 self._json(HTTPStatus.INTERNAL_SERVER_ERROR, {"message": str(exc)})
 
@@ -1446,11 +1500,13 @@ def main() -> None:
     host = args.host or settings.host
     port = args.port or settings.port
     application = SmartCourseApplication(settings)
+    application.product_services.start()
     server = ThreadingHTTPServer((host, port), make_handler(application))
     print(f"SmartCourse API listening on http://{host}:{port}", flush=True)
     try:
         server.serve_forever()
     finally:
+        application.product_services.closed.set()
         application.task_queue.close(wait=False)
         server.server_close()
 

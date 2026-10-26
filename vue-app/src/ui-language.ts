@@ -1,6 +1,7 @@
 import {ref,watch} from 'vue'
 import {catalog} from './locales/catalog'
 import {authDesign} from './locales/auth-design'
+import {product} from './locales/product'
 import {examples} from './locales/examples'
 import {errors} from './locales/errors'
 import {legalCopy,legalTitles} from './locales/legal'
@@ -10,7 +11,7 @@ let initial:UiLanguage='zh'
 try{const saved=localStorage.getItem('smartcourse-ui-language');if(uiLanguages.some(x=>x.code===saved))initial=saved as UiLanguage}catch{}
 export const uiLanguage=ref<UiLanguage>(initial)
 const columns=['en','ja','ru','fr','es','de']
-const messages:Record<string,string[]>={...catalog,...authDesign,...examples,...errors,...legalTitles,
+const messages:Record<string,string[]>={...catalog,...authDesign,...examples,...errors,...legalTitles,...product,
  '已登录':['Signed in','ログイン済み','Вход выполнен','Connecté','Sesión iniciada','Angemeldet']}
 export function t(value:unknown):string{
  const key=String(value??'')

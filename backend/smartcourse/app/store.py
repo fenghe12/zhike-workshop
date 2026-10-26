@@ -47,6 +47,7 @@ class JsonStore:
         return json.loads(self.path.read_text(encoding="utf-8"))
 
     def _write(self, data: dict[str, Any]) -> None:
+        previous = self.path.stat() if self.path.exists() else None
         descriptor, temporary_name = tempfile.mkstemp(
             prefix=self.path.name + ".", suffix=".tmp", dir=self.path.parent
         )
@@ -56,6 +57,8 @@ class JsonStore:
                 json.dump(data, stream, ensure_ascii=False, indent=2)
                 stream.flush()
                 os.fsync(stream.fileno())
+            if previous is not None and os.geteuid() == 0:
+                os.chown(temporary, previous.st_uid, previous.st_gid)
             os.replace(temporary, self.path)
         finally:
             temporary.unlink(missing_ok=True)
@@ -87,7 +90,7 @@ class JsonStore:
         return hmac.compare_digest(JsonStore._password_hash(password, salt), encoded)
 
     def register(
-        self, phone: str, password: str, display_name: str, institution: str = "", policy_consent=None
+        self, phone: str, password: str, display_name: str, institution: str = "", policy_consent=None, verified_email=None
     ) -> dict[str, Any]:
         phone = phone.strip()
         display_name = display_name.strip() or "智课用户"
@@ -109,6 +112,10 @@ class JsonStore:
                 "passwordHash": self._password_hash(password),
                 "createdAt": utc_now(),
             }
+            if verified_email:
+                if any(u.get('email') == verified_email for u in data['users'].values()):
+                    raise ValueError('该邮箱已绑定其他账号。')
+                user.update(email=verified_email, emailVerifiedAt=utc_now())
             data["users"][phone] = user
             if policy_consent is not None:
                 user['policyConsent'] = copy.deepcopy(policy_consent)
@@ -134,6 +141,28 @@ class JsonStore:
                 raise ValueError('账号不存在')
             user['policyConsent'] = copy.deepcopy(consent)
             return self._public_user(user)
+        return self.transact(operation)
+
+    def bind_email(self, user_id, email):
+        def operation(data):
+            if any(u.get('email') == email and u['id'] != user_id for u in data['users'].values()):
+                raise ValueError('该邮箱已绑定其他账号。')
+            user = next(u for u in data['users'].values() if u['id'] == user_id)
+            user.update(email=email, emailVerifiedAt=utc_now())
+            return self._public_user(user)
+        return self.transact(operation)
+
+    def change_password(self, user_id, password, current_password=None):
+        if not isinstance(password, str) or not 6 <= len(password) <= 128:
+            raise ValueError('新密码长度须为 6 至 128 位。')
+        def operation(data):
+            user = next(u for u in data['users'].values() if u['id'] == user_id)
+            if current_password is not None and not self._password_matches(current_password, user['passwordHash']):
+                raise ValueError('当前密码不正确。')
+            user['passwordHash'] = self._password_hash(password)
+            user['passwordChangedAt'] = utc_now()
+            data['tokens'] = {key: token for key, token in data['tokens'].items() if token['userId'] != user_id}
+            return self._issue_token(data, user)
         return self.transact(operation)
 
     @staticmethod
