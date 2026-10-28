@@ -471,6 +471,9 @@ class TTSAgent:
                                'text':script_text,'language':target_lang,'voiceVersion':voice_version,
                                'speed':self.tts_speed,'silence':self.silence_sec if not is_last else 0,
                                'fps':os.environ.get('SMARTCOURSE_VIDEO_FPS','25')}
+                if target_lang.replace('_','-').split('-')[0]=='en':
+                    from app.speech_pacing import PACING_POLICY_VERSION
+                    request_value['pacingPolicyVersion']=PACING_POLICY_VERSION
                 checkpoint_path=Path(wav_path).with_suffix('.input.json')
                 saved=read_record(checkpoint_path)
                 reuse=saved.get('input')==request_value and Path(wav_path).is_file() and Path(wav_path).with_suffix('.timing.json').is_file()
@@ -497,6 +500,7 @@ class TTSAgent:
                     "wav_path": os.path.abspath(wav_path),
                     "duration": dur,
                     "generation_id": saved['generationId'],
+                    "speech_pacing": read_record(Path(wav_path).with_suffix('.timing.json')).get('pacingReview'),
                 })
                 if generate_subtitle:
                     alignment_futures[page_id]=alignment_pool.submit(self._align_page,page_results[-1].copy(),target_lang)
@@ -601,8 +605,13 @@ class TTSAgent:
             if all_subtitles:
                 logger.info(f"  Subtitles: {len(all_subtitles)} entries")
 
+            pacing_pages=[{'page_id':page['page_id'],**page['speech_pacing']} for page in page_results if page.get('speech_pacing')]
+            pacing_checked=[page for page in pacing_pages if page.get('checked')]
+            speech_pacing={'pages':pacing_pages,'checkedPages':len(pacing_checked),
+                           'passed':all(page.get('passed') is True for page in pacing_checked) if pacing_checked else None}
             return {
                 "task_id": task_id,
+                "speech_pacing":speech_pacing,
                 "timeline_path": timeline_path,
                 "full_audio_path": full_audio_path,
                 "srt_path": srt_path,

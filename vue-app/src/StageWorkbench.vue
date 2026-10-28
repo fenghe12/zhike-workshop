@@ -77,6 +77,8 @@ function time(value:number){return Number.isFinite(value)?`${Math.floor(value/60
  <div class="stage-workbench" v-loading="busy" @click="recordDownload">
   <el-radio-group v-if="languages.length" v-model="language" class="language-switch"><el-radio-button v-for="code in languages" :key="code" :value="code">{{languageNames[code.split('-')[0]!]||code}}</el-radio-button></el-radio-group>
   <el-alert v-if="error" :title="error" type="warning" :closable="false"/>
+  <el-alert v-if="[3,5].includes(stage)&&data.warning" :title="data.warning" type="warning" :closable="false"/>
+  <el-alert v-if="stage===3&&language.startsWith('en')&&data.speechPacing" :title="data.speechPacing.passed===false?'英语逐句语速检测：有异常语句需要复核。':data.speechPacing.checkedPages>=data.pageCount?'英语逐句语速检测通过。':'英语逐句语速已检查 '+data.speechPacing.checkedPages+' 页；其余页面的有效语句不足，请试听确认。'" :type="data.speechPacing.passed===false?'warning':data.speechPacing.checkedPages>=data.pageCount?'success':'info'" :closable="false"/>
   <el-tabs v-model="tab">
    <el-tab-pane label="阶段概览" name="overview">
     <div class="stage-stat-grid"><div><small>处理页数</small><strong>{{data.pageCount??report.pageCount??output.pageCount??'待统计'}}</strong></div><div><small>已用时间</small><strong>{{progress?.elapsedSeconds!==undefined?time(progress.elapsedSeconds):'待统计'}}</strong></div><div><small>预计剩余</small><strong>{{progress?.etaSeconds!==undefined?time(progress.etaSeconds):'待估算'}}</strong></div></div>

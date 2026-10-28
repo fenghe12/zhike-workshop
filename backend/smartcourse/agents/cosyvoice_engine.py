@@ -226,7 +226,7 @@ class CosyVoiceEngine:
             'referenceCacheUses':reference_cache_uses},ensure_ascii=False,indent=2))
         return len(audio)/sample_rate
 
-    def synthesize(self, text: str, speaker_prompt: str, output_path: str, language: str = "en") -> float:
+    def synthesize(self, text: str, speaker_prompt: str, output_path: str, language: str = "en", _check_pacing: bool = True) -> float:
         language = normalize_language(language)
         reference = Path(speaker_prompt)
         if not reference.is_file():
@@ -305,4 +305,30 @@ class CosyVoiceEngine:
         destination.with_suffix('.timing.json').write_text(json.dumps({
             'source':'cosyvoice3_generated_pcm','inputText':text,'sampleRate':sample_rate,
             'totalSamples':len(speech),'sentences':timings},ensure_ascii=False,indent=2))
+        if _check_pacing and language == 'en':
+            self.stabilize_file(destination, reference, language)
+            return sf.info(str(destination)).duration
         return len(speech) / self._model.sample_rate
+
+    def stabilize_file(self, audio_path, speaker_prompt, language='en'):
+        import soundfile as sf
+        from app.speech_pacing import stabilize_pcm
+        audio_path=Path(audio_path);timing_path=audio_path.with_suffix('.timing.json')
+        metadata=json.loads(timing_path.read_text());audio,sample_rate=sf.read(str(audio_path),dtype='float32')
+        if sample_rate!=metadata['sampleRate'] or audio.ndim!=1:
+            raise ValueError('语速检查要求与采样记录一致的单声道音频')
+        retries=audio_path.parent/'pacing-retries'/audio_path.stem/uuid.uuid4().hex
+        def regenerate(text):
+            retries.mkdir(parents=True,exist_ok=True)
+            target=retries/(uuid.uuid4().hex+'.wav')
+            self.synthesize(text,str(speaker_prompt),str(target),language,_check_pacing=False)
+            data,rate=sf.read(str(target),dtype='float32')
+            if rate!=sample_rate:raise ValueError('重新生成语句的采样率发生变化')
+            return data
+        corrected,sentences,report=stabilize_pcm(audio,sample_rate,metadata['sentences'],language,regenerate)
+        metadata.update(sentences=sentences,pacingReview=report)
+        if report['repairs']:
+            metadata['totalSamples']=sentences[-1]['endSample']
+            sf.write(str(audio_path),corrected,sample_rate,subtype='PCM_16')
+        timing_path.write_text(json.dumps(metadata,ensure_ascii=False,indent=2))
+        return report
