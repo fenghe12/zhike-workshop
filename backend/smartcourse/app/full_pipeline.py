@@ -360,8 +360,9 @@ class FullPipelineRunner:
                 "S4", lambda: self._run_s4(task, root, progress)
             )
         if start_stage <= 5:
+            compose_task = {**task, "outputs": {**previous_outputs, **results}}
             results["s5"] = run_stage(
-                "S5", lambda: self._run_s5(task, root, progress)
+                "S5", lambda: self._run_s5(compose_task, root, progress)
             )
 
         durations = [
