@@ -50,6 +50,11 @@ from .account_policy import accepted_policy, policy_documents, validate_policy_c
 from .task_queue import PersistentTaskQueue, TaskAlreadyQueued, with_queue_position
 from .uploads import save_upload
 from .translation_policy import validate_policy
+from .user_feedback import list_feedback, submit_feedback
+from .usage_tracking import UsageStore
+from .visitor_traffic import IpLocator, client_ip
+from .admin_console import AdminConsole
+from .course_profile import normalize_profile, DOMAINS, AUDIENCES
 from .task_model import create_task, retry_stage, safe_artifact_name, utc_now, replace_task_assets
 from .teacher_features import (draft_blueprint, update_blueprint, approve_blueprint, reserve_unit_build, update_unit_build, get_unit_build, make_patch_plan, approve_patch_plan, create_question, generate_question_batch, review_question, attempt_question, question_stats, public_question, _read)
 from .teacher_microcourse import assemble_units
@@ -85,6 +90,9 @@ class SmartCourseApplication:
         self.settings.artifact_root.mkdir(parents=True, exist_ok=True)
         self.task_template_path = self.settings.data_root / "recovered-task.json"
         self.store = JsonStore(self.settings.data_root / "state.json", self.task_template_path)
+        self.usage = UsageStore(self.settings.data_root)
+        self.ip_locator = IpLocator(self.settings.data_root)
+        self.admin = AdminConsole(self)
         self.account_security = AccountSecurity(self.settings.data_root / 'account-security.sqlite3')
         self.product_services = ProductServices(self)
         self.compute_control = ComputeControl(self)
@@ -137,6 +145,8 @@ class SmartCourseApplication:
 
     def add_task(self, payload: dict[str, Any], user_id: str | None, validated_assets=None) -> dict[str, Any]:
         task = create_task(payload)
+        task['inputs']['courseProfile'] = normalize_profile(task.get('inputs', {}).get('courseProfile'))
+        task['voiceId'] = payload.get('voiceId', 'default')
         from .course_presets import bind_course_presets
         bind_course_presets(task, payload, self.settings, overrides=validated_assets)
         task["createdBy"] = user_id
@@ -176,6 +186,10 @@ class SmartCourseApplication:
                 )
                 if stage is None:
                     raise ApiError(HTTPStatus.INTERNAL_SERVER_ERROR, "任务阶段数据不完整")
+                if status == 'queued' and not stage.get('queuedAtEpoch'):
+                    stage['queuedAtEpoch'] = time.time()
+                if status in {'running','completed','failed'} and stage.get('queuedAtEpoch'):
+                    stage['queueWaitSeconds'] = round(stage.get('queueWaitSeconds', 0) + max(0, time.time()-stage.pop('queuedAtEpoch')), 3)
                 if status == "running" and not stage.get("startedAt"):
                     stage["startedAt"] = now
                     stage["startedAtEpoch"] = time.time()
@@ -419,10 +433,10 @@ def make_handler(application: SmartCourseApplication):
             return {"Set-Cookie": "smartcourse-session="+token+"; Path=/; HttpOnly; SameSite=Lax; Max-Age=604800"}
 
         def _client_identity(self):
-            value = self.client_address[0]
-            if value in {'127.0.0.1','::1'}:
-                value = self.headers.get('X-Real-IP', value)
-            return value[:128]
+            return client_ip(self.client_address[0], self.headers)
+
+        def _network_info(self):
+            return application.ip_locator.describe(self._client_identity())
 
         def _agreement_user(self):
             self._user_id(required=True)
@@ -459,6 +473,12 @@ def make_handler(application: SmartCourseApplication):
                 application.account_security.failed(identity)
                 raise
             application.account_security.succeeded(identity)
+            application.usage.record(result['user']['id'], 'register' if registering else 'login', network=self._network_info())
+            def update_activity(data):
+                user = data['users'][result['user']['phone']]
+                user['lastLoginAt'] = utc_now()
+                user['loginCount'] = int(user.get('loginCount', 0)) + 1
+            application.store.transact(update_activity)
             return result
 
         def _uploaded_asset(self, value, kind):
@@ -620,7 +640,20 @@ def make_handler(application: SmartCourseApplication):
                 parsed = urlparse(self.path)
                 path = parsed.path.rstrip("/") or "/"
                 query = parse_qs(parsed.query)
+                if application.admin.get(self, path, query):
+                    return
+                if path == '/v1/course-profile/options':
+                    self._user_id(required=True)
+                    self._json(HTTPStatus.OK, {'domains':DOMAINS, 'audiences':AUDIENCES})
+                    return
                 if application.compute_control.get(self, path) or application.product_services.get(self, path):
+                    return
+                if path == '/v1/feedback':
+                    user_id = self._user_id(required=True)
+                    task_id = query.get('taskId', [None])[0]
+                    if task_id:
+                        self._task_owner(task_id)
+                    self._json(HTTPStatus.OK, list_feedback(application.store, user_id, task_id))
                     return
                 if path == '/v1/auth/policies':
                     self._json(HTTPStatus.OK, policy_documents())
@@ -879,6 +912,36 @@ def make_handler(application: SmartCourseApplication):
                 if application.compute_control.post(self, path, payload) or application.product_services.post(self, path, payload):
                     return
                 self._guard_task_route(path)
+                if path == '/v1/visits':
+                    page = payload.get('page', '')
+                    if not isinstance(page, str) or not re.fullmatch(r'[a-zA-Z0-9_-]{1,60}', page):
+                        raise ValueError('页面名称无效')
+                    self._json(HTTPStatus.CREATED, application.usage.record(self._user_id() or '', 'page_view', {'page':page}, payload.get('eventId'), network=self._network_info()))
+                    return
+                if path == '/v1/usage':
+                    user_id = self._user_id(required=True)
+                    kind = payload.get('kind')
+                    if kind not in {'page_view','result_play','result_download','example_selected'}:
+                        raise ValueError('使用记录类型无效')
+                    task_id = payload.get('taskId')
+                    if task_id is not None:
+                        if not isinstance(task_id, str): raise ValueError('课程编号无效')
+                        self._task_owner(task_id)
+                    if kind in {'result_play','result_download'} and not task_id:
+                        raise ValueError('播放和下载记录需要关联课程')
+                    detail = {key:payload[key] for key in ('page','language','exampleId','exampleKind','fileType') if key in payload}
+                    if any(not isinstance(value,str) or len(value)>120 for value in detail.values()):
+                        raise ValueError('使用记录参数无效')
+                    self._json(HTTPStatus.CREATED, application.usage.record(user_id, kind, detail, payload.get('eventId'), task_id, network=self._network_info()))
+                    return
+                if path == '/v1/feedback':
+                    user_id = self._user_id(required=True)
+                    task_id = payload.get('taskId')
+                    if task_id is not None and (not isinstance(task_id, str) or not re.fullmatch(r'task_[a-f0-9]{12}', task_id)):
+                        raise ValueError('关联课程编号无效')
+                    task = self._task_owner(task_id) if task_id else None
+                    self._json(HTTPStatus.CREATED, submit_feedback(application.store, user_id, payload, task))
+                    return
                 match = re.fullmatch(r"/v1/courses/([^/]+)/blueprints", path)
                 if match:
                     course_id=unquote(match.group(1)); self._task_owner(course_id)
@@ -1402,6 +1465,8 @@ def make_handler(application: SmartCourseApplication):
                 if application.product_services.put(self, path):
                     return
                 payload = self._body()
+                if application.admin.put(self, path, payload):
+                    return
                 if application.product_services.put(self, path, payload):
                     return
                 self._guard_task_route(path)

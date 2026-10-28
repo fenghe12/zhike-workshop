@@ -182,6 +182,8 @@ def retry_stage(task: dict[str, Any], stage_index: int) -> dict[str, Any]:
                 "completedAt",
                 "elapsedSeconds",
                 "etaSeconds",
+                "queuedAtEpoch",
+                "queueWaitSeconds",
                 "detail",
             ):
                 stage.pop(field, None)
@@ -210,7 +212,7 @@ def replace_task_assets(task, assets):
             for stage in task["stages"]:
                 if stage["index"] >= first:
                     stage.update(status="waiting", progress=0)
-                    for key in ["startedAt", "startedAtEpoch", "completedAt", "elapsedSeconds", "etaSeconds", "detail", "error"]:
+                    for key in ["startedAt", "startedAtEpoch", "completedAt", "elapsedSeconds", "etaSeconds", "queuedAtEpoch", "queueWaitSeconds", "detail", "error"]:
                         stage.pop(key, None)
             task.update(status="needs_regeneration", currentStage=first)
             task.pop("error", None)

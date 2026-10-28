@@ -11,7 +11,7 @@ def available_voice_presets(settings):
         raise ValueError('服务器音色配置格式错误')
     choices = []
     if settings.default_reference_audio and Path(settings.default_reference_audio).is_file():
-        choice = {'id': 'default', 'name': '苏老师音色'}
+        choice = {'id': 'default', 'name': os.environ.get('SMARTCOURSE_DEFAULT_VOICE_NAME', '苏老师音色')}
         if Path(settings.default_reference_audio).name in {'speaker-reference-10s.wav', 'speaker-reference-clean-zh.wav'}:
             choice['sampleUrl'] = '/voice-previews/default.wav'
         choices.append(choice)

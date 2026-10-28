@@ -180,6 +180,20 @@ class CourseStructureTests(unittest.TestCase):
             self.assertTrue(page["script_text"])
             self.assertTrue(page["layout"]["regions"])
 
+    def test_upload_mode_ignores_notes_when_configured(self):
+        from pptx import Presentation
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / 'course.pptx'
+            deck = Presentation()
+            slide = deck.slides.add_slide(deck.slide_layouts[1])
+            slide.shapes.title.text = 'The course topic'
+            slide.placeholders[1].text = 'The visible teaching content'
+            slide.notes_slide.notes_text_frame.text = 'This is an unrelated note.'
+            deck.save(path)
+            page = CourseStructureAgent().from_pptx(path, 'task', include_notes=False)['pages'][0]
+            self.assertEqual(page['script_source'], 'slide_text')
+            self.assertNotIn('unrelated note', page['script_text'])
+
 
 class SubtitleLayoutTests(unittest.TestCase):
     def test_long_chinese_subtitle_wraps_within_safe_width(self):

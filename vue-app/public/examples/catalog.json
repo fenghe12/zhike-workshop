@@ -39,7 +39,14 @@
     "scriptPreview": "/examples/ai-script.png",
     "image": "/examples/lecturer-1.png",
     "audio": "/examples/ai-voice.wav",
-    "audioPreview": "/examples/ai-voice.svg"
+    "audioPreview": "/examples/ai-voice.svg",
+    "courseProfile": {
+      "domain": "computing",
+      "audience": "undergraduate",
+      "topics": [
+        "人工智能入门"
+      ]
+    }
   },
   {
     "id": "water",
@@ -81,7 +88,14 @@
     "scriptPreview": "/examples/water-script.png",
     "image": "/examples/lecturer-2.png",
     "audio": "/examples/water-voice.wav",
-    "audioPreview": "/examples/water-voice.svg"
+    "audioPreview": "/examples/water-voice.svg",
+    "courseProfile": {
+      "domain": "science",
+      "audience": "secondary",
+      "topics": [
+        "水循环与节约用水"
+      ]
+    }
   },
   {
     "id": "security",
@@ -123,7 +137,14 @@
     "scriptPreview": "/examples/security-script.png",
     "image": "/examples/lecturer-3.png",
     "audio": "/examples/security-voice.wav",
-    "audioPreview": "/examples/security-voice.svg"
+    "audioPreview": "/examples/security-voice.svg",
+    "courseProfile": {
+      "domain": "computing",
+      "audience": "secondary",
+      "topics": [
+        "网络安全与防诈骗"
+      ]
+    }
   },
   {
     "id": "binary",
@@ -165,7 +186,14 @@
     "scriptPreview": "/examples/binary-script.png",
     "image": "/examples/lecturer-4.png",
     "audio": "/examples/binary-voice.wav",
-    "audioPreview": "/examples/binary-voice.svg"
+    "audioPreview": "/examples/binary-voice.svg",
+    "courseProfile": {
+      "domain": "computing",
+      "audience": "secondary",
+      "topics": [
+        "二进制与逻辑运算"
+      ]
+    }
   },
   {
     "id": "plant",
@@ -207,6 +235,13 @@
     "scriptPreview": "/examples/plant-script.png",
     "image": "/examples/lecturer-5.png",
     "audio": "/examples/plant-voice.wav",
-    "audioPreview": "/examples/plant-voice.svg"
+    "audioPreview": "/examples/plant-voice.svg",
+    "courseProfile": {
+      "domain": "science",
+      "audience": "secondary",
+      "topics": [
+        "植物的光合作用"
+      ]
+    }
   }
 ]

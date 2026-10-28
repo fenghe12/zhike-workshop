@@ -2,6 +2,7 @@
 import os
 import socket
 import threading
+import time
 
 from .resource_scheduler import ResourceScheduler
 from .task_model import retry_stage, utc_now
@@ -29,11 +30,13 @@ class PersistentTaskQueue:
             task = data["tasks"][task_id]
             if task.get("status") == "processing" and task.get("queue", {}).get("state") in {"running", "waiting_resource"}:
                 raise TaskAlreadyQueued("任务正在执行")
-            if task.get('outputs'):
+            if task.get('outputs') or any(s.get('startedAt') for s in task.get('stages', [])):
                 history = task.setdefault('executionHistory', [])
                 history.append({'savedAt': utc_now(), 'startStage': start_stage,
-                                'status': task.get('status'), 'outputs': task['outputs'].copy()})
+                                'status': task.get('status'), 'outputs': task['outputs'].copy(),
+                                'stages': [dict(stage) for stage in task.get('stages', [])]})
                 del history[:-10]
+            task['executionCount'] = int(task.get('executionCount', len(task.get('executionHistory', [])))) + 1
             retry_stage(task, start_stage)
             now = utc_now()
             messages.append({"taskId": task_id, "startStage": start_stage, "enqueuedAt": now})
@@ -41,7 +44,7 @@ class PersistentTaskQueue:
                         queue={"state": "queued", "enqueuedAt": now})
             for field in ("workerPid", "workerHost", "error", "requiredAsset"):
                 task.pop(field, None)
-            task["stages"][start_stage - 1].update(status="queued", progress=0,
+            task["stages"][start_stage - 1].update(status="queued", progress=0, queuedAtEpoch=time.time(),
                                                   detail={"step": "等待课程工作进程"})
         with self._condition:
             if self._closed:

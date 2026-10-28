@@ -3,7 +3,7 @@ import math
 
 DEFAULT_POLICY = {"semantic_similarity": 0.85, "terminology_coverage": 0.9,
                   "formula_number_proper_name_accuracy": 1.0, "contextual_consistency": 0.85,
-                  "maxRetries": 1}
+                  "maxRetries": 3}
 
 
 def validate_policy(value=None):

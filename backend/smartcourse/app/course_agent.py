@@ -96,7 +96,7 @@ class CourseStructureAgent:
         self.experience_memory_path = experience_memory_path
         self.require_rag = require_rag
 
-    def from_pptx(self, pptx_path: Path, task_id: str) -> dict[str, Any]:
+    def from_pptx(self, pptx_path: Path, task_id: str, *, include_notes: bool = True) -> dict[str, Any]:
         from pptx import Presentation
 
         presentation = Presentation(str(pptx_path))
@@ -117,7 +117,7 @@ class CourseStructureAgent:
             if not title and texts:
                 title = texts[0]
             key_points = [value for value in texts if value != title]
-            notes = _notes_text(slide)
+            notes = _notes_text(slide) if include_notes else ""
             script = notes or "\n".join(key_points or texts)
             pages.append(
                 {

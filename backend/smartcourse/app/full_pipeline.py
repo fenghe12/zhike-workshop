@@ -7,6 +7,7 @@ import re
 import shutil
 import sys
 import time
+from decimal import Decimal
 from pathlib import Path
 from statistics import mean
 from typing import Any, Callable
@@ -23,7 +24,7 @@ from .config import SUPPORTED_LANGUAGES, Settings
 from .translation_policy import validate_policy, meets_thresholds
 from .course_agent import CourseStructureAgent, save_structure
 from .code_lessons import get_lesson_spec
-from .gateway import ResponsesGateway
+from .gateway import ResponsesGateway, GatewayError
 from .pedagogical_ir import build_e2_variants, compile_course_structure_ir
 from .performance import PipelinePerformanceRecorder
 from .resource_scheduler import ResourceScheduler
@@ -81,6 +82,22 @@ def _safe_task_component(value: str) -> str:
     return re.sub(r"[^0-9A-Za-z_-]+", "_", value).strip("_") or "task"
 
 
+def _translation_warning(page_reports: list[dict[str, Any]]) -> str:
+    failed_pages = [item["page_id"] for item in page_reports if not item["passed"]]
+    return ("以下页面的翻译检查未通过，已继续生成，请审阅：" + "、".join(map(str, failed_pages))
+            if failed_pages else "")
+
+
+def _run_speech_with_retries(function: Callable[[], Any], notify: Callable[[Exception, int], None], error_type: type[Exception]) -> Any:
+    for attempt in range(4):
+        try:
+            return function()
+        except error_type as exc:
+            if attempt == 3:
+                raise
+            notify(exc, attempt + 1)
+
+
 def _exact_token_accuracy(source: str, translated: str) -> float:
     tokens = []
     operators = {"AND", "OR", "NOT", "XOR", "NAND", "NOR", "XNOR", "AI", "ML", "DL",
@@ -97,8 +114,23 @@ def _exact_token_accuracy(source: str, translated: str) -> float:
     normalized_translation = re.sub(r'\s+', '', translated).casefold()
     ai_names = ('artificialintelligence', '人工智能', '人工知能', '인공지능',
                 'künstlicheintelligenz', 'intelligenceartificielle')
-    return sum(token in translated or (token == 'AI' and any(name in normalized_translation for name in ai_names))
-               for token in tokens) / len(tokens)
+    aliases = {'US': ('米国', 'アメリカ', '美国'), 'RMB': ('人民元', '人民币')}
+    units = {'thousand': Decimal('1000'), 'million': Decimal('1000000'),
+             'billion': Decimal('1000000000'), '万': Decimal('10000'),
+             '億': Decimal('100000000'), '亿': Decimal('100000000')}
+    target_amounts = set()
+    for amount, unit in re.findall(r'(\d+(?:\.\d+)?)\s*(thousand|million|billion|万|億|亿)', translated, re.I):
+        target_amounts.add(Decimal(amount) * units[unit.lower()])
+    def preserved(token: str) -> bool:
+        if token in translated or (token == 'AI' and any(name in normalized_translation for name in ai_names)):
+            return True
+        if any(name in translated for name in aliases.get(token, ())):
+            return True
+        if re.fullmatch(r'\d+(?:\.\d+)?', token):
+            source_units = re.findall(r'(?<![\d.])' + re.escape(token) + r'\s*(thousand|million|billion)(?![A-Za-z])', source, re.I)
+            return any(Decimal(token) * units[unit.lower()] in target_amounts for unit in source_units)
+        return False
+    return sum(preserved(token) for token in tokens) / len(tokens)
 
 
 def promote_dense_slide_layout(pptx_path: Path, bbox_content: dict[str, Any], minimum_characters: int = 0) -> dict[str, Any]:
@@ -393,7 +425,7 @@ class FullPipelineRunner:
             else:
                 pptx=source_document
             progress(1, "running", 20, {"step": "解析 PPT 页面、文本与布局"})
-            structure = agent.from_pptx(pptx, task["id"])
+            structure = agent.from_pptx(pptx, task["id"], include_notes=False)
             if pptx.resolve() != output_pptx.resolve():
                 shutil.copy2(pptx, output_pptx)
             structure["generated_pptx"] = str(output_pptx)
@@ -413,10 +445,16 @@ class FullPipelineRunner:
                     page.update(script_text=script, script_source='user_docx')
                 shutil.copy2(lecture_path, output_dir / 'source_lecture.docx')
             else:
-                progress(1, "running", 35, {"step":"根据课件逐页生成讲稿","total":len(structure['pages'])})
+                progress(1, "running", 30, {"step":"读取课件画面","total":len(structure['pages'])})
+                from .pptx_render import render_pptx
+                slide_images = render_pptx(output_pptx, output_dir / 'source-slide-images', width=1280)
+                if len(slide_images) != len(structure['pages']):
+                    raise ValueError('课件画面与页面数量不一致')
+                progress(1, "running", 35, {"step":"根据课件文字与画面逐页生成讲稿","total":len(structure['pages'])})
                 from .upload_lecture import generate_upload_lecture
                 generated = generate_upload_lecture(
-                    structure, self.gateway, structure['language_code'], output_dir / 'generated-lecture'
+                    structure, self.gateway, structure['language_code'], output_dir / 'generated-lecture',
+                    slide_images=slide_images,
                 )
                 if [page['page_id'] for page in generated] != [page['page_id'] for page in structure['pages']]:
                     raise ValueError('生成讲稿的页码与课件不一致')
@@ -731,10 +769,17 @@ class FullPipelineRunner:
             )
         return f"""You are the translation and validation agent in a multilingual MOOC system.
 Translate the page into {target_name}. Preserve page_id, numbers, formulas, symbols, URLs,
-proper nouns and academic terminology. Do not summarize or add content. Keep named Boolean
-logic operators such as AND, OR and NOT in their original uppercase form when referring to
-a gate or its cases; a local-language explanation may follow in parentheses. Back-translate
-the translated script to the source language and evaluate it. Return JSON only:
+proper nouns and academic terminology. Do not summarize or add content. Translate each field
+independently. Do not add material from the title or key_points to script_text. Translate only
+the supplied script_text as narration; preserve empty fields. Keep named Boolean logic operators
+such as AND, OR and NOT in their original uppercase form when referring to
+a gate or its cases; a local-language explanation may follow in parentheses.
+Keep each original numeral and decimal digit sequence exactly as written in its corresponding
+translated field, including when translating units. Do not convert 1.5 million to 150万 or
+1.3 billion to 13億; retain 1.5 and 1.3 with the translated unit instead.
+Keep every original uppercase abbreviation, including US and RMB, unchanged in the translation;
+local-language explanations may be added beside the original abbreviation.
+Back-translate the translated script to the source language and evaluate it. Return JSON only:
 {{"page_id":1,"title":"...","key_points":["..."],"script_text":"...",
 "back_translation":"...","semantic_similarity":0.0,"terminology_coverage":0.0,
 "formula_number_proper_name_accuracy":0.0,"contextual_consistency":0.0,
@@ -744,8 +789,34 @@ Source page:
 {json.dumps(page, ensure_ascii=False)}"""
 
     def _translate_page(
-        self, page: dict[str, Any], target_name: str, policy=None, protected_names=()
+        self, page: dict[str, Any], target_name: str, policy=None, protected_names=(),
+        _separate_fields: bool = True,
     ) -> tuple[dict[str, Any], dict[str, Any]]:
+        if _separate_fields and str(page.get("script_text", "")).strip() and (
+            str(page.get("title", "")).strip() or page.get("key_points")
+        ):
+            # Narration is translated without slide text so a footer or slide point cannot
+            # become narration merely because it appeared in the same model request.
+            slide_page = {**page, "script_text": ""}
+            script_page = {"page_id": page.get("page_id", 0), "title": "",
+                           "key_points": [], "script_text": page["script_text"]}
+            slide, slide_report = self._translate_page(
+                slide_page, target_name, policy, protected_names, False)
+            script, script_report = self._translate_page(
+                script_page, target_name, policy, protected_names, False)
+            slide["script_text"] = script["script_text"]
+            report = dict(slide_report)
+            for field in ("semantic_similarity", "terminology_coverage",
+                          "formula_number_proper_name_accuracy", "contextual_consistency"):
+                report[field] = min(slide_report[field], script_report[field])
+            report["back_translation"] = script_report["back_translation"]
+            report["passed"] = slide_report["passed"] and script_report["passed"] and bool(script["script_text"].strip())
+            report["personal_names_preserved"] = slide_report["personal_names_preserved"] and script_report["personal_names_preserved"]
+            report["note"] = " ".join(filter(None, (slide_report["note"], script_report["note"])))
+            report["attempt"] = max(slide_report["attempt"], script_report["attempt"])
+            report["slide_validation"] = slide_report
+            report["script_validation"] = script_report
+            return slide, report
         from .pptx_names import localized_person_names
         name_map=localized_person_names(protected_names,target_name)
         previous: dict[str, Any] | None = None
@@ -754,12 +825,21 @@ Source page:
             + [str(value) for value in page.get("key_points", [])]
         )
         policy = validate_policy(policy)
+        last_result = None
+        last_error = None
         for attempt in range(policy["maxRetries"] + 1):
-            value = self.gateway.respond_json(
-                self._translation_prompt(page, target_name, previous) + "\nRequired quality thresholds:\n" + json.dumps(policy) + "\nUse these official personal-name spellings exactly, including in the script:\n" + json.dumps(name_map, ensure_ascii=False),
-                reasoning_effort="medium",
-                max_output_tokens=12_000,
-            )
+            try:
+                value = self.gateway.respond_json(
+                    self._translation_prompt(page, target_name, previous) + "\nRequired quality thresholds:\n" + json.dumps(policy) + "\nUse these official personal-name spellings exactly, including in the script:\n" + json.dumps(name_map, ensure_ascii=False),
+                    reasoning_effort="medium",
+                    max_output_tokens=12_000,
+                )
+                if not isinstance(value, dict) or not isinstance(value.get("key_points", []), list):
+                    raise ValueError("译文格式无效")
+            except (GatewayError, ValueError, TypeError) as exc:
+                last_error = str(exc)
+                previous = {"error": "译文返回不完整或格式无效，请重新翻译并返回完整 JSON。"}
+                continue
             translated = {
                 "page_id": int(page.get("page_id", 0)),
                 "title": str(value.get("title", "")),
@@ -793,10 +873,34 @@ Source page:
             report["passed"] = report["passed"] and names_preserved
             if not names_preserved:
                 report["note"] += " 人名需保留原文写法。"
+            if str(page.get("script_text", "")).strip():
+                from .language_validation import check_target_language
+                language_check = check_target_language(translated["script_text"], target_name)
+                report["languageCheck"] = language_check
+                if language_check["status"] == "mismatch":
+                    report["passed"] = False
+                    report["note"] += f" 讲稿语种为 {language_check['detected']}，目标语种为 {target_name}。"
             report["thresholds"] = policy
+            last_result = translated, report
             if report["passed"]:
                 return translated, report
             previous = {"translation": translated, "validation": report}
+        if last_result:
+            translated, report = last_result
+            report["attempt"] = policy["maxRetries"] + 1
+            if last_error:
+                report["note"] += " 后续重试未返回完整译文。"
+            return translated, report
+        translated = {"page_id": int(page.get("page_id", 0)), "title": str(page.get("title", "")),
+                      "key_points": [str(item) for item in page.get("key_points", [])],
+                      "script_text": str(page.get("script_text", "")),
+                      "layout": copy.deepcopy(page.get("layout", {})), "script_source": "untranslated_source"}
+        report = {"page_id": translated["page_id"], "back_translation": "", "semantic_similarity": 0.0,
+                  "terminology_coverage": 0.0, "formula_number_proper_name_accuracy": 0.0,
+                  "contextual_consistency": 0.0, "passed": False,
+                  "note": "多次重试后仍未取得有效译文，本页保留原文，需人工处理。",
+                  "attempt": policy["maxRetries"] + 1, "personal_names_preserved": False,
+                  "thresholds": policy}
         return translated, report
 
     def _run_s2(
@@ -856,7 +960,7 @@ Source page:
                     name_spellings=localized_person_names(protected_names,target_name)
                     request_value = {"taskId":task['id'],"page":page,"language":target_name,
                                      "policy":task.get('translationPolicy'),"names":protected_names,
-                                     "model":self.settings.gateway_model}
+                                     "model":self.settings.gateway_model,"translationVersion":"language-check-v2"}
                     if any(name_spellings[name]!=name for name in name_spellings):
                         request_value["officialNameSpellings"]=name_spellings
                     try:
@@ -947,14 +1051,19 @@ Source page:
                 "package": package_report,
                 "languageCode": code,
                 "pageCount": len(page_reports),
-                "passed": all(item["passed"] for item in page_reports),
-                "automaticCorrectionCount": sum(item["attempt"] - 1 for item in page_reports),
+                "passed": all(item["passed"] for item in page_reports) and not package_report.get("warnings"),
+                "automaticCorrectionCount": sum(
+                    sum(item[key]["attempt"] - 1 for key in ("slide_validation", "script_validation"))
+                    if "slide_validation" in item else item["attempt"] - 1
+                    for item in page_reports
+                ),
                 "metrics": metrics,
                 "pages": page_reports,
             }
+            report["warning"] = _translation_warning(page_reports)
+            if package_report.get("warnings"):
+                report["warning"] += ("；" if report["warning"] else "") + "部分 PPT 段落未通过翻译检查，请审阅。"
             _write_json(report_path, report)
-            if not report["passed"]:
-                raise RuntimeError(f"{code} 翻译校验未通过，详见 translation_report.json")
             if code in {'ja-JP','de-DE'}:
                 from .pptx_font_embedding import embed_fonts
                 font_root=Path(os.environ.get('SMARTCOURSE_FONT_ROOT', str(self.settings.artifact_root.parent/'model-cache'/'fonts')))
@@ -990,6 +1099,7 @@ Source page:
                 "pageCount": len(translated_pages),
                 "validationReport": self._url(report_path),
                 "passed": report["passed"],
+                "warning": report["warning"],
                 "metrics": metrics,
             }
         result = {"languageCount": len(outputs), "languages": outputs}
@@ -1036,7 +1146,13 @@ Source page:
                     progress(3, "running", min(99, round(((index-1)+completed/max(1,total))*100/max(1,len(codes)))),
                              {"language":code,"page":page_id,"processed":completed,"total":total,
                               "step":"语音合成" if phase=="synthesis" else "语音时间戳对齐"})
-                result = agent.run(code, str(source_json), language=code, progress_callback=speech_progress)
+                from s3_tts_agent import SpeechCoverageError
+                result = _run_speech_with_retries(
+                    lambda: agent.run(code, str(source_json), language=code, progress_callback=speech_progress),
+                    lambda exc, attempt: progress(3, "running", 0, {"language": code, "step": str(exc),
+                                                                      "retry": attempt, "retryLimit": 3}),
+                    SpeechCoverageError,
+                )
                 if result.get("error"):
                     raise RuntimeError(f"{code} 语音合成失败：{result['error']}")
                 requested_seconds = float(task.get('inputs',{}).get('durationMinutes',10))*60
@@ -1287,10 +1403,13 @@ Source page:
                 )
             if result.get("error") or not result.get("output_path"):
                 raise RuntimeError(f"{code} 视频合成失败：{result}")
+            from .course_duration import probe_video_duration
+            video_duration = probe_video_duration(result['output_path'])
             if pdf_input:
                 from .pdf_delivery import package_pdf_result
                 packaged=package_pdf_result(root,code,task['name'],result['output_path'])
                 outputs[code]={key:self._url(value) if isinstance(value,str) else value for key,value in packaged.items()}
+                outputs[code].update(durationSeconds=video_duration, durationSource='video_metadata' if video_duration is not None else None)
                 outputs[code]['pageVideos']=[{**page,'path':self._url(page['path'])} for page in packaged['pageVideos']]
                 progress(5,'running',min(99,round(index*100/max(1,len(codes)))),{'language':code,'step':'PDF 课程结果已整理'})
                 continue
@@ -1327,6 +1446,8 @@ Source page:
             bundle=archive_course(delivery, root/'delivery'/f'{code}.zip')
             outputs[code] = {
                 "video": self._url(result.get("output_path")),
+                "durationSeconds": video_duration,
+                "durationSource": "video_metadata" if video_duration is not None else None,
                 "pageVideos": [{**item, 'path': self._url(item['path'])} for item in page_videos],
                 "offlinePage": self._url(offline),
                 "srt": self._url(language_root / "s3_output/subtitles.srt"),

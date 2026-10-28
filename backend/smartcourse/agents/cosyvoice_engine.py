@@ -122,6 +122,17 @@ class CosyVoiceEngine:
         if self._remote_session is not None:
             self._remote_session.close()
             self._remote_session = None
+        if self._model is not None:
+            self._model = None
+            self._speaker_keys.clear()
+            self._speaker_reference = None
+            self._conversion_reference = None
+            self._conversion_conditioning = None
+            import gc
+            gc.collect()
+            import torch
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
 
     def _load(self):
         if self._model is not None:

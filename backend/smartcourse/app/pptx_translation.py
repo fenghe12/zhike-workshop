@@ -151,6 +151,14 @@ def _validate_answer(answer, inputs, part, target=None, protected_names=()):
                 content = content.replace(name, '')
             if re.search(r'[\u4e00-\u9fff]', content):
                 raise ValueError(f"PPT 译文仍含未翻译的中文，目标语言为 {target}：{part}")
+        if target:
+            from .language_validation import check_target_language
+            content = ''.join(values)
+            for name in protected_names:
+                content = content.replace(name, '')
+            result = check_target_language(content, target)
+            if result['status'] == 'mismatch':
+                raise ValueError(f"PPT 段落语种为 {result['detected']}，目标为 {target}：{part}")
     return translated
 
 
@@ -225,7 +233,7 @@ def translate_package(source: Path, destination: Path, gateway, target: str, *, 
                 saved=json.loads(record.read_text())
                 if saved['inputs'] == inputs:
                     try:
-                        return item,_validate_answer(saved['answer'],inputs,part,target,protected_names)
+                        return item,_validate_answer(saved['answer'],inputs,part,target,protected_names),None
                     except ValueError:
                         pass
                 record.replace(record.with_suffix('.rejected-cache.json'))
@@ -248,22 +256,38 @@ def translate_package(source: Path, destination: Path, gateway, target: str, *, 
                     'properties': {'paragraphs': {'type': 'array', 'minItems': len(inputs), 'maxItems': len(inputs),
                         'prefixItems': [{'type': 'array', 'items': {'type': 'string'},
                                          'minItems': len(row['runs']), 'maxItems': len(row['runs'])} for row in inputs]}}}
-            for attempt in range(2):
-                answer=gateway.respond_json(prompt,reasoning_effort='medium',max_output_tokens=12000,**options)
+            from .gateway import GatewayError
+            last_values = None
+            last_error = None
+            for attempt in range(4):
+                answer = None
                 try:
-                    values=_validate_answer(answer,inputs,part,target,protected_names);break
-                except ValueError as error:
+                    answer=gateway.respond_json(prompt,reasoning_effort='medium',max_output_tokens=12000,**options)
+                    if isinstance(answer,dict):
+                        candidate=answer.get('paragraphs')
+                        if (isinstance(candidate,list) and len(candidate)==len(inputs) and
+                            all(isinstance(row,list) and len(row)==len(item['runs']) and
+                                all(isinstance(value,str) for value in row) and any(value.strip() for value in row)
+                                for item,row in zip(inputs,candidate))):
+                            last_values=candidate
+                    values=_validate_answer(answer,inputs,part,target,protected_names)
+                    temporary=record.with_suffix('.tmp');temporary.write_text(json.dumps({'inputs':inputs,'answer':answer},ensure_ascii=False));temporary.replace(record)
+                    return item,values,None
+                except (GatewayError, ValueError, TypeError) as error:
+                    last_error = str(error)
                     record.with_suffix(f'.error-{attempt+1}.json').write_text(json.dumps({'inputs':inputs,'answer':answer,'error':str(error)},ensure_ascii=False))
-                    if attempt==1:raise
                     prompt+='\nCorrect this validation error: '+str(error)+'. Return exactly '+str(len(inputs))+' paragraphs, with run counts '+str([len(row['runs']) for row in inputs])+'. Translate all source-language words except explicitly protected personal names. Previous response: '+json.dumps(answer,ensure_ascii=False)
-            temporary=record.with_suffix('.tmp');temporary.write_text(json.dumps({'inputs':inputs,'answer':answer},ensure_ascii=False));temporary.replace(record)
-            return item,values
+            values = last_values or [row['runs'] for row in inputs]
+            warning = {'part':part,'offset':offset,'message':last_error,
+                       'sourceRetained':last_values is None}
+            return item,values,warning
 
-        count=0;pool=ThreadPoolExecutor(max_workers=max(1,min(3,int(os.environ.get('SMARTCOURSE_TRANSLATION_WORKERS','3')))))
+        count=0;warnings=[];pool=ThreadPoolExecutor(max_workers=max(1,min(3,int(os.environ.get('SMARTCOURSE_TRANSLATION_WORKERS','3')))))
         futures=[pool.submit(translate,item) for item in items]
         try:
             for completed,future in enumerate(as_completed(futures),1):
-                (part,offset,batch,inputs),values=future.result()
+                (part,offset,batch,inputs),values,warning=future.result()
+                if warning: warnings.append(warning)
                 for (nodes,_),texts in zip(batch,values):
                     for node,text in zip(nodes,texts):node.text=text;count+=1
                 if progress:progress(completed,len(items))
@@ -274,4 +298,4 @@ def translate_package(source: Path, destination: Path, gateway, target: str, *, 
         with zipfile.ZipFile(temporary,'w',zipfile.ZIP_DEFLATED) as output:
             for item in package.infolist():output.writestr(item,changes.get(item.filename,package.read(item.filename)))
     temporary.replace(destination)
-    return {'translatedTextNodes':count,'translatedParts':len(changes),'fallbackImagesRequiringRefresh':cached_images}
+    return {'translatedTextNodes':count,'translatedParts':len(changes),'fallbackImagesRequiringRefresh':cached_images,'warnings':warnings}

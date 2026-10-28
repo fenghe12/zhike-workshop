@@ -16,7 +16,7 @@ class Handler(BaseHTTPRequestHandler):
  def log_message(self,*args):pass
  def current_user(self):
   headers={'Content-Type':'application/json'}
-  for name in ('Authorization','Cookie'):
+  for name in ('Authorization','Cookie','X-Real-IP'):
    if self.headers.get(name):headers[name]=self.headers[name]
   if len(headers)==1:raise PermissionError('请先登录后上传课程素材')
   try:
@@ -32,7 +32,7 @@ class Handler(BaseHTTPRequestHandler):
  def proxy(self,path,method='GET',body=None):
   headers={'Content-Type':'application/json'}
   response_started=False
-  for name in ['Authorization','Range','Cookie']:
+  for name in ['Authorization','Range','Cookie','X-Real-IP']:
    if self.headers.get(name):headers[name]=self.headers[name]
   try:
    with urlopen(Request(config()['base_url'].rstrip('/')+path,data=body,method=method,headers=headers),timeout=30) as r:
@@ -58,7 +58,7 @@ class Handler(BaseHTTPRequestHandler):
    else:self.send(503,{'message':'生成服务尚未连接，请在系统设置中检查服务地址。'})
  def backend_json(self,path,method='GET',value=None):
   headers={'Content-Type':'application/json'}
-  for name in ('Authorization','Cookie'):
+  for name in ('Authorization','Cookie','X-Real-IP'):
    if self.headers.get(name):headers[name]=self.headers[name]
   data=None if value is None else json.dumps(value,ensure_ascii=False).encode()
   with urlopen(Request(config()['base_url'].rstrip('/')+path,data=data,method=method,headers=headers),timeout=30) as response:
@@ -105,15 +105,11 @@ class Handler(BaseHTTPRequestHandler):
     with zipfile.ZipFile(io.BytesIO(body)) as z:
      if sum(x.file_size for x in z.infolist())>800*1024*1024:raise ValueError('课件解压后过大')
      presentation=E.fromstring(z.read('ppt/presentation.xml'));rels=E.fromstring(z.read('ppt/_rels/presentation.xml.rels'));targets={x.get('Id'):x.get('Target') for x in rels};slide_ids=presentation.findall('p:sldIdLst/p:sldId',NS)
-     pages=[];elements=0;notes=0
+     pages=[];elements=0
      for sid in slide_ids:
       target=targets[sid.get('{'+NS['r']+'}id')];part=target.lstrip('/') if target.startswith('/') else posixpath.normpath('ppt/'+target);root=E.fromstring(z.read(part));texts=[''.join(t.text or '' for t in p.iter('{'+NS['a']+'}t')).strip() for p in root.iter('{'+NS['a']+'}p')];pages.append([t for t in texts if t]);elements+=sum(1 for x in root.iter() if x.tag in ['{'+NS['p']+'}sp','{'+NS['p']+'}pic','{'+NS['p']+'}graphicFrame'])
-     for part in z.namelist():
-      if part.startswith('ppt/notesSlides/notesSlide') and part.endswith('.xml'):
-       root=E.fromstring(z.read(part));content=''.join(t.text or '' for t in root.iter('{'+NS['a']+'}t')).strip()
-       if content and not content.isdigit():notes+=1
     if not pages:raise ValueError('课件中没有可读取的页面')
-    identifier=uuid.uuid4().hex;meta={'id':identifier,'createdBy':user_id,'name':filename,'pages':len(pages),'elements':elements,'notes':notes,'title':pages[0][0] if pages[0] else filename,'first_page_text':pages[0][1:6]}
+    identifier=uuid.uuid4().hex;meta={'id':identifier,'createdBy':user_id,'name':filename,'pages':len(pages),'elements':elements,'title':pages[0][0] if pages[0] else filename,'first_page_text':pages[0][1:6]}
     first=''.join(pages[0]);cjk=sum('\u4e00'<=c<='\u9fff' for c in first);latin=sum(c.isascii() and c.isalpha() for c in first)
     if latin>cjk*3:meta['language']='英语'
     elif cjk>latin:meta['language']='中文'
@@ -129,17 +125,20 @@ class Handler(BaseHTTPRequestHandler):
     return self.proxy('/v1/uploads','POST',json.dumps({'filename':meta['name'],'kind':'ppt','contentBase64':base64.b64encode(content).decode()}).encode())
    if path=='/api/courses':
     value=json.loads(body)
-    inputs={key:value[key] for key in ('topic','durationMinutes','totalPages','targetLearners','requirements') if value.get(key) not in (None,'')}
+    inputs={key:value[key] for key in ('topic','durationMinutes','totalPages','targetLearners','requirements','courseProfile','exampleId') if value.get(key) not in (None,'')}
     if value.get('pptUrl'):
      inputs['ppt']={'name':Path(str(value['pptUrl'])).name or 'course.pptx','path':value['pptUrl'],'url':value['pptUrl']}
     if value.get('scriptUrl'):
      inputs['script']={'name':Path(str(value['scriptUrl'])).name or 'lecture.docx','path':value['scriptUrl'],'url':value['scriptUrl']}
-    task_payload={key:value[key] for key in ('name','mode','sourceLanguage','targetLanguages') if key in value}
+    task_payload={key:value[key] for key in ('name','mode','sourceLanguage','targetLanguages','voiceId') if key in value}
     task_payload['inputs']=inputs
+    task_payload['autoExecute']=False
     _status,task=self.backend_json('/v1/tasks','POST',task_payload)
     task_id=task['id']
-    if value.get('teacherImageUrl'):
-     self.backend_json('/v1/tasks/'+task_id+'/assets','PUT',{'referenceImage':{'path':value['teacherImageUrl'],'url':value['teacherImageUrl'],'name':Path(str(value['teacherImageUrl'])).name}})
+    assets={}
+    for field,role in (('teacherImageUrl','referenceImage'),('referenceAudioUrl','referenceAudio')):
+     if value.get(field):assets[role]={'path':value[field],'url':value[field],'name':Path(str(value[field])).name}
+    if assets:self.backend_json('/v1/tasks/'+task_id+'/assets','PUT',assets)
     self.backend_json('/v1/tasks/'+task_id+'/execute','POST',{'startStage':1})
     return self.send(202,{'jobId':task_id,'statusUrl':'/v1/tasks/'+task_id})
    if path.startswith('/v1/') or course_route(path):return self.proxy(self.path,'POST',body)

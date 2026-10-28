@@ -15,6 +15,26 @@ def presentation_parts(package, count=1):
 
 
 class TranslationPackageTests(unittest.TestCase):
+    def test_wrong_language_paragraph_is_retried(self):
+        class Translator:
+            calls = 0
+            def respond_json(self, *args, **kwargs):
+                self.calls += 1
+                text = ('现在我们开始学习人工智能的基本概念。我们需要理解机器如何学习以及如何解决实际问题。'
+                        '这是一个重要的技术领域。' if self.calls == 1 else
+                        'これから人工知能の基本的な概念を学びます。機械がどのように学習し、'
+                        '実際の問題を解決するのかを理解することが重要です。')
+                return {'paragraphs': [[text]]}
+        with tempfile.TemporaryDirectory() as temporary:
+            source, output = Path(temporary)/'input.pptx', Path(temporary)/'out.pptx'
+            with zipfile.ZipFile(source, 'w') as package:
+                presentation_parts(package)
+                package.writestr('ppt/slides/slide1.xml', '<a:p xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"><a:r><a:t>Introduction to artificial intelligence</a:t></a:r></a:p>')
+            translator = Translator()
+            report = translate_package(source, output, translator, 'Japanese')
+            self.assertEqual(translator.calls, 2)
+            self.assertFalse(report['warnings'])
+
     def test_plain_master_heading_is_translated_as_one_phrase(self):
         from lxml import etree as E
         class Translator:
@@ -156,15 +176,21 @@ class TranslationPackageTests(unittest.TestCase):
                     self.assertEqual(tree.find('.//{http://schemas.openxmlformats.org/drawingml/2006/main}rPr').get('b'), "1")
                     self.assertEqual(tree.find('.//{http://schemas.openxmlformats.org/drawingml/2006/main}t').text, "Course translated")
 
-    def test_invalid_response_does_not_publish_output(self):
+    def test_invalid_response_is_preserved_with_warning_after_retries(self):
         class InvalidTranslator:
+            calls = 0
             def respond_json(self, *args, **kwargs):
+                self.calls += 1
                 return {"paragraphs": []}
         with tempfile.TemporaryDirectory() as temporary:
             source, output = Path(temporary) / "input.pptx", Path(temporary) / "out.pptx"
             with zipfile.ZipFile(source, "w") as package:
                 presentation_parts(package)
                 package.writestr("ppt/slides/slide1.xml", '<a:p xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"><a:r><a:t>Test</a:t></a:r></a:p>')
-            with self.assertRaises(ValueError):
-                translate_package(source, output, InvalidTranslator(), "German")
-            self.assertFalse(output.exists())
+            translator = InvalidTranslator()
+            report = translate_package(source, output, translator, "German")
+            self.assertEqual(translator.calls, 4)
+            self.assertTrue(output.exists())
+            self.assertTrue(report['warnings'][0]['sourceRetained'])
+            with zipfile.ZipFile(output) as package:
+                self.assertIn(b'Test', package.read('ppt/slides/slide1.xml'))

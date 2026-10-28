@@ -38,6 +38,10 @@ logging.basicConfig(
 )
 logger = logging.getLogger("TTSAgent")
 
+
+class SpeechCoverageError(ValueError):
+    """Generated speech did not pass the transcription coverage check."""
+
 # -----------------------------
 # Config
 # -----------------------------
@@ -261,7 +265,9 @@ class FasterWhisperAligner(WhisperAligner):
             path = os.environ.get("SMARTCOURSE_WHISPER_MODEL_PATH")
             if not path or not Path(path).is_dir():
                 raise ValueError("未配置实际语音对齐模型目录")
-            self._model = WhisperModel(path, device="cpu", compute_type="int8",
+            device = os.environ.get("SMARTCOURSE_WHISPER_DEVICE", "cpu")
+            compute = os.environ.get("SMARTCOURSE_WHISPER_COMPUTE_TYPE", "float16" if device == "cuda" else "int8")
+            self._model = WhisperModel(path, device=device, compute_type=compute,
                                        cpu_threads=int(os.environ.get('SMARTCOURSE_ALIGNMENT_THREADS', '8')))
 
     def get_sentence_timestamps(self, wav_path: str, language: str = "en") -> List[Dict]:
@@ -351,18 +357,26 @@ class TTSAgent:
         if not timing_path.is_file():
             return
         timing = json.loads(timing_path.read_text(encoding='utf-8'))
-        scale = 1.0 / speed
+        import wave
+        with wave.open(str(source), 'rb') as audio:
+            actual_samples, sample_rate = audio.getnframes(), audio.getframerate()
+        original_samples = timing.get('totalSamples')
+        if not isinstance(original_samples, int) or original_samples <= 0:
+            raise ValueError('语音采样记录缺少有效的总采样数')
+        scale = actual_samples / original_samples
         for item in timing.get('sentences', []):
-            if 'start' in item:
-                item['start'] = round(float(item['start']) * scale, 6)
-            if 'end' in item:
-                item['end'] = round(float(item['end']) * scale, 6)
             if 'startSample' in item:
-                item['startSample'] = round(float(item['startSample']) * scale)
+                item['startSample'] = min(actual_samples, round(float(item['startSample']) * scale))
+                item['start'] = item['startSample'] / sample_rate
+            elif 'start' in item:
+                item['start'] = round(float(item['start']) * scale, 6)
             if 'endSample' in item:
-                item['endSample'] = round(float(item['endSample']) * scale)
-        if 'totalSamples' in timing:
-            timing['totalSamples'] = round(float(timing['totalSamples']) * scale)
+                item['endSample'] = min(actual_samples, round(float(item['endSample']) * scale))
+                item['end'] = item['endSample'] / sample_rate
+            elif 'end' in item:
+                item['end'] = round(float(item['end']) * scale, 6)
+        timing['totalSamples'] = actual_samples
+        timing['sampleRate'] = sample_rate
         timing['speed'] = speed
         timing_path.write_text(json.dumps(timing, ensure_ascii=False, indent=2), encoding='utf-8')
 
@@ -382,8 +396,14 @@ class TTSAgent:
         coverage = coverage_report(pr["script_text"], sentences)
         Path(wav_path).with_suffix('.coverage.json').write_text(json.dumps(coverage, ensure_ascii=False, indent=2))
         if not coverage['passed']:
+            import shutil
+            failed = Path(wav_path).parent / 'failed-checks' / f"page_{page_id:03d}" / str(pr['generation_id'])
+            failed.mkdir(parents=True, exist_ok=True)
+            for source in (Path(wav_path), Path(wav_path).with_suffix('.timing.json'), Path(wav_path).with_suffix('.coverage.json')):
+                if source.is_file():
+                    shutil.copy2(source, failed / source.name)
             Path(wav_path).with_suffix('.input.json').unlink(missing_ok=True)
-            raise ValueError(f"第 {page_id} 页语音与讲稿对应内容不足，停止后续媒体生成，请检查语音完整性")
+            raise SpeechCoverageError(f"第 {page_id} 页语音与讲稿对应内容不足，请检查语音完整性")
         write_record(asr_path,{'input':asr_input,'sentences':sentences})
         from app.speech_timing import generated_sentences
         measured = generated_sentences(wav_path, pr['script_text'], pr['duration'])
@@ -593,7 +613,7 @@ class TTSAgent:
             }
 
         finally:
-            alignment_pool.shutdown(wait=False,cancel_futures=True)
+            alignment_pool.shutdown(wait=True,cancel_futures=True)
 
 
 # =====================================================

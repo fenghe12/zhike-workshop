@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 import time
 from typing import Any, Callable
 
@@ -12,6 +13,7 @@ class PipelinePerformanceRecorder:
         self.task_id = task_id
         self.started = time.perf_counter()
         self.stages: dict[str, dict[str, Any]] = {}
+        self.media_device = os.environ.get("SMARTCOURSE_PERFORMANCE_DEVICE", "NPU").upper()
 
     def run_stage(self, stage: str, function: Callable[[], Any]) -> Any:
         started = time.perf_counter()
@@ -23,7 +25,7 @@ class PipelinePerformanceRecorder:
             raise
         finally:
             self.stages[stage] = {
-                "device": STAGE_DEVICES.get(stage, "unknown"),
+                "device": self.media_device if stage in {"S3", "S4"} else STAGE_DEVICES.get(stage, "unknown"),
                 "elapsedSeconds": round(time.perf_counter() - started, 3),
                 "status": status,
             }
@@ -43,6 +45,10 @@ class PipelinePerformanceRecorder:
             3,
         )
         npu_hours = round(npu_seconds / 3600, 6)
+        gpu_seconds = round(
+            sum(float(value["elapsedSeconds"]) for value in self.stages.values() if value["device"] == "GPU"),
+            3,
+        )
         duration = float(output_duration_seconds or 0)
         return {
             "schemaVersion": "2026.1",
@@ -53,6 +59,7 @@ class PipelinePerformanceRecorder:
             "stages": self.stages,
             "npuSeconds": npu_seconds,
             "npuHours": npu_hours,
+            "gpuSeconds": gpu_seconds,
             "npuHourlyCost": npu_hourly_cost,
             "estimatedNpuCost": round(npu_hours * npu_hourly_cost, 4)
             if npu_hourly_cost is not None
