@@ -3,6 +3,7 @@ from __future__ import annotations
 import base64
 import ast
 import json
+import logging
 import mimetypes
 import random
 import re
@@ -23,6 +24,20 @@ from .config import Settings
 
 class GatewayError(RuntimeError):
     pass
+
+
+class GatewayJSONError(GatewayError):
+    def __init__(self, message: str, *, raw_text: str = "", attempts: int = 1):
+        super().__init__(message)
+        self.raw_text = raw_text
+        self.attempts = attempts
+
+
+def _save_response_record(path: Path, record: dict[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+    descriptor = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+    with os.fdopen(descriptor, "w", encoding="utf-8") as stream:
+        json.dump(record, stream, ensure_ascii=False, indent=2)
 
 
 def _curl_json(url, encoded, headers, timeout):
@@ -97,7 +112,7 @@ def extract_json(text: str) -> Any:
     starts = [(cleaned.find("{"), "{", "}"), (cleaned.find("["), "[", "]")]
     starts = [item for item in starts if item[0] >= 0]
     if not starts:
-        raise GatewayError("网关文本中没有 JSON 对象")
+        raise GatewayJSONError("网关文本中没有 JSON 对象", raw_text=text)
     start, opening, closing = min(starts, key=lambda item: item[0])
     depth = 0
     quoted = False
@@ -119,8 +134,11 @@ def extract_json(text: str) -> Any:
         elif char == closing:
             depth -= 1
             if depth == 0:
-                return json.loads(cleaned[start : index + 1])
-    raise GatewayError("网关返回的 JSON 不完整")
+                try:
+                    return json.loads(cleaned[start : index + 1])
+                except ValueError as exc:
+                    raise GatewayJSONError("网关返回的 JSON 格式无效", raw_text=text) from exc
+    raise GatewayJSONError("网关返回的 JSON 不完整", raw_text=text)
 
 
 class ResponsesGateway:
@@ -138,6 +156,7 @@ class ResponsesGateway:
         max_output_tokens: int | None = None,
         response_schema: dict[str, Any] | None = None,
         retries: int = 4,
+        response_record_path: Path | None = None,
     ) -> str:
         token = self.settings.gateway_token or _embedded_kimi_key()
         if not token:
@@ -201,7 +220,18 @@ class ResponsesGateway:
                     req = request.Request(self.settings.gateway_url, data=encoded, headers=headers, method="POST")
                     with request.urlopen(req, timeout=self.timeout) as response:
                         payload = json.loads(response.read().decode("utf-8"))
-                return _extract_text(payload)
+                raw_text = _extract_text(payload)
+                if response_record_path is not None:
+                    _save_response_record(Path(response_record_path), {
+                        "rawText": raw_text,
+                        "model": payload.get("model", self.settings.gateway_model),
+                        "finishReasons": [choice.get("finish_reason") for choice in payload.get("choices", [])
+                                          if isinstance(choice, dict)],
+                        "status": payload.get("status"),
+                        "incompleteDetails": payload.get("incomplete_details"),
+                        "usage": payload.get("usage"),
+                    })
+                return raw_text
             except error.HTTPError as exc:
                 detail = exc.read().decode("utf-8", errors="replace")[:1000]
                 last_error = GatewayError(f"网关 HTTP {exc.code}: {detail}")
@@ -213,12 +243,29 @@ class ResponsesGateway:
                 time.sleep(min(2**attempt, 12) + random.random())
         raise GatewayError(f"网关请求失败：{last_error}")
 
-    def respond_json(self, text: str, **kwargs: Any) -> Any:
-        for attempt in range(2):
-            raw = self.respond(text, **kwargs)
+    def respond_json(self, text: str, *, json_retries: int = 3,
+                     json_record_dir: Path | None = None, **kwargs: Any) -> Any:
+        if isinstance(json_retries, bool) or not isinstance(json_retries, int) or not 0 <= json_retries <= 3:
+            raise ValueError("JSON 重试次数必须为 0 至 3")
+        prompt = text
+        for attempt in range(json_retries + 1):
+            record_path = Path(json_record_dir) / f"attempt-{attempt + 1}.json" if json_record_dir is not None else None
+            options = dict(kwargs)
+            if record_path is not None:
+                options["response_record_path"] = record_path
+            raw = self.respond(prompt, **options)
             try:
                 return extract_json(raw)
-            except ValueError:
-                if attempt == 1:
-                    raise
-                text += "\nReturn only valid JSON. Escape quotation marks and line breaks inside strings. Do not include commentary or Markdown fences."
+            except (GatewayError, ValueError) as exc:
+                if record_path is not None:
+                    record = json.loads(record_path.read_text()) if record_path.is_file() else {"rawText": raw}
+                    record["parseError"] = str(exc)
+                    _save_response_record(record_path, record)
+                logging.getLogger(__name__).warning("Model JSON parsing failed on attempt %s/%s: %s",
+                                                    attempt + 1, json_retries + 1, exc)
+                if attempt == json_retries:
+                    raise GatewayJSONError(str(exc), raw_text=raw, attempts=attempt + 1) from exc
+                prompt = text + "\nThe previous response could not be parsed: " + str(exc)
+                prompt += ("\nReturn one complete, valid JSON value covering every requested item. "
+                           "Escape quotation marks and line breaks inside strings. "
+                           "Include all closing brackets. Do not include commentary or Markdown fences.")

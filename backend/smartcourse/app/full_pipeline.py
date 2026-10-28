@@ -1136,7 +1136,11 @@ Source page:
                                                 preserve_script=task.get('mode') == 'upload',
                                                 review_content=task.get('mode') == 'topic' and os.environ.get('SMARTCOURSE_STRICT_NARRATION_REVIEW') == '1',
                                                 target_duration_seconds=(float(task.get('inputs',{}).get('durationMinutes',10))*60
-                                                                         if task.get('mode') == 'topic' else None))
+                                                                         if task.get('mode') == 'topic' else None),
+                                                progress_callback=lambda page, attempt: progress(3, "running",
+                                                    min(99, round((index-1)*100/max(1,len(codes)))),
+                                                    {"language":code,"page":page,"step":"准备逐页朗读讲稿",
+                                                     "retry":attempt-1,"retryLimit":3}))
                 from .narration import export_lecture_text
                 oral_structure=json.loads(source_json.read_text(encoding="utf-8"))
                 oral_text=export_lecture_text(oral_structure,source_json.parent/'lecture.txt')
@@ -1173,7 +1177,8 @@ Source page:
                     "srt": self._url(result.get("srt_path")),
                     "durationSeconds": result.get("total_duration"),
                     "speechPacing": result.get("speech_pacing"),
-                    "warning": ("部分语句的语速检查仍需复核，请试听生成语音。" if (result.get('speech_pacing') or {}).get('passed') is False else ""),
+                    "warning": "；".join([page['narration_warning'] for page in oral_structure['pages'] if page.get('narration_warning')]
+                        + (["部分语句的语速检查仍需复核，请试听生成语音。"] if (result.get('speech_pacing') or {}).get('passed') is False else [])),
                     "pageCount": result.get("pages"),
                     "referenceAudio": self._url(reference_audio),
                     "narrationStructure": self._url(source_json),

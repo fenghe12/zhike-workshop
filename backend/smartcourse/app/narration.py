@@ -5,6 +5,8 @@ import math
 import re
 from pathlib import Path
 
+from .gateway import GatewayError
+
 
 def validate_spoken_text(text):
     if not isinstance(text, str) or not text.strip():
@@ -23,7 +25,8 @@ def export_lecture_text(structure,output):
     return output
 
 
-def prepare_narration(structure, gateway, output, *, preserve_script=False, target_duration_seconds=None, review_content=False):
+def prepare_narration(structure, gateway, output, *, preserve_script=False, target_duration_seconds=None,
+                      review_content=False, progress_callback=None):
     output=Path(output)
     if preserve_script:
         pages = structure.get('pages', [])
@@ -58,19 +61,24 @@ def prepare_narration(structure, gateway, output, *, preserve_script=False, targ
                 raise ValueError('缓存口播稿页码不完整或顺序不一致')
             for page in cached['pages']:
                 validate_spoken_text(page['script_text'])
-                if character_limit and len(page['script_text']) > character_limit:
+                if (character_limit and len(page['script_text']) > character_limit
+                        and not page.get('narration_length_review', {}).get('continuedAfterRetries')):
                     raise ValueError('缓存口播稿超过长度限制')
         except (ValueError, KeyError, TypeError):
             pass
         else:
             return output
-    if len(structure['pages']) > 5:
+    if len(structure['pages']) > 1:
         result=copy.deepcopy(structure)
         result['pages']=[]
-        for offset in range(0,len(structure['pages']),5):
-            subset={**structure,'pages':structure['pages'][offset:offset+5]}
-            part=prepare_narration(subset,gateway,output.parent/'narration-batches'/f'pages-{offset+1:03d}.json',
-                target_duration_seconds=(target_duration_seconds*len(subset['pages'])/len(structure['pages']) if target_duration_seconds else None),review_content=review_content)
+        # Reuse completed five-page batches; new or rejected batches use individual pages.
+        batch_size = 5 if len(structure['pages']) > 5 else 1
+        for offset in range(0,len(structure['pages']),batch_size):
+            subset={**structure,'pages':structure['pages'][offset:offset+batch_size]}
+            page_id = subset['pages'][0]['page_id']
+            part=prepare_narration(subset,gateway,output.parent/'narration-batches'/f'pages-{page_id:03d}.json',
+                target_duration_seconds=(target_duration_seconds*len(subset['pages'])/len(structure['pages']) if target_duration_seconds else None),
+                review_content=review_content,progress_callback=progress_callback)
             result['pages'].extend(json.loads(part.read_text())['pages'])
         output.parent.mkdir(parents=True,exist_ok=True)
         output.write_text(json.dumps(result,ensure_ascii=False,indent=2))
@@ -89,18 +97,21 @@ def prepare_narration(structure, gateway, output, *, preserve_script=False, targ
         'Report genuinely missing or ambiguous source information in source_issues without inventing its replacement.\n'+json.dumps(request,ensure_ascii=False))
     output.parent.mkdir(parents=True,exist_ok=True)
     feedback = ''
-    for attempt in range(1, 4):
-        response=gateway.respond_json(prompt+feedback, reasoning_effort='medium',max_output_tokens=8000)
-        pages=response.get('pages',[]) if isinstance(response,dict) else []
+    best_pages = None
+    for attempt in range(1, 5):
+        response = None
+        if progress_callback:
+            progress_callback(structure['pages'][0]['page_id'], attempt)
         try:
+            response=gateway.respond_json(prompt+feedback, reasoning_effort='medium',max_output_tokens=8000,
+                json_retries=0,json_record_dir=output.parent/(output.stem+'.responses')/f'revision-{attempt}')
+            pages=response.get('pages',[]) if isinstance(response,dict) else []
             if not isinstance(pages,list) or any(not isinstance(page,dict) for page in pages):
                 raise ValueError('口语讲稿页面格式无效')
             if [p.get('page_id') for p in pages] != [p['page_id'] for p in structure['pages']]:
                 raise ValueError('口语讲稿未完整覆盖课件页面')
             for prepared in pages:
-                text = validate_spoken_text(prepared.get('script_text'))
-                if character_limit and len(text) > character_limit:
-                    raise ValueError(f"第 {prepared['page_id']} 页讲稿 {len(text)} 字，超过 {character_limit} 字限制。需保留核心内容并减少重复说明")
+                validate_spoken_text(prepared.get('script_text'))
             if review_content:
                 from .course_content_review import review_course_content
                 source = [{'page':p['page_id'],'title':p.get('title'),
@@ -114,11 +125,30 @@ def prepare_narration(structure, gateway, output, *, preserve_script=False, targ
                 if not review['passed']:
                     reasons = [check.get('reason','') for check in review['checks'] if not check['met']]
                     raise ValueError('口播内容复核未通过：'+'；'.join(reasons))
-        except ValueError as error:
+            if best_pages is None or sum(len(p['script_text']) for p in pages) < sum(len(p['script_text']) for p in best_pages):
+                best_pages = copy.deepcopy(pages)
+            for prepared in pages:
+                if character_limit and len(prepared['script_text']) > character_limit:
+                    raise ValueError(f"第 {prepared['page_id']} 页讲稿 {len(prepared['script_text'])} 字，超过 {character_limit} 字建议长度。需保留核心内容并减少重复说明")
+        except (ValueError, GatewayError) as error:
             rejected = output.with_name(output.stem+f'.rejected-{attempt}.json')
-            rejected.write_text(json.dumps({'request':request,'response':response,'error':str(error)},ensure_ascii=False,indent=2))
-            if attempt == 3:
-                raise ValueError('口语讲稿三次修订仍未通过检查：'+str(error)) from error
+            rejected.write_text(json.dumps({'request':request,'response':response,'error':str(error),
+                'rawResponse':getattr(error,'raw_text',None)},ensure_ascii=False,indent=2))
+            rejected.chmod(0o600)
+            if attempt == 4:
+                if best_pages is not None:
+                    pages = best_pages
+                    for prepared in pages:
+                        length = len(prepared['script_text'])
+                        if character_limit and length > character_limit:
+                            prepared['narration_length_review'] = {
+                                'passed': False, 'suggestedMaximumCharacters': character_limit,
+                                'actualCharacters': length, 'retries': 3, 'continuedAfterRetries': True}
+                            prepared['narration_warning'] = (
+                                f"第 {prepared['page_id']} 页讲稿 {length} 字，超过建议长度 {character_limit} 字；"
+                                '局部修订三次后，保留最短的可朗读讲稿继续生成。')
+                    break
+                raise ValueError('口语讲稿三次重试后仍未通过检查：'+str(error)) from error
             feedback = '\nPrevious attempt failed validation. Correct the specific issue without inventing or deleting substantive claims. '
             feedback += json.dumps({'validationError':str(error),'previousResponse':response},ensure_ascii=False)
             continue
@@ -127,9 +157,10 @@ def prepare_narration(structure, gateway, output, *, preserve_script=False, targ
     for source,prepared in zip(result['pages'],pages):
         text=prepared.get('script_text')
         validate_spoken_text(text)
-        if character_limit and len(text) > character_limit:
-            raise ValueError('目标语言口播稿超出时长对应的长度限制，需要重新组织')
         source.update(script_text=text,script_source='narration_agent',source_issues=prepared.get('source_issues',[]))
+        for field in ('narration_length_review','narration_warning'):
+            if field in prepared:
+                source[field] = prepared[field]
     output.parent.mkdir(parents=True,exist_ok=True)
     output.write_text(json.dumps(result,ensure_ascii=False,indent=2))
     record.write_text(json.dumps(request,ensure_ascii=False,indent=2))

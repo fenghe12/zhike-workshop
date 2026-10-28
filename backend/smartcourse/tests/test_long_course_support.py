@@ -24,7 +24,7 @@ class LongCourseTests(unittest.TestCase):
         source={'task_id':'long-course','language_code':'en','pages':[{'page_id':i,'script_text':'Text '+str(i)} for i in range(1,13)]}
         with tempfile.TemporaryDirectory() as folder:
             out=prepare_narration(source,Gateway(),Path(folder)/'notes.json')
-            self.assertEqual(calls,[5,5,2]);self.assertEqual([p['page_id'] for p in json.loads(out.read_text())['pages']],list(range(1,13)))
+            self.assertEqual(calls,[1]*12);self.assertEqual([p['page_id'] for p in json.loads(out.read_text())['pages']],list(range(1,13)))
 
     def test_reference_content_change_creates_a_new_version(self):
         with tempfile.TemporaryDirectory() as folder:
@@ -39,7 +39,7 @@ class LongCourseTests(unittest.TestCase):
             def __init__(self):created.append(self)
             def synthesize(self,text,reference,output,language):
                 calls.append((text,reference,output,language));Path(output).write_bytes(text.encode());return 1.0
-        with tempfile.TemporaryDirectory(dir='/tmp') as folder,patch.dict(sys.modules,{'cosyvoice_engine':types.SimpleNamespace(CosyVoiceEngine=Model)}):
+        with tempfile.TemporaryDirectory() as folder,patch.dict(sys.modules,{'cosyvoice_engine':types.SimpleNamespace(CosyVoiceEngine=Model)}):
             root=Path(folder);worker=threading.Thread(target=serve,args=(root,),daemon=True);worker.start()
             deadline=time.monotonic()+3
             while not (root/'worker.sock').exists() and time.monotonic()<deadline:time.sleep(.01)
