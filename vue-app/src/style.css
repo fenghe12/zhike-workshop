@@ -55,3 +55,5 @@
 
 @media(max-width:1440px){.sidebar{transform:translateX(-100%);transition:.2s;width:232px;overflow-y:auto}.sidebar.open{transform:translateX(0)}.main-shell{margin-left:0}.mobile-menu{display:inline-flex!important}}
 @media(min-width:1441px){.sidebar nav button,.secondary-nav a{white-space:nowrap;flex-shrink:0}.sidebar nav{flex-shrink:0}}
+
+.top-actions .admin-entry{flex-shrink:0;white-space:nowrap}
