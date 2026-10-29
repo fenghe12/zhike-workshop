@@ -1,0 +1,21 @@
+[Unit]
+Description=SmartCourse presentation upload preview
+After=network-online.target smartcourse-api.service
+
+[Service]
+Type=simple
+User=smartcourse
+Group=smartcourse
+WorkingDirectory=/srv/smartcourse/source/ui-adapter
+EnvironmentFile=/srv/smartcourse/config/app.env
+Environment=SMARTCOURSE_ADAPTER_STATE_ROOT=/srv/smartcourse/runtime/adapter
+ExecStart=/srv/smartcourse/envs/api/bin/python -B /srv/smartcourse/source/ui-adapter/serve.py --port 18772
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+UMask=0027
+StandardOutput=append:/srv/smartcourse/logs/adapter.log
+StandardError=append:/srv/smartcourse/logs/adapter.log
+
+[Install]
+WantedBy=multi-user.target

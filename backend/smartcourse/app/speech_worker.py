@@ -4,7 +4,16 @@ import json
 import os
 import re
 import socket
+import tempfile
 from pathlib import Path
+
+
+def configure_session_paths(root):
+    root=Path(root).resolve()
+    temporary=root/'tmp';cache=root/'cache'
+    temporary.mkdir(parents=True,exist_ok=True);cache.mkdir(parents=True,exist_ok=True)
+    os.environ.update(TMPDIR=str(temporary),TEMP=str(temporary),TMP=str(temporary),XDG_CACHE_HOME=str(cache))
+    tempfile.tempdir=None
 
 
 def exchange(socket_path, payload, timeout=900):
@@ -60,7 +69,9 @@ def serve(root):
 
 if __name__=='__main__':
     parser=argparse.ArgumentParser();parser.add_argument('--serve');parser.add_argument('--socket');parser.add_argument('--request');parser.add_argument('--close',action='store_true');parser.add_argument('--ping',action='store_true');args=parser.parse_args()
-    if args.serve:serve(args.serve)
+    if args.serve:
+        configure_session_paths(args.serve)
+        serve(args.serve)
     else:
         payload={'action':'close' if args.close else 'ping'} if args.close or args.ping else json.loads(Path(args.request).read_text())
         print(json.dumps(exchange(args.socket,payload,20 if args.close or args.ping else 900),ensure_ascii=False),flush=True)

@@ -83,7 +83,7 @@ class ComposeAgent:
             avatar=Path(avatars_dir)/f"page_{page['page_id']:03d}.mp4"
             if not avatar.is_file():raise ValueError('缺少页面数字人视频')
             avatar_versions[str(page['page_id'])]=reference_version(Path(output_dir)/'avatar-inputs'/str(page['page_id']),avatar,'avatar')
-        cache_input={'styleVersion':'framed-caption-balanced-v5','sourceVersion':source_version,'audioVersion':audio_version,
+        cache_input={'styleVersion':'framed-caption-balanced-v6','sourceVersion':source_version,'audioVersion':audio_version,
                      'avatarVersions':avatar_versions,'timeline':timeline,'bbox':{str(key):value for key,value in bbox_map.items()},
                      'subtitle':Path(subtitle_srt).read_text() if subtitle_srt else ''}
         checkpoint=Path(output_dir)/'composition-input.json';cached=read_record(checkpoint)
@@ -244,13 +244,11 @@ class ComposeAgent:
                 os.remove(concat_file)
 
     def _burn_subtitles(self, video_path, srt_path, output_path, bbox_map=None,audio_path=None):
-        self._burn_subtitles_local(
-            video_path,
-            srt_path,
-            output_path,
-            bbox_map=bbox_map or {},
-            audio_path=audio_path,
-        )
+        if os.environ.get('SMARTCOURSE_CAPTION_RENDERER') == 'python':
+            return self._burn_subtitles_local(video_path, srt_path, output_path, bbox_map or {}, audio_path)
+        from app.caption_overlay import burn_captions
+        return burn_captions(video_path, srt_path, output_path, bbox_map or {}, audio_path,
+                             self._subtitle_horizontal_bounds, self._wrap_subtitle)
 
     @staticmethod
     def _parse_srt_time(value):
