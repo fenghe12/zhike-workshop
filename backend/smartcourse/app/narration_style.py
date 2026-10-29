@@ -30,7 +30,7 @@ def review_teaching_style(text):
 
 
 def authored_by_user(page):
-    return page.get('original_script_source', page.get('script_source')) == 'user_docx'
+    return any(page.get(key) in {'user_docx','teacher_patch'} for key in ('original_script_source','script_source'))
 
 
 def style_warning(page_id, retries=3):

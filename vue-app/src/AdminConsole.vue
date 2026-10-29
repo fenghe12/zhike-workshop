@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import StudioMetrics from './StudioMetrics.vue'
 import {computed,onMounted,ref} from 'vue'
 import {api} from './api'
 import CourseDurationStats from './CourseDurationStats.vue'
@@ -33,7 +34,7 @@ onMounted(async()=>{try{const result=await api<any>('/v1/admin/access');access.v
   <el-skeleton v-if="access===null" :rows="4" animated/>
   <el-result v-else-if="!access" icon="warning" title="需要管理员权限" sub-title="普通账号只能查看自己的课程和反馈。请联系项目负责人开通管理权限。"/>
   <template v-else>
-   <section class="admin-panel filters"><el-form label-position="top"><div class="filter-grid">
+   <StudioMetrics/><section class="admin-panel filters"><el-form label-position="top"><div class="filter-grid">
     <el-form-item label="起始日期"><el-input v-model="filters.start" type="date"/></el-form-item><el-form-item label="结束日期"><el-input v-model="filters.end" type="date"/></el-form-item>
     <el-form-item label="用户"><el-select v-model="filters.userId" clearable filterable @change="filters.taskId=''">
      <el-option v-for="user in userChoices" :key="user.id" :value="user.id" :label="user.name+' · '+user.account"/>

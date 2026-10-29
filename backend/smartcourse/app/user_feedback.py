@@ -68,6 +68,7 @@ def submit_feedback(store, user_id, payload, task=None):
         snapshot = {'name': task.get('name'), 'status': task.get('status'),
                     'stage': task.get('currentStage'), 'updatedAt': task.get('updatedAt'),
                     'resultCompletedAt': version}
+        snapshot['generationConfig'] = copy.deepcopy(task.get('generationConfig',{}))
     else:
         snapshot = None
     record = {'id': 'feedback_' + uuid.uuid4().hex, 'createdBy': user_id,
@@ -78,8 +79,10 @@ def submit_feedback(store, user_id, payload, task=None):
     def save(data):
         if task:
             current = data.get('tasks', {}).get(task['id'])
-            if not current or (current.get('createdBy') != user_id and user_id not in current.get('teacherDemoUsers', [])):
+            if not current:
                 raise ValueError('课程访问权限已变更，请重新打开课程')
+            from .course_access import require_course
+            require_course(current,user_id)
         data.setdefault('userFeedback', {})[record['id']] = record
         return record
     saved = store.transact(save)

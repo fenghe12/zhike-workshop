@@ -5,6 +5,7 @@ import json
 import re
 import zipfile
 import posixpath
+from contextvars import copy_context
 from pathlib import Path
 
 A = "http://schemas.openxmlformats.org/drawingml/2006/main"
@@ -283,7 +284,7 @@ def translate_package(source: Path, destination: Path, gateway, target: str, *, 
             return item,values,warning
 
         count=0;warnings=[];pool=ThreadPoolExecutor(max_workers=max(1,min(3,int(os.environ.get('SMARTCOURSE_TRANSLATION_WORKERS','3')))))
-        futures=[pool.submit(translate,item) for item in items]
+        futures=[pool.submit(copy_context().run,translate,item) for item in items]
         try:
             for completed,future in enumerate(as_completed(futures),1):
                 (part,offset,batch,inputs),values,warning=future.result()

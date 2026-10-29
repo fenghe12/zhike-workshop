@@ -9,10 +9,12 @@ from pathlib import Path
 from .remote_media import _connection
 
 
-def generate_remote_lecture(pages, *, audience, minutes, output):
+def generate_remote_lecture(pages, *, audience, minutes, output, teacher_context=''):
     output = Path(output)
     output.parent.mkdir(parents=True, exist_ok=True)
     request = {'pages': pages, 'audience': audience, 'minutes': minutes}
+    if teacher_context:
+        request['teacher_context'] = teacher_context
     root = os.environ.get('SMARTCOURSE_REMOTE_ROOT', '/home/ma-user/work/smartcourse')
     metadata = output.with_suffix('.remote-input.json')
     remote = root + '/lecture-jobs/' + uuid.uuid4().hex

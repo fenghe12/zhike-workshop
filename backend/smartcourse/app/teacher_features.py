@@ -6,7 +6,7 @@ import copy, fcntl, json, os, re, tempfile, time, uuid
 from contextlib import contextmanager
 from pathlib import Path
 
-LOCALES = {"zh-CN", "en-US", "ja-JP", "ko-KR", "de-DE", "fr-FR"}
+LOCALES = {"zh-CN", "en-US", "ja-JP", "ko-KR", "de-DE", "fr-FR", "ru-RU", "es-ES"}
 
 def _now(): return time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
 

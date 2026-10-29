@@ -35,7 +35,7 @@ from .advanced_experiments import (
 )
 from .config import Settings
 from .code_lessons import get_lesson_spec, list_lesson_specs
-from .full_pipeline import FullPipelineRunner, StageInputRequired
+from .full_pipeline import FullPipelineRunner, StageInputRequired, StageReviewRequired
 from .experiment_runner import ExperimentRunner
 from .experiment_analysis import analyze_learning_rows, build_experiment_protocol
 from .demo_course import build_demo_course_manifest, prepare_demo_package
@@ -110,12 +110,16 @@ class SmartCourseApplication:
             settings,
             rag_service=self.rag,
         )
+        from .course_studio import CourseStudio
+        self.studio = CourseStudio(self)
         self._execution_lock = threading.RLock()
         self._executions: dict[str, threading.Thread] = {}
         self.task_queue = PersistentTaskQueue(
             self.store, self._execute, os.environ.get("SMARTCOURSE_TASK_WORKERS", "3")
         )
         self.task_queue.start()
+        from .feedback_repair import recover_repairs
+        recover_repairs(self)
 
     def task_template(self) -> dict[str, Any] | None:
         if not self.task_template_path.exists():
@@ -154,6 +158,12 @@ class SmartCourseApplication:
         def operation(data):
             saved_policy = data.get("translationPolicies", {}).get(user_id, data.get("translationPolicy"))
             task["translationPolicy"] = validate_policy(payload.get("translationPolicy", saved_policy))
+            from .teaching_memory import task_memory
+            task['teachingMemory'] = task_memory(data, user_id)
+            self.studio.prepare_task(task, payload, user_id, data)
+            from .narration_style import STYLE_VERSION
+            task['generationConfig'] = {'model':self.settings.gateway_model,'narrationStyleVersion':STYLE_VERSION,
+                                         'translationVersion':'direct-teaching-v3'}
             data["tasks"][task["id"]] = task
             return task
 
@@ -258,6 +268,13 @@ class SmartCourseApplication:
             self.mutate_task(task_id, complete)
         except TaskCancelled:
             return
+        except StageReviewRequired as exc:
+            def await_review(value,_data):
+                value.update(status='waiting_review',currentStage=3,updatedAt=utc_now())
+                value.pop('error',None)
+                value['stages'][2].update(status='waiting_review',message=str(exc))
+                return value
+            self.mutate_task(task_id,await_review)
         except StageInputRequired as exc:
             required_stage, required_asset, message = exc.stage, exc.asset, str(exc)
             def await_input(task_value, _data):
@@ -415,14 +432,18 @@ def make_handler(application: SmartCourseApplication):
                 raise ApiError(HTTPStatus.UNAUTHORIZED, "登录已失效，请重新登录" if self._token() else "请先登录")
             return user["id"] if user else None
 
-        def _task_owner(self, task_id):
+        def _task_owner(self, task_id, permission=None):
             user_id = self._user_id(required=True)
             task = application.get_task(task_id)
-            if task.get("createdBy") != user_id and user_id not in task.get('teacherDemoUsers',[]):
-                raise ApiError(HTTPStatus.FORBIDDEN, "无权访问此任务")
+            from .course_access import require_course, visible_task
+            if permission is None:
+                permission = 'read' if self.command in {'GET','HEAD'} else 'manage' if self.command == 'DELETE' else 'edit'
+                if permission == 'read' and any(part in self.path for part in ('/teacher/questions','/question-stats','/patch-plans','/blueprints')):
+                    permission = 'review'
+            require_course(task, user_id, permission)
             if user_id in task.get('teacherDemoUsers',[]) and task.get('demoTitle'):
                 task={**task,'name':task['demoTitle']}
-            return task
+            return visible_task(task,user_id) if permission == 'read' else task
 
         def _guard_task_route(self, path):
             match = re.match(r"/v1/tasks/([^/]+)(?:/|$)", path)
@@ -580,7 +601,14 @@ def make_handler(application: SmartCourseApplication):
             user_id = self._user_id(required=True)
             parts = path.relative_to(root).parts
             if len(parts) > 1 and parts[0] == "tasks":
-                self._task_owner(parts[1])
+                from .course_access import course_role, require_course, published_artifacts
+                task = application.get_task(parts[1])
+                role = require_course(task,user_id)
+                if role not in {'owner','editor'}:
+                    public_url = '/artifacts/'+str(path.relative_to(root))
+                    image_folder = '/artifacts/tasks/'+task['id']+'/s1/source-slide-images/'
+                    if public_url not in published_artifacts(task) and not (role in {'reviewer','learner'} and public_url.startswith(image_folder) and path.suffix == '.png'):
+                        raise ApiError(HTTPStatus.FORBIDDEN,'此文件不属于共享课程的可读结果。')
             elif len(parts) > 2 and parts[0] == "uploads":
                 asset = application.store.snapshot().get("uploads", {}).get(parts[2])
                 if not asset or asset.get("createdBy") != user_id:
@@ -632,19 +660,33 @@ def make_handler(application: SmartCourseApplication):
                 raise ApiError(HTTPStatus.NOT_FOUND, "接口不存在")
             except (BrokenPipeError, ConnectionResetError):
                 return
-            except ApiError as exc:
-                self._json(exc.status, {"message": exc.message})
+            except (ApiError, AuthSecurityError) as exc:
+                self._json(exc.status, {"message": str(exc)})
 
         def do_GET(self) -> None:
             try:
                 parsed = urlparse(self.path)
                 path = parsed.path.rstrip("/") or "/"
                 query = parse_qs(parsed.query)
+                if application.studio.get(self,path,query):
+                    return
                 if application.admin.get(self, path, query):
                     return
                 if path == '/v1/course-profile/options':
                     self._user_id(required=True)
                     self._json(HTTPStatus.OK, {'domains':DOMAINS, 'audiences':AUDIENCES})
+                    return
+                if path == '/v1/settings/teaching-memory':
+                    from .teaching_memory import read_memory
+                    self._json(HTTPStatus.OK, read_memory(application.store, self._user_id(required=True)))
+                    return
+                match = re.fullmatch(r'/v1/tasks/([^/]+)/execution-journal', path)
+                if match:
+                    from .execution_journal import read_journal
+                    task = self._task_owner(match.group(1), 'edit')
+                    root = application.settings.workspace_root or application.settings.artifact_root / 'tasks'
+                    journal = read_journal(root / safe_artifact_name(task['id']) / 'execution-journal.json')
+                    self._json(HTTPStatus.OK, {'journal': journal, 'teachingMemory': task.get('teachingMemory')})
                     return
                 if application.compute_control.get(self, path) or application.product_services.get(self, path):
                     return
@@ -909,9 +951,16 @@ def make_handler(application: SmartCourseApplication):
             try:
                 path = urlparse(self.path).path.rstrip("/") or "/"
                 payload = self._body()
+                if application.studio.post(self,path,payload):
+                    return
                 if application.compute_control.post(self, path, payload) or application.product_services.post(self, path, payload):
                     return
                 self._guard_task_route(path)
+                if path == '/v1/settings/teaching-memory':
+                    from .teaching_memory import save_memory
+                    owner = self._user_id(required=True)
+                    self._json(HTTPStatus.OK, save_memory(application.store, owner, payload))
+                    return
                 if path == '/v1/visits':
                     page = payload.get('page', '')
                     if not isinstance(page, str) or not re.fullmatch(r'[a-zA-Z0-9_-]{1,60}', page):
@@ -939,7 +988,7 @@ def make_handler(application: SmartCourseApplication):
                     task_id = payload.get('taskId')
                     if task_id is not None and (not isinstance(task_id, str) or not re.fullmatch(r'task_[a-f0-9]{12}', task_id)):
                         raise ValueError('关联课程编号无效')
-                    task = self._task_owner(task_id) if task_id else None
+                    task = self._task_owner(task_id, 'read') if task_id else None
                     self._json(HTTPStatus.CREATED, submit_feedback(application.store, user_id, payload, task))
                     return
                 match = re.fullmatch(r"/v1/courses/([^/]+)/blueprints", path)
@@ -1007,6 +1056,9 @@ def make_handler(application: SmartCourseApplication):
                 if match:
                     user=self._user_id(required=True)
                     question_id=unquote(match.group(1))
+                    question_record=_read(application.settings).get('questions',{}).get(question_id)
+                    if not question_record:raise ApiError(HTTPStatus.NOT_FOUND,'题目不存在')
+                    application.studio.task(question_record['course_id'],user)
                     result=attempt_question(application.settings,question_id,str(payload.get("option_id")),user,
                                             payload.get("clientEventId"))
                     if not result['correct']:

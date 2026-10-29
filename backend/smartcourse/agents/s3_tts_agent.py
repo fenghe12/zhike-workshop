@@ -477,6 +477,17 @@ class TTSAgent:
                 checkpoint_path=Path(wav_path).with_suffix('.input.json')
                 saved=read_record(checkpoint_path)
                 reuse=saved.get('input')==request_value and Path(wav_path).is_file() and Path(wav_path).with_suffix('.timing.json').is_file()
+                feedback_marker=Path(wav_path).with_suffix('.feedback-review.json')
+                if reuse and feedback_marker.is_file() and target_lang.startswith('en'):
+                    review=self.tts_engine.stabilize_file(wav_path,self.speaker_prompt,target_lang)
+                    if review.get('checked'):
+                        if review.get('repairs'):
+                            duration=append_silence_to_wav(wav_path,0.0,float(os.environ.get('SMARTCOURSE_VIDEO_FPS','25')))
+                            saved.update(generationId=uuid.uuid4().hex,duration=duration)
+                            write_record(checkpoint_path,saved)
+                        feedback_marker.unlink()
+                    else:
+                        reuse=False
                 if reuse:
                     with wave.open(wav_path) as stream:dur=stream.getnframes()/stream.getframerate()
                     from app.speech_timing import generated_sentences
@@ -491,6 +502,7 @@ class TTSAgent:
                                                float(os.environ.get('SMARTCOURSE_VIDEO_FPS','25')))
                     saved={'input':request_value,'generationId':uuid.uuid4().hex,'duration':dur}
                     write_record(checkpoint_path,saved)
+                    feedback_marker.unlink(missing_ok=True)
                 elapsed = time.time() - t0
                 logger.info(f"Page {page_id}: {dur:.2f}s (took {elapsed:.1f}s)")
 

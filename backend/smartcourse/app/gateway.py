@@ -158,6 +158,8 @@ class ResponsesGateway:
         retries: int = 4,
         response_record_path: Path | None = None,
     ) -> str:
+        from .teaching_memory import apply_current_memory
+        text = apply_current_memory(text)
         token = self.settings.gateway_token or _embedded_kimi_key()
         if not token:
             raise GatewayError("缺少 KIMI_API_KEY 环境变量")

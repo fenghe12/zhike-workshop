@@ -2,7 +2,7 @@
 import {computed,ref,watch} from 'vue'
 import {api,post,type Task} from './api'
 const props=defineProps<{task?:Task;language?:string;media?:HTMLMediaElement;pageId?:number|null}>()
-type Feedback={id:string;rating:number|null;categories:string[];comment:string;page:number|null;playbackSeconds:number|null;createdAt:string;language?:string|null;taskSnapshot?:{name?:string}|null}
+type Feedback={status?:string;resolutionNote?:string;id:string;rating:number|null;categories:string[];comment:string;page:number|null;playbackSeconds:number|null;createdAt:string;language?:string|null;taskSnapshot?:{name?:string}|null}
 const options=[['translation','翻译'],['narration','讲稿'],['speech','语音'],['avatar','数字人'],['subtitles','字幕'],['layout','排版'],['performance','速度或任务处理'],['account','账号或使用问题'],['other','其他']]
 const names=Object.fromEntries(options)
 const rating=ref(0),categories=ref<string[]>([]),comment=ref(''),positionPage=ref<number|string>(''),positionSeconds=ref<number|null>(null)
@@ -28,7 +28,7 @@ async function submit(){error.value='';message.value='';if(!rating.value&&!comme
    <p v-if="error" class="feedback-error" role="alert">{{error}}</p><p v-if="message" class="feedback-success" role="status">{{message}}</p>
    <button class="submit-feedback" type="submit" :disabled="busy">{{busy?'正在提交…':'提交反馈'}}</button>
   </form>
-  <details class="feedback-history"><summary>我的反馈（{{history.length}}）</summary><p v-if="loading">正在读取…</p><p v-else-if="!history.length">尚未提交反馈。</p><article v-for="row in history" :key="row.id"><div><strong>{{row.rating?row.rating+' / 5 分':'文字反馈'}}</strong><time>{{date(row.createdAt)}}</time></div><p v-if="!task&&row.taskSnapshot?.name">课程：{{row.taskSnapshot.name}}</p><p v-if="row.categories.length">{{row.categories.map(key=>names[key]||key).join('、')}}</p><p v-if="row.page||row.playbackSeconds!==null">{{row.page?'第 '+row.page+' 页':''}} {{row.playbackSeconds!==null?clock(row.playbackSeconds):''}}</p><p class="saved-comment">{{row.comment}}</p></article></details>
+  <details class="feedback-history"><summary>我的反馈（{{history.length}}）</summary><p v-if="loading">正在读取…</p><p v-else-if="!history.length">尚未提交反馈。</p><article v-for="row in history" :key="row.id"><div><strong>{{row.rating?row.rating+' / 5 分':'文字反馈'}}</strong><time>{{date(row.createdAt)}}</time></div><p v-if="!task&&row.taskSnapshot?.name">课程：{{row.taskSnapshot.name}}</p><p v-if="row.categories.length">{{row.categories.map(key=>names[key]||key).join('、')}}</p><p v-if="row.page||row.playbackSeconds!==null">{{row.page?'第 '+row.page+' 页':''}} {{row.playbackSeconds!==null?clock(row.playbackSeconds):''}}</p><p class="saved-comment">{{row.comment}}</p><p v-if="row.status">处理状态：{{({new:'待处理',reviewing:'处理中',planned:'已安排',resolved:'已解决'} as Record<string,string>)[row.status]||row.status}}</p><p v-if="row.resolutionNote">处理说明：{{row.resolutionNote}}</p></article></details>
  </section>
 </template>
 <style scoped>

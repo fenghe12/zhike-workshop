@@ -1,0 +1,11 @@
+<script setup lang="ts">
+import {onMounted,ref} from 'vue'
+import {api} from './api'
+const value=ref<any>(),error=ref('')
+async function load(){try{value.value=await api('/v1/studio/admin-metrics');error.value=''}catch(e){error.value=(e as Error).message}}
+onMounted(load)
+const labels:Record<string,string>={memoryUsers:'保存教学偏好的用户',courseMemories:'课程记忆',acceptedEntries:'已采纳记忆条目',reviews:'内容审阅次数',repairs:'反馈修正任务',templates:'课程模板',batches:'批量制作任务',publishedVersions:'已发布版本',learningUsers:'保存学习记录的用户',courseAnswers:'课程问答'}
+const distributions:Record<string,string>={reviewStates:'内容审阅状态',reviewModels:'审阅使用的模型',repairStates:'反馈修正状态',repairLanguages:'修正任务语种',commentStates:'协作评论状态'}
+</script>
+<template><section class="studio-metrics"><h2>课程改进与教学使用</h2><p>以下为全站累计数据。</p><p v-if="error" role="alert">{{error}}</p><div v-if="value" class="metric-grid"><article v-for="(label,key) in labels" :key="key"><small>{{label}}</small><strong>{{value[key]??0}}</strong></article></div><details v-if="value"><summary>审阅、修正和协作分布</summary><article v-for="(label,key) in distributions" :key="key"><h4>{{label}}</h4><p v-if="!Object.keys(value[key]||{}).length">暂无记录</p><p v-for="(count,name) in value[key]||{}" :key="name">{{name}}：{{count}}</p></article></details><details v-if="value"><summary>按生成配置汇总评分与反馈</summary><article v-for="(row,i) in value.qualityByConfiguration||[]" :key="i"><p>{{row.model}} · {{row.language||'一般反馈'}} · 讲稿规则 {{row.narrationStyleVersion??'历史未记录'}}</p><p>反馈 {{row.feedbackCount}} 条 · 平均评分 {{row.averageRating??'未评分'}} · 已处理 {{row.resolvedCount}} 条</p></article></details><button @click="load">刷新统计</button></section></template>
+<style scoped>.studio-metrics{padding:20px;margin:20px 0;border:1px solid #dce7df;background:white;border-radius:10px}.studio-metrics h2{font-size:18px}.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}.metric-grid article{padding:12px;background:#f3f7f4;border-radius:8px}.metric-grid small{display:block;color:#6b8172}.metric-grid strong{display:block;font-size:26px;margin-top:8px;color:#24543d}.studio-metrics details{margin:18px 0;font-size:13px}.studio-metrics button{padding:8px 12px;color:#24543d;background:#f2f7f3;border:1px solid #cbdccf;border-radius:6px;cursor:pointer}</style>

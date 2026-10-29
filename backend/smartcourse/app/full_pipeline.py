@@ -164,6 +164,10 @@ class StageInputRequired(RuntimeError):
         super().__init__("请上传参考音频" if asset == "referenceAudio" else "请上传讲者图片")
 
 
+class StageReviewRequired(RuntimeError):
+    pass
+
+
 class FullPipelineRunner:
     """执行软著说明书中的 S1 至 S5 全流程。
 
@@ -286,11 +290,34 @@ class FullPipelineRunner:
         )
 
     def run(
+        self, task_id: str, task: dict[str, Any], progress: ProgressCallback,
+        start_stage: int = 1,
+    ) -> dict[str, Any]:
+        from .execution_journal import ExecutionJournal
+        journal = ExecutionJournal(self._task_root(task_id) / 'execution-journal.json',
+                                   {**task, 'id': task_id}, self.settings.gateway_model, start_stage)
+        try:
+            result = self._run(task_id, task, progress, start_stage, journal)
+        except StageReviewRequired:
+            journal.finish('waiting_review',message='讲稿与译文已生成，等待教师审阅。')
+            raise
+        except StageInputRequired as error:
+            journal.finish('waiting_input', stage=error.stage, message=str(error))
+            raise
+        except Exception as error:
+            journal.finish('cancelled' if type(error).__name__ == 'TaskCancelled' else 'failed',
+                           message=str(error)[:600])
+            raise
+        journal.finish('completed')
+        return result
+
+    def _run(
         self,
         task_id: str,
         task: dict[str, Any],
         progress: ProgressCallback,
         start_stage: int = 1,
+        journal=None,
     ) -> dict[str, Any]:
         root = self._task_root(task_id)
         root.mkdir(parents=True, exist_ok=True)
@@ -305,14 +332,26 @@ class FullPipelineRunner:
         performance = PipelinePerformanceRecorder(task_id)
 
         def run_stage(code, function):
+            from .teaching_memory import use_memory, generation_memory
             resource, message = self.resources.STAGES[code]
             started = time.perf_counter()
+            engine = self.settings.gateway_model if code in {'S1','S2'} else 'CosyVoice3' if code=='S3' else str(task.get('inputs',{}).get('avatarEngine',os.environ.get('SMARTCOURSE_AVATAR_ENGINE','float'))) if code=='S4' else 'FFmpeg'
+            if code=='S1' and task.get('mode')=='topic' and os.environ.get('SMARTCOURSE_PPT_GENERATOR','deeppresenter')!='qwen':
+                engine='DeepPresenter'
+            journal.stage(code, 'queued', resource=resource, engine=engine)
             progress(int(code[1:]), "queued", 0, {"step": message, "resource": resource})
             with self.resources.acquire(resource):
                 waited = time.perf_counter() - started
                 progress(int(code[1:]), "running", 0, {})
+                journal.stage(code, 'running', queueWaitSeconds=round(waited, 3))
                 try:
-                    return performance.run_stage(code, function)
+                    with use_memory(generation_memory(task), code):
+                        result = performance.run_stage(code, function)
+                    journal.stage(code, 'completed', elapsedSeconds=performance.stages[code]['elapsedSeconds'])
+                    return result
+                except Exception as error:
+                    journal.stage(code, 'failed', message=str(error)[:600])
+                    raise
                 finally:
                     performance.stages[code]["queueWaitSeconds"] = round(waited, 3)
                     performance.stages[code]["resource"] = resource
@@ -348,6 +387,8 @@ class FullPipelineRunner:
                 "S2", lambda: self._run_s2(task, root, progress)
             )
         if start_stage <= 3:
+            if task.get('inputs',{}).get('reviewBeforeMedia') and not task.get('inputs',{}).get('reviewApproved'):
+                raise StageReviewRequired('讲稿与译文已生成，等待教师审阅。')
             if not task.get("assets", {}).get("referenceAudio"):
                 raise StageInputRequired(3, "referenceAudio")
             results["s3"] = run_stage(
@@ -470,6 +511,9 @@ class FullPipelineRunner:
             topic = str(task.get("inputs", {}).get("topic", "")).strip()
             pages = int(task.get("inputs", {}).get("totalPages", 10))
             requirements = str(task.get('inputs', {}).get('requirements', ''))
+            from .teaching_memory import memory_prompt, generation_memory
+            teacher_context = memory_prompt(generation_memory(task), 'S1')
+            requirements += teacher_context
             if task.get('inputs', {}).get('answerSourceContext') is not None:
                 requirements = reviewed_generation_requirements(output_dir, requirements)
             progress(1, "running", 20, {"step": "正在生成课程课件"})
@@ -518,6 +562,7 @@ class FullPipelineRunner:
                     audience=str(task.get('inputs', {}).get('targetLearners', '高校本科生')),
                     minutes=int(task.get('inputs', {}).get('durationMinutes', 10)),
                     output=output_dir / 'topic_lecture.json',
+                    **({'teacher_context': teacher_context} if teacher_context else {}),
                     endpoint=os.environ.get('SMARTCOURSE_DEEPPRESENTER_ENDPOINT', 'http://127.0.0.1:7811/v1/chat/completions'))
             for page, narration in zip(structure['pages'], lecture):
                 page.update(narration)
@@ -1153,9 +1198,15 @@ Source page:
                 source_json = root / "s2" / code / "translated_structure.json"
                 export_lecture_text(json.loads(source_json.read_text(encoding="utf-8")),source_json.parent/'lecture.txt')
                 from .narration import prepare_narration
-                source_json = prepare_narration(json.loads(source_json.read_text(encoding="utf-8")), self.gateway,
+                narration_input = json.loads(source_json.read_text(encoding='utf-8'))
+                previous_narration = root/'s3'/code/'narration_structure.json'
+                if task.get('inputs',{}).get('repairScope') and previous_narration.is_file():
+                    from .course_revisions import preserve_revision_narration
+                    narration_input = preserve_revision_narration(narration_input,
+                        json.loads(previous_narration.read_text(encoding='utf-8')),task['inputs']['repairScope'],code)
+                source_json = prepare_narration(narration_input, self.gateway,
                                                 root / "s3" / code / "narration_structure.json",
-                                                preserve_script=task.get('mode') == 'upload',
+                                                preserve_script=task.get('mode') == 'upload' or bool(task.get('inputs',{}).get('repairScope')),
                                                 enforce_direct_style=not bool(task.get('inputs',{}).get('script')),
                                                 review_content=task.get('mode') == 'topic' and os.environ.get('SMARTCOURSE_STRICT_NARRATION_REVIEW') == '1',
                                                 target_duration_seconds=(float(task.get('inputs',{}).get('durationMinutes',10))*60

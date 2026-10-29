@@ -49,7 +49,7 @@ class AdminTests(unittest.TestCase):
         except error.HTTPError as e:return e.code,json.load(e)
 
     def test_permission_is_server_configured_not_user_supplied(self):
-        for path in ['/v1/admin/overview','/v1/admin/options','/v1/admin/tasks','/v1/admin/feedback']:
+        for path in ['/v1/admin/overview','/v1/admin/options','/v1/admin/tasks','/v1/admin/feedback','/v1/studio/admin-metrics']:
             self.assertEqual(self.call(path,user=False)[0],401)
             self.assertEqual(self.call(path,user=self.owner)[0],403)
             self.assertEqual(self.call(path)[0],200)
@@ -58,8 +58,9 @@ class AdminTests(unittest.TestCase):
         self.assertFalse(self.call('/v1/admin/access',user=self.owner)[1]['isAdmin'])
 
     def test_feedback_filters_multiselect_status_audit_and_private_notes(self):
-        _,first=self.call('/v1/feedback',{'taskId':self.task['id'],'language':'日语','rating':2,'categories':['translation','speech'],'comment':'Actual feedback'},user=self.owner)
-        self.call('/v1/feedback',{'taskId':self.failed['id'],'language':'英语','rating':5,'categories':['layout'],'comment':'Another result'},user=self.owner)
+        with patch('app.user_feedback.utc_now',return_value='2026-10-28T03:00:00Z'):
+            _,first=self.call('/v1/feedback',{'taskId':self.task['id'],'language':'日语','rating':2,'categories':['translation','speech'],'comment':'Actual feedback'},user=self.owner)
+            self.call('/v1/feedback',{'taskId':self.failed['id'],'language':'英语','rating':5,'categories':['layout'],'comment':'Another result'},user=self.owner)
         status,result=self.call('/v1/admin/feedback?category=translation,subtitles&rating=2&language=ja-JP&start=2026-10-28&end=2026-10-28')
         self.assertEqual(status,200);self.assertEqual(result['total'],1);self.assertEqual(result['averageRating'],2)
         self.assertEqual(result['rows'][0]['id'],first['id'])
@@ -70,6 +71,8 @@ class AdminTests(unittest.TestCase):
         own=self.call('/v1/feedback',user=self.owner)[1]
         self.assertTrue(all('adminNote' not in row and 'adminHistory' not in row for row in own))
         self.assertEqual(self.call('/v1/admin/feedback?feedbackStatus=planned')[1]['total'],1)
+        groups=self.call('/v1/studio/admin-metrics')[1]['qualityByConfiguration']
+        self.assertTrue(any(row['language']=='ja-JP' and row['averageRating']==2 for row in groups))
 
     def test_overview_counts_samples_date_and_excludes_test_data(self):
         status,result=self.call('/v1/admin/overview?start=2026-10-28&end=2026-10-28')

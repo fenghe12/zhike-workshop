@@ -125,12 +125,12 @@ class Handler(BaseHTTPRequestHandler):
     return self.proxy('/v1/uploads','POST',json.dumps({'filename':meta['name'],'kind':'ppt','contentBase64':base64.b64encode(content).decode()}).encode())
    if path=='/api/courses':
     value=json.loads(body)
-    inputs={key:value[key] for key in ('topic','durationMinutes','totalPages','targetLearners','requirements','courseProfile','exampleId') if value.get(key) not in (None,'')}
+    inputs={key:value[key] for key in ('topic','durationMinutes','totalPages','targetLearners','requirements','courseProfile','exampleId','reviewBeforeMedia') if value.get(key) not in (None,'')}
     if value.get('pptUrl'):
      inputs['ppt']={'name':Path(str(value['pptUrl'])).name or 'course.pptx','path':value['pptUrl'],'url':value['pptUrl']}
     if value.get('scriptUrl'):
      inputs['script']={'name':Path(str(value['scriptUrl'])).name or 'lecture.docx','path':value['scriptUrl'],'url':value['scriptUrl']}
-    task_payload={key:value[key] for key in ('name','mode','sourceLanguage','targetLanguages','voiceId') if key in value}
+    task_payload={key:value[key] for key in ('name','mode','sourceLanguage','targetLanguages','voiceId','memoryCourseId','templateId') if key in value}
     task_payload['inputs']=inputs
     task_payload['autoExecute']=False
     _status,task=self.backend_json('/v1/tasks','POST',task_payload)

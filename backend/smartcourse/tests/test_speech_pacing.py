@@ -2,7 +2,7 @@ import unittest
 import tempfile,json
 from pathlib import Path
 import numpy as np
-from app.speech_pacing import pacing_report,stabilize_pcm
+from app.speech_pacing import PACING_POLICY_VERSION,pacing_report,stabilize_pcm
 
 
 class SpeechPacingTests(unittest.TestCase):
@@ -71,6 +71,55 @@ class SpeechPacingTests(unittest.TestCase):
         self.assertEqual(len(called),3);self.assertTrue(report['passed'])
         self.assertGreater(report['repairs'][0]['tempoFactor'],1)
         self.assertLess(len(result),len(audio))
+
+    def test_feedback_rechecks_cached_page_and_regenerates_only_the_outlier(self):
+        import soundfile as sf
+        from agents.cosyvoice_engine import CosyVoiceEngine
+        from agents.s3_tts_agent import TTSAgent
+        from app.media_checkpoint import reference_version,write_record
+        audio,rate,sentences=self.fixture()
+        class Tensor:
+            def __init__(self,value):self.value=value
+            def detach(self):return self
+            def cpu(self):return self
+            def numpy(self):return self.value
+        class Model:
+            sample_rate=rate
+            def __init__(self):self.calls=[]
+            def inference_cross_lingual(self,text,*args,**kwargs):
+                self.calls.append(text)
+                yield {'tts_speech':Tensor(np.full((1,4*rate),.25,dtype=np.float32))}
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory);reference=root/'reference.wav'
+            sf.write(reference,np.full(3*rate,.1,dtype=np.float32),rate)
+            folder=root/'runtime/en-US/s3_output'
+            wav=folder/'segments/page_001.wav';wav.parent.mkdir(parents=True)
+            sf.write(wav,audio,rate,subtype='PCM_16')
+            original,_=sf.read(wav,dtype='float32')
+            script=' '.join(row['text'] for row in sentences)
+            wav.with_suffix('.timing.json').write_text(json.dumps({'source':'cosyvoice3_generated_pcm',
+                'inputText':script,'sampleRate':rate,'totalSamples':len(audio),'sentences':sentences}))
+            version=reference_version(folder,reference,'voice')
+            write_record(wav.with_suffix('.input.json'),{'input':{'taskId':'fixture','text':script,
+                'language':'en-US','voiceVersion':version,'speed':1.0,'silence':0,
+                'fps':'25','pacingPolicyVersion':PACING_POLICY_VERSION},'generationId':'original'})
+            wav.with_suffix('.feedback-review.json').write_text('{}')
+            source=root/'source.json';source.write_text(json.dumps({'task_id':'fixture','language_code':'en-US',
+                'pages':[{'page_id':1,'script_text':script}]}))
+            engine=CosyVoiceEngine();engine._model=Model();engine._load=lambda:None
+            agent=TTSAgent(workspace_root=str(root/'runtime'),speaker_prompt=str(reference),tts_speed=1.0)
+            agent.tts_engine=engine
+            agent.run('en-US',str(source),generate_subtitle=False)
+            self.assertEqual(len(engine._model.calls),1)
+            self.assertTrue(engine._model.calls[0].endswith(sentences[1]['text']))
+            self.assertFalse(wav.with_suffix('.feedback-review.json').exists())
+            metadata=json.loads(wav.with_suffix('.timing.json').read_text())
+            self.assertTrue(metadata['pacingReview']['passed'])
+            corrected,_=sf.read(wav,dtype='float32')
+            for index in (0,2):
+                before=sentences[index];after=metadata['sentences'][index]
+                np.testing.assert_array_equal(original[before['startSample']:before['endSample']],
+                                              corrected[after['startSample']:after['endSample']])
 
 
 if __name__=='__main__':unittest.main()

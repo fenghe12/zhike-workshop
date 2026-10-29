@@ -6,16 +6,19 @@ from pathlib import Path
 import requests
 
 
-def generate_topic_lecture(pages, *, audience, minutes, output, endpoint='http://127.0.0.1:7811/v1/chat/completions'):
+def generate_topic_lecture(pages, *, audience, minutes, output, endpoint='http://127.0.0.1:7811/v1/chat/completions', teacher_context=''):
     try:
         from .narration_style import DIRECT_TEACHING_RULE, review_teaching_style, style_warning
     except ImportError:
         from narration_style import DIRECT_TEACHING_RULE, review_teaching_style, style_warning
     if os.environ.get('SMARTCOURSE_REMOTE_MEDIA') == '1':
         from .remote_topic_lecture import generate_remote_lecture
-        return generate_remote_lecture(pages, audience=audience, minutes=minutes, output=output)
+        return generate_remote_lecture(pages, audience=audience, minutes=minutes, output=output,
+                                       **({'teacher_context': teacher_context} if teacher_context else {}))
     output = Path(output)
     request = {'pages': pages, 'audience': audience, 'minutes': minutes}
+    if teacher_context:
+        request['teacher_context'] = teacher_context
     character_limit = max(80, round(minutes / max(1, len(pages)) * 300))
     result = []
     if output.is_file():
@@ -37,7 +40,7 @@ def generate_topic_lecture(pages, *, audience, minutes, output, endpoint='http:/
                 '直接向学生讲授知识，不使用“幻灯片介绍了”“本页展示了”等描述页面的句式。'
                 f'正文最多 {character_limit} 个字符。精简开场与重复解释，保留定义、条件和计算过程。'
                 f'教学对象：{audience}。本页建议时长：{minutes / max(1, len(pages)):.1f}分钟。\n'
-                + DIRECT_TEACHING_RULE+'\n'+json.dumps(page, ensure_ascii=False)}]
+                + DIRECT_TEACHING_RULE+'\n'+json.dumps(page, ensure_ascii=False)+teacher_context}]
         for attempt in range(4):
             response = requests.post(endpoint, json={'model': 'DeepPresenter-9B', 'temperature': 0,
                                      'max_tokens': 2000, 'messages': messages}, timeout=300)
