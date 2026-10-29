@@ -54,6 +54,55 @@ class InputAssistanceTests(unittest.TestCase):
             status,value=self.writing()
         self.assertEqual(status,409);self.assertIn('已保留',value['message']);self.app.pipeline_runner.gateway.respond_json.assert_not_called()
 
+    def test_feedback_retries_invented_playback_symptoms_in_summary_or_suggestion(self):
+        model=self.app.pipeline_runner.gateway.respond_json
+        good={'summary':'第1页5.6秒起语速突然变慢。','suggestions':[{'text':'第1页5.6秒起语速突然变慢，希望讲解语速保持均匀。','reason':'保留用户描述的语速、页码和时间。'}],'questions':[]}
+        for field in ('summary','suggestion'):
+            with self.subTest(field=field):
+                bad=copy.deepcopy(good)
+                if field=='summary':bad['summary']='第1页5.6秒出现视频卡顿。'
+                else:bad['suggestions'][0]['text']='第1页5.6秒开始播放变慢，建议改善视频流畅度。'
+                model.reset_mock();model.side_effect=[bad,good]
+                status,value=self.writing(purpose='feedback',text='第1页5.6秒开始突然变慢，希望语速更均匀',language='zh-CN')
+                self.assertEqual(status,200,value);self.assertEqual(model.call_count,2)
+                self.assertEqual(value['suggestions'],good['suggestions'])
+
+    def test_feedback_preserves_explicitly_reported_speech_and_network_problems(self):
+        answer={'summary':'用户同时报告了语速和网络加载问题。','suggestions':[{'text':'第1页语速很慢，并且网络加载时出现缓冲。','reason':'保留两个已经报告的问题。'}],'questions':[]}
+        model=self.app.pipeline_runner.gateway.respond_json;model.return_value=answer
+        status,value=self.writing(purpose='feedback',text='第1页语速很慢，网络加载也会缓冲。',language='zh-CN')
+        self.assertEqual(status,200,value);self.assertEqual(model.call_count,1)
+        self.assertEqual(value['suggestions'],answer['suggestions'])
+
+    def test_ambiguous_slowdown_is_not_classified_as_playback_or_speech(self):
+        before=copy.deepcopy(self.app.store.snapshot()['tasks'])
+        model=self.app.pipeline_runner.gateway.respond_json
+        status,value=self.writing(purpose='feedback',text='第1页5.6秒开始变慢',language='zh-CN')
+        self.assertEqual(status,200,value);model.assert_not_called()
+        self.assertEqual(value['suggestions'],[]);self.assertTrue(value['questions'])
+        self.assertEqual(value['generationMode'],'local_clarification')
+        self.assertIn('第1页5.6秒开始变慢',value['summary'])
+        self.assertEqual(self.app.store.snapshot()['tasks'],before)
+
+    def test_feedback_summary_can_distinguish_unreported_problems(self):
+        good={'summary':'第1页语速变慢。用户未提及播放卡顿、加载或网络问题。','suggestions':[{'text':'第1页语速变慢。','reason':'保留实际报告。'}],'questions':[]}
+        bad=copy.deepcopy(good);bad['summary']='未报告加载问题，但第1页播放变慢。'
+        model=self.app.pipeline_runner.gateway.respond_json;model.side_effect=[bad,good]
+        status,value=self.writing(purpose='feedback',text='第1页语速变慢',language='zh-CN')
+        self.assertEqual(status,200,value);self.assertEqual(model.call_count,2)
+        self.assertEqual(value['summary'],good['summary'])
+
+    def test_preference_edit_does_not_restore_a_conflicting_account_default(self):
+        self.app.store.transact(lambda data:data.setdefault('teachingMemories',{}).update({self.uid('owner'):{'enabled':True,'style':'先解释概念，再说明例子。'}}))
+        good={'summary':'保留当前填写的讲授顺序。','suggestions':[{'text':'先举例，再讲原理。','reason':'仅整理表达。'}],'questions':[]}
+        bad=copy.deepcopy(good);bad['suggestions'][0]['text']='先解释概念，再说明例子。'
+        model=self.app.pipeline_runner.gateway.respond_json;model.side_effect=[bad,good]
+        status,value=self.writing(purpose='memory',text='先举例，再讲原理',instruction='保持我的偏好，整理为一句',language='zh-CN')
+        self.assertEqual(status,200,value);self.assertEqual(model.call_count,2)
+        self.assertEqual(value['suggestions'],good['suggestions'])
+        supplied=json.loads(model.call_args_list[0].args[0].rsplit('\n',1)[1])
+        self.assertEqual(supplied['teachingPreference'],{})
+
     def test_grounded_title_suggestions_create_one_cpu_revision_and_optional_memory(self):
         answer=self.title_answer();wrong=copy.deepcopy(answer);wrong['changes'][0]['oldText']='Not in this slide'
         self.app.pipeline_runner.gateway.respond_json.side_effect=[wrong,answer]
