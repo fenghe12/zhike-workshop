@@ -16,6 +16,8 @@ class RemoteSpeechSession:
         self.identifier=uuid.uuid4().hex
         base=os.environ.get('SMARTCOURSE_REMOTE_ROOT','/home/ma-user/work/smartcourse')
         self.root=base+'/mooc-sessions/'+self.identifier
+        # multiprocessing creates Unix sockets below TMPDIR; keep their paths short.
+        self.temporary_root=base+'/tmp/s-'+self.identifier[:12]
         self.base=base;self.started=False
         options,port,host=_connection();self.host=host
         self.ssh=['ssh',*options,'-p',str(port),host]
@@ -32,7 +34,7 @@ class RemoteSpeechSession:
     def start(self):
         package=Path(__file__).resolve().parents[1]
         subprocess.run([*self.ssh,shlex.join(['mkdir','-p',self.root+'/requests',self.root+'/app',
-            self.root+'/tmp',self.root+'/cache'])],check=True,capture_output=True,timeout=45)
+            self.temporary_root,self.root+'/cache'])],check=True,capture_output=True,timeout=45)
         subprocess.run([*self.scp,str(package/'agents/cosyvoice_engine.py'),str(package/'app/speech_worker.py'),self.host+':'+self.root+'/'],check=True,capture_output=True,timeout=120)
         subprocess.run([*self.scp,str(package/'app/__init__.py'),str(package/'app/config.py'),str(package/'app/speech_pacing.py'),
             self.host+':'+self.root+'/app/'],check=True,capture_output=True,timeout=120)
@@ -41,7 +43,8 @@ class RemoteSpeechSession:
              'SMARTCOURSE_COSYVOICE_ROOT':os.environ['SMARTCOURSE_REMOTE_COSYVOICE_ROOT'],
              'SMARTCOURSE_COSYVOICE_MODEL':self.base+'/shared/models/Fun-CosyVoice3-0.5B-2512',
              'SMARTCOURSE_REMOTE_MEDIA':'0','PYTHONDONTWRITEBYTECODE':'1',
-             'TMPDIR':self.root+'/tmp','TEMP':self.root+'/tmp','TMP':self.root+'/tmp',
+             'TMPDIR':self.temporary_root,'TEMP':self.temporary_root,'TMP':self.temporary_root,
+             'SMARTCOURSE_SESSION_TMP':self.temporary_root,
              'XDG_CACHE_HOME':self.root+'/cache', 'TORCH_EXTENSIONS_DIR':self.base+'/cache/torch-extensions'}
         if os.environ.get('SMARTCOURSE_REMOTE_FFMPEG'):
             env['SMARTCOURSE_FFMPEG']=os.environ['SMARTCOURSE_REMOTE_FFMPEG']

@@ -163,7 +163,8 @@ class CourseStudio:
         if template:
             source = data.get('tasks', {}).get(template.get('sourceTaskId'))
             if source and source.get('createdBy') == owner:
-                for role, asset in source.get('assets', {}).items():
+                for role in ('referenceAudio','referenceImage'):
+                    asset=source.get('assets',{}).get(role)
                     if not asset:
                         continue
                     origin = self.app.pipeline_runner._resolve_asset(asset)
@@ -172,6 +173,8 @@ class CourseStudio:
                     destination = folder/(role+origin.suffix.lower())
                     shutil.copy2(origin, destination)
                     task['assets'][role] = {**asset, 'path':self.url(destination), 'url':self.url(destination)}
+                if source.get('assets',{}).get('consent'):
+                    task['assets']['consent']=copy.deepcopy(source['assets']['consent'])
 
     def versions(self, task, owner):
         tasks=self.app.store.snapshot().get('tasks',{})
@@ -316,10 +319,15 @@ class CourseStudio:
                       'totalPages':payload.get('totalPages',5), 'durationMinutes':lesson['minutes'],
                       'targetLearners':record.get('audience') or record.get('inputs',{}).get('targetLearners','高校本科生'),
                       'seriesId':batch['id']}
-            task = self.app.add_task({'name':lesson['title'], 'mode':'topic', 'inputs':inputs,
-                'targetLanguages':languages, 'sourceLanguage':record.get('language','zh-CN'),
-                'templateId':record['id'] if group == 'templates' else payload.get('templateId'),
-                'memoryCourseId':record.get('sourceTaskId'), 'autoExecute':False}, owner)
+            try:
+                task = self.app.add_task({'name':lesson['title'], 'mode':'topic', 'inputs':inputs,
+                    'targetLanguages':languages, 'sourceLanguage':record.get('language','zh-CN'),
+                    'templateId':record['id'] if group == 'templates' else payload.get('templateId'),
+                    'memoryCourseId':record.get('sourceTaskId'), 'autoExecute':False}, owner)
+            except (ValueError,RuntimeError,OSError) as error:
+                batch['errors'].append({'taskId':None,'lesson':lesson['title'],'message':str(error)[:600]})
+                self.save('batches',batch['id'],batch)
+                continue
             batch['taskIds'].append(task['id'])
             self.save('batches', batch['id'], batch)
             if payload.get('execute') is True:
@@ -327,7 +335,9 @@ class CourseStudio:
                     self.app.execute_task(task['id'], asynchronous=True)
                 except Exception as error:
                     batch['errors'].append({'taskId':task['id'], 'message':str(error)[:600]})
-        batch['status'] = 'prepared' if not payload.get('execute') else 'submitted' if not batch['errors'] else 'partially_submitted'
+        batch['status'] = ('failed' if not batch['taskIds'] else
+                          'partially_prepared' if batch['errors'] and not payload.get('execute') else
+                          'prepared' if not payload.get('execute') else 'submitted' if not batch['errors'] else 'partially_submitted')
         return self.save('batches', batch['id'], batch)
 
     def content_review(self, task, owner, payload):

@@ -162,6 +162,28 @@ class CourseStudioTests(unittest.TestCase):
                 bbox=json.loads((root/'runtime/en-US/s4_output/bbox.json').read_text())['bboxes']
                 self.assertEqual(bbox[0]['layout_mode'],'side_panel');self.assertNotIn('layout_mode',bbox[1])
 
+    def test_display_title_revision_keeps_speech_and_updates_downloadable_slides(self):
+        memory=self.app.studio.update_memory(self.task['id'],self.uid('owner'),{'revision':0,'entries':[
+            {'kind':'term','name':'学习','value':'Model Training','language':'en-US','pages':[2],'status':'accepted'}]})
+        change={'page':2,'language':'en-US','kind':'slide_text','oldText':'Learning','text':'Model Training'}
+        result=create_revision(self.app,self.task,self.uid('owner'),[change],execute=False)
+        self.assertEqual(result['startStage'],5)
+        root=self.app.studio.root(result['task']['id'])
+        self.assertIn('s4',result['task']['outputs'])
+        self.assertEqual(self.app.studio.memory(result['task']['id']),memory)
+        self.assertEqual((root/'runtime/en-US/s3_output/segments/page_002.wav').read_bytes(),
+                         (self.course_root/'runtime/en-US/s3_output/segments/page_002.wav').read_bytes())
+        self.assertEqual(Presentation(root/'s3/en-US/course-with-narration.pptx').slides[1].shapes.title.text,'Model Training')
+        self.assertEqual(Presentation(self.course_root/'s2/en-US/translated.pptx').slides[1].shapes.title.text,'Learning')
+        with zipfile.ZipFile(self.course_root/'s2/en-US/translated.pptx') as before, zipfile.ZipFile(root/'s2/en-US/translated.pptx') as after:
+            for name in before.namelist():
+                if name!='ppt/slides/slide2.xml':self.assertEqual(before.read(name),after.read(name),name)
+
+    def test_slide_text_spoken_in_narration_still_requires_speech_stage(self):
+        change={'page':2,'language':'en-US','kind':'slide_text','oldText':'weights','text':'parameters'}
+        result=create_revision(self.app,self.task,self.uid('owner'),[change],execute=False)
+        self.assertEqual(result['startStage'],3)
+
     def test_export_has_manifest_all_resources_and_no_private_state(self):
         status,value=self.call('export',{});self.assertEqual(status,200,value)
         with zipfile.ZipFile(self.app.settings.artifact_root/value['download'].removeprefix('/artifacts/')) as archive:
@@ -232,6 +254,9 @@ class CourseStudioTests(unittest.TestCase):
         overview=self.call()[1];self.assertTrue(any(x['status']=='not_checked' for x in overview['quality']['checks']))
 
     def test_plan_template_batch_and_member_permissions_use_persistent_server_state(self):
+        self.app.mutate_task(self.task['id'],lambda value,_:value['assets'].update({
+            'consent':{'authorized':True,'version':POLICY_VERSION},
+            'referenceAudio':{'path':self.url(self.course_root/'runtime/en-US/s3_output/segments/page_001.wav'),'name':'reference.wav'}}))
         good={'outline':[{'title':'Inputs','objective':'Explain input values','activity':'Identify input data','minutes':2,'requirements':'Use source definitions'}, {'title':'Weights','objective':'Explain model weights','activity':'Compare two weights','minutes':3,'requirements':''}]}
         wrong=copy.deepcopy(good);wrong['outline'][1]['title']='Inputs'
         self.app.pipeline_runner.gateway.respond_json.side_effect=[wrong,good]
@@ -242,6 +267,9 @@ class CourseStudioTests(unittest.TestCase):
         status,template=self.call('/v1/studio/templates',{'courseId':self.task['id'],'name':'Teacher template'});self.assertEqual(status,201,template)
         status,batch=self.call('/v1/studio/plans/'+plan['id']+'/launch',{'targetLanguages':['en-US'],'templateId':template['id'],'execute':True})
         self.assertEqual(status,200,batch);self.assertEqual(len(batch['taskIds']),2);self.assertEqual(self.app.execute_task.call_count,2)
+        copied=self.app.get_task(batch['taskIds'][0])['assets']
+        self.assertTrue(copied['consent']['authorized'])
+        self.assertIn(batch['taskIds'][0],copied['referenceAudio']['path'])
         self.assertEqual(self.call('/v1/studio/templates/'+template['id']+'/launch',{'topics':['x']},user='other')[0],403)
 
     def test_learning_questions_progress_and_answers_are_account_scoped(self):

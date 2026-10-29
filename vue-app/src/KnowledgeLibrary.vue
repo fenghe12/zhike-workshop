@@ -24,7 +24,7 @@ async function upload(event:Event){
 <template>
  <div class="guidance" style="display:block">
   <strong>课程参考课件</strong>
-  <p>每个账户独立保存参考材料。首次生成主题课程前，请导入 PPTX 课件。</p>
+  <p>参考课件选填，每个账户独立保存。导入后，主题生成会检索相关内容；也可直接根据主题生成课程。</p>
   <p v-if="ready">已建立知识库，包含 {{units}} 个内容单元。</p>
   <p v-else-if="!enabled">请先登录，再导入参考课件。</p>
   <label>参考课件语言 <select v-model="language" :disabled="busy"><option value="zh-CN">中文</option><option value="en-US">英语</option><option value="ja-JP">日语</option><option value="ko-KR">韩语</option><option value="de-DE">德语</option><option value="fr-FR">法语</option></select></label><br/>

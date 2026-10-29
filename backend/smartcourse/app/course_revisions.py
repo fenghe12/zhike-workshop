@@ -10,6 +10,27 @@ from .task_model import utc_now
 from .course_access import require_course, course_family
 
 
+def replace_slide_text(path, page, old, new):
+    """Keep unrelated presentation parts unchanged when replacing one text run."""
+    import zipfile
+    from lxml import etree as ET
+    from .pptx_text_fit import slide_parts
+    with zipfile.ZipFile(path) as source:
+        contents={name:source.read(name) for name in source.namelist()}
+        part=slide_parts(contents)[page-1]
+        root=ET.fromstring(contents[part])
+        nodes=list(root.iter('{http://schemas.openxmlformats.org/drawingml/2006/main}t'))
+        if sum((node.text or '').count(old) for node in nodes)!=1:
+            raise ValueError('待替换文字需要在所选页面的一个文本片段中恰好出现一次。')
+        for node in nodes:
+            if old in (node.text or ''):node.text=node.text.replace(old,new)
+        contents[part]=ET.tostring(root,encoding='UTF-8',xml_declaration=True)
+        pending=Path(path).with_suffix('.revision-pending.pptx')
+        with zipfile.ZipFile(pending,'w') as target:
+            for item in source.infolist():target.writestr(item,contents[item.filename])
+    pending.replace(path)
+
+
 def preserve_revision_narration(structure, previous, scope, language):
     """Retain previously normalized narration on pages outside a content edit."""
     result = copy.deepcopy(structure)
@@ -58,6 +79,22 @@ def create_revision(app, base, user_id, changes, *, execute=True, feedback_id=No
         raise ValueError('字幕修订请单独提交。')
     source_changed = any(x['kind'] in {'script','slide_text'} and x.get('language','source') == 'source' for x in clean)
     start_stage = 2 if source_changed else 3 if kinds & {'script', 'speech', 'slide_text'} else 4 if 'avatar' in kinds else 5
+    display_only = kinds == {'slide_text'} and not source_changed
+    if display_only:
+        for change in clean:
+            structure=json.loads((base_root/'s2'/change['language']/'translated_structure.json').read_text())
+            row=next(p for p in structure['pages'] if p['page_id']==change['page'])
+            oral_path=base_root/'s3'/change['language']/'narration_structure.json'
+            if not oral_path.is_file():
+                display_only=False
+                break
+            oral=json.loads(oral_path.read_text())
+            spoken=next(p for p in oral['pages'] if p['page_id']==change['page'])
+            if any(change['oldText'] in str(value.get('script_text','')) for value in (row,spoken)):
+                display_only=False
+                break
+    if display_only:
+        start_stage=5
     inputs = copy.deepcopy(base['inputs'])
     if start_stage <= 3 and inputs.get('reviewBeforeMedia'):
         inputs['reviewApproved']=False
@@ -101,19 +138,8 @@ def create_revision(app, base, user_id, changes, *, execute=True, feedback_id=No
                 if code == 'source':
                     write_speaker_notes(path.parent/'generated.pptx', value['pages'])
             elif kind == 'slide_text':
-                from pptx import Presentation
                 deck_path = release_root/('s1/generated.pptx' if code == 'source' else 's2/'+code+'/translated.pptx')
-                deck = Presentation(deck_path)
-                matches = 0
-                for shape in deck.slides[page-1].shapes:
-                    if shape.has_text_frame:
-                        for paragraph in shape.text_frame.paragraphs:
-                            for run in paragraph.runs:
-                                matches += run.text.count(item['oldText'])
-                                run.text = run.text.replace(item['oldText'], item['text'])
-                if matches != 1:
-                    raise ValueError('待替换文字需要在所选页面的一个文本片段中恰好出现一次。')
-                deck.save(deck_path)
+                replace_slide_text(deck_path,page,item['oldText'],item['text'])
                 path = release_root/('s1/course_structure.json' if code == 'source' else 's2/'+code+'/translated_structure.json')
                 value = json.loads(path.read_text(encoding='utf-8'))
                 row = next(p for p in value['pages'] if p['page_id'] == page)
@@ -156,6 +182,18 @@ def create_revision(app, base, user_id, changes, *, execute=True, feedback_id=No
                                slide_content_height_px=round(height*.83), x_px=width-size-margin,
                                y_px=height-size-margin, size_px=size, position_description='right-side-panel')
                     path.write_text(json.dumps(value,ensure_ascii=False,indent=2),encoding='utf-8')
+        if display_only:
+            from .narrated_document import prepare_narrated_document
+            for code in {item['language'] for item in clean}:
+                path=release_root/'s3'/code/'narration_structure.json'
+                oral=json.loads(path.read_text())
+                for change in clean:
+                    if change['language']!=code:continue
+                    row=next(p for p in oral['pages'] if p['page_id']==change['page'])
+                    row['title']=str(row.get('title','')).replace(change['oldText'],change['text'])
+                    row['key_points']=[str(x).replace(change['oldText'],change['text']) for x in row.get('key_points',[])]
+                path.write_text(json.dumps(oral,ensure_ascii=False,indent=2))
+                prepare_narrated_document(release_root/'s2'/code,path.parent,oral,code)
         for code in codes:
             changed = {x['page'] for x in clean if x.get('language') == code and x['kind'] in {'script','slide_text'}}
             report_path = release_root/'s2'/code/'translation_report.json'
@@ -176,6 +214,9 @@ def create_revision(app, base, user_id, changes, *, execute=True, feedback_id=No
             task['courseMembers'] = copy.deepcopy(base.get('courseMembers', {}))
             task['baseTaskId'] = base['id']
             task['rootTaskId'] = course_family(base,data['tasks'])
+            memory=data.get('courseStudio',{}).get('memories',{}).get(base['id'])
+            if memory is not None:
+                data['courseStudio']['memories'][task['id']]=copy.deepcopy(memory)
             task['revisionChanges'] = clean
             task['feedbackId'] = feedback_id
             task['outputs'] = {f's{i}': replace(base['outputs'][f's{i}']) for i in range(1, start_stage) if f's{i}' in base.get('outputs', {})}

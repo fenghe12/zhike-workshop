@@ -12,6 +12,10 @@ def generate_course(topic: str, destination: Path, *, pages: int, audience: str,
                     minutes: int, language: str, requirements: str = "", source_material=None) -> dict:
     if not topic.strip() or not 1 <= pages <= 30:
         raise ValueError("课程主题不能为空，生成页数须为 1 至 30")
+    if os.environ.get('SMARTCOURSE_PPT_GENERATOR')=='deeppresenter-native':
+        from .deeppresenter_native import generate_native
+        return generate_native(topic,destination,pages=pages,audience=audience,minutes=minutes,
+                               language=language,requirements=requirements,source_material=source_material)
     if os.environ.get('SMARTCOURSE_PPT_GENERATOR', 'deeppresenter') == 'qwen':
         from .config import Settings
         from .gateway import ResponsesGateway

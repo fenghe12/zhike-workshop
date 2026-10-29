@@ -15,6 +15,27 @@ def presentation_parts(package, count=1):
 
 
 class TranslationPackageTests(unittest.TestCase):
+    def test_source_repackaging_reuses_batches_and_changed_text_is_translated_again(self):
+        class Translator:
+            calls=0
+            def respond_json(self,*args,**kwargs):
+                self.calls+=1
+                return {'paragraphs':[['Translated concept']]}
+        def write_deck(path,text,metadata):
+            with zipfile.ZipFile(path,'w') as package:
+                presentation_parts(package)
+                package.writestr('ppt/slides/slide1.xml','<a:p xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"><a:r><a:t>'+text+'</a:t></a:r></a:p>')
+                package.writestr('docProps/core.xml',metadata)
+        with tempfile.TemporaryDirectory() as folder:
+            source,output=Path(folder)/'source.pptx',Path(folder)/'output.pptx'
+            translator=Translator()
+            write_deck(source,'Original concept','first')
+            translate_package(source,output,translator,'English');self.assertEqual(translator.calls,1)
+            write_deck(source,'Original concept','repacked')
+            translate_package(source,output,translator,'English');self.assertEqual(translator.calls,1)
+            write_deck(source,'Revised concept','changed')
+            translate_package(source,output,translator,'English');self.assertEqual(translator.calls,2)
+
     def test_wrong_language_paragraph_is_retried(self):
         class Translator:
             calls = 0
@@ -120,9 +141,9 @@ class TranslationPackageTests(unittest.TestCase):
             calls = 0
             def respond_json(self, prompt, **kwargs):
                 self.calls += 1
-                if self.calls > 1:
-                    raise ConnectionError("Temporary interruption")
-                return {"paragraphs": [["Erste Seite"]]}
+                if 'Page 1' in prompt:
+                    return {"paragraphs": [["Erste Seite"]]}
+                raise ConnectionError("Temporary interruption")
         class ResumedGateway:
             calls = 0
             def respond_json(self, prompt, **kwargs):

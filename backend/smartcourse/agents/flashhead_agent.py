@@ -26,7 +26,8 @@ class FlashHeadAvatarAgent:
                 audio = Path(page['wav_path'])
                 snapshot = output/'raw'/(destination.stem+'.audio.wav')
                 expected = {'taskRoot': str(self.root.resolve()), 'language': task_id,
-                            'page': page['page_id'], 'photoVersion': version, 'duration': page['duration']}
+                            'page': page['page_id'], 'photoVersion': version, 'duration': page['duration'],
+                            'generationFps':25}
                 if not (raw.is_file() and raw.stat().st_size and audio.is_file() and snapshot.is_file()
                         and read_record(destination.with_suffix('.input.json')).get('input') == expected
                         and snapshot.read_bytes() == audio.read_bytes()):
@@ -69,7 +70,7 @@ class FlashHeadAvatarAgent:
                 checkpoint=destination.with_suffix('.input.json')
                 snapshot=raw_output/(destination.stem+'.audio.wav')
                 expected={'taskRoot':str(self.root.resolve()),'language':task_id,'page':page['page_id'],
-                          'photoVersion':photo_version,'duration':page['duration']}
+                          'photoVersion':photo_version,'duration':page['duration'],'generationFps':25}
                 saved=read_record(checkpoint)
                 reuse=saved.get('input')==expected and raw_video.is_file() and snapshot.is_file() and snapshot.read_bytes()==audio.read_bytes()
                 if reuse:
@@ -108,6 +109,13 @@ class FlashHeadAvatarAgent:
 
     @staticmethod
     def normalize_video(raw_video, audio, destination, duration):
+        ffprobe=os.environ.get('SMARTCOURSE_FFPROBE') or shutil.which('ffprobe')
+        if not ffprobe:raise RuntimeError('缺少 FFprobe，无法检查数字人原始帧率')
+        original=json.loads(subprocess.check_output([ffprobe,'-v','error','-select_streams','v:0',
+            '-show_entries','stream=r_frame_rate','-of','json',str(raw_video)],timeout=30))
+        from fractions import Fraction
+        if Fraction(original['streams'][0]['r_frame_rate'])!=25:
+            raise RuntimeError('FlashHead 原始生成帧率须为 25 FPS，请检查模型推理配置并重新生成。')
         ffmpeg = os.environ.get("SMARTCOURSE_FFMPEG") or shutil.which("ffmpeg")
         if not ffmpeg:
             raise RuntimeError("缺少 FFmpeg")

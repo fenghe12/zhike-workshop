@@ -497,6 +497,11 @@ class FullPipelineRunner:
                 generated = generate_upload_lecture(
                     structure, self.gateway, structure['language_code'], output_dir / 'generated-lecture',
                     slide_images=slide_images,
+                    progress_callback=lambda page,attempt:progress(1,'running',
+                        round(35+35*(page if attempt==0 else page-1)/max(1,len(structure['pages']))),
+                        {'step':'逐页讲稿已保存' if attempt==0 else '根据课件文字与画面生成讲稿',
+                         'page':page,'processed':page if attempt==0 else page-1,'total':len(structure['pages']),
+                         'retry':max(0,attempt-1),'retryLimit':3}),
                 )
                 if [page['page_id'] for page in generated] != [page['page_id'] for page in structure['pages']]:
                     raise ValueError('生成讲稿的页码与课件不一致')
@@ -519,6 +524,9 @@ class FullPipelineRunner:
             progress(1, "running", 20, {"step": "正在生成课程课件"})
             source_code = _language_code(task.get("sourceLanguage", "中文"))
             language = LANGUAGE_MODEL_NAMES[source_code]
+            source_material=task.get('inputs',{}).get('answerSourceContext')
+            if source_material is None and rag_service is not None and rag_service.status().get('ready'):
+                source_material=rag_service.query({'query':topic,'topK':8,'generate':False}).get('context')
             generation = generate_course(
                 topic, output_pptx, pages=pages,
                 language=language,
@@ -529,7 +537,7 @@ class FullPipelineRunner:
                     task.get("inputs", {}).get("durationMinutes", 45)
                 ),
                 requirements=requirements,
-                source_material=task.get('inputs',{}).get('answerSourceContext'),
+                source_material=source_material,
             )
             generation_manifest = Path(generation.get('manifest', ''))
             if generation_manifest.is_file():

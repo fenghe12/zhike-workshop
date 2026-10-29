@@ -172,8 +172,13 @@ def translate_package(source: Path, destination: Path, gateway, target: str, *, 
     checkpoint=destination.parent/(destination.stem+'-batches');checkpoint.mkdir(parents=True,exist_ok=True)
     saved_source,saved_target=checkpoint/'source.pptx',checkpoint/'target.json'
     if saved_source.exists():
-        if saved_source.read_bytes()!=source.read_bytes() or json.loads(saved_target.read_text())!=target:
-            raise ValueError('批次记录与当前课件或目标语言不一致，请使用新的输出目录')
+        if json.loads(saved_target.read_text())!=target:
+            raise ValueError('批次记录与目标语言不一致，请使用新的输出目录')
+        if saved_source.read_bytes()!=source.read_bytes():
+            # Every paragraph batch validates its complete input before reuse.
+            # Saving PPTX notes may change ZIP metadata without changing slide text.
+            pending=saved_source.with_suffix('.pending.pptx')
+            pending.write_bytes(source.read_bytes());pending.replace(saved_source)
     else:
         saved_source.write_bytes(source.read_bytes());saved_target.write_text(json.dumps(target))
     roots={};items=[];cached_images=0
@@ -293,7 +298,8 @@ def translate_package(source: Path, destination: Path, gateway, target: str, *, 
                     for node,text in zip(nodes,texts):node.text=text;count+=1
                 if progress:progress(completed,len(items))
         finally:
-            pool.shutdown(wait=False,cancel_futures=True)
+            # Finish checkpoint writes before a caller resumes the same output directory.
+            pool.shutdown(wait=True,cancel_futures=True)
         changes={part:ET.tostring(root,encoding='utf-8',xml_declaration=True) for part,root in roots.items()}
         destination.parent.mkdir(parents=True,exist_ok=True);temporary=destination.with_suffix('.pending.pptx')
         with zipfile.ZipFile(temporary,'w',zipfile.ZIP_DEFLATED) as output:

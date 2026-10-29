@@ -11,6 +11,19 @@ from app.gateway import GatewayError, GatewayJSONError, ResponsesGateway, extrac
 
 
 class GatewayRetryTests(unittest.TestCase):
+    def test_local_json_requests_enable_server_grammar_and_keep_explicit_schema(self):
+        gateway=ResponsesGateway(SimpleNamespace(gateway_url='http://127.0.0.1:17814/v1/chat/completions',
+            gateway_model='fixture-model',gateway_token='fixture-token'))
+        payload={'choices':[{'message':{'content':'{"ok":true}'},'finish_reason':'stop'}]}
+        captured=[]
+        def reply(req,**kwargs):
+            captured.append(json.loads(req.data));return io.BytesIO(json.dumps(payload).encode())
+        with patch('app.gateway.request.urlopen',side_effect=reply):
+            gateway.respond_json('Return JSON')
+            gateway.respond_json('Return JSON',response_schema={'type':'object','required':['ok']})
+        self.assertEqual(captured[0]['response_format'],{'type':'json_object','schema':{}})
+        self.assertEqual(captured[1]['response_format']['schema']['required'],['ok'])
+
     def gateway(self):
         return ResponsesGateway(SimpleNamespace(gateway_url='http://model.local/v1/chat/completions',
             gateway_model='fixture-model', gateway_token='private-fixture-token'))

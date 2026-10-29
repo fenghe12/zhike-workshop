@@ -13,6 +13,18 @@ from app.speech_worker import configure_session_paths
 
 
 class RemoteSpeechRuntimeTests(unittest.TestCase):
+    def test_worker_uses_short_persistent_socket_directory(self):
+        with tempfile.TemporaryDirectory() as directory, patch.dict(os.environ):
+            old=tempfile.tempdir
+            temporary=Path(directory)/'short'
+            os.environ['SMARTCOURSE_SESSION_TMP']=str(temporary)
+            try:
+                configure_session_paths(Path(directory)/('a'*90))
+                self.assertEqual(tempfile.gettempdir(),str(temporary))
+                self.assertTrue(temporary.is_dir())
+            finally:
+                tempfile.tempdir=old
+
     def test_worker_restores_session_paths_after_a_runtime_wrapper(self):
         with tempfile.TemporaryDirectory() as directory, patch.dict(os.environ):
             old=tempfile.tempdir

@@ -8,7 +8,7 @@ from .gateway import GatewayError
 from .narration_style import STYLE_VERSION, DIRECT_TEACHING_RULE, review_teaching_style, style_warning
 
 
-def generate_upload_lecture(structure, gateway, source_language, output_dir, *, slide_images=None):
+def generate_upload_lecture(structure, gateway, source_language, output_dir, *, slide_images=None, progress_callback=None):
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
     pages = structure.get("pages") or []
@@ -67,6 +67,8 @@ def generate_upload_lecture(structure, gateway, source_language, output_dir, *, 
             )
             candidate = None
             for attempt in range(4):
+                if progress_callback:
+                    progress_callback(int(page_id),attempt+1)
                 answer = None
                 try:
                     options = {'image_paths': [image_path]} if image_path else {}
@@ -101,4 +103,6 @@ def generate_upload_lecture(structure, gateway, source_language, output_dir, *, 
         if not result['narration_style_review']['passed']:
             result['narration_warning'] = style_warning(page_id)
         results.append(result)
+        if progress_callback:
+            progress_callback(int(page_id),0)
     return results

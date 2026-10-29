@@ -253,6 +253,11 @@ class ResponsesGateway:
         for attempt in range(json_retries + 1):
             record_path = Path(json_record_dir) / f"attempt-{attempt + 1}.json" if json_record_dir is not None else None
             options = dict(kwargs)
+            from urllib.parse import urlparse
+            if ('response_schema' not in options and urlparse(self.settings.gateway_url).hostname
+                    in {'127.0.0.1','localhost','::1'}
+                    and self.settings.gateway_url.rstrip('/').endswith('/chat/completions')):
+                options['response_schema'] = {}
             if record_path is not None:
                 options["response_record_path"] = record_path
             raw = self.respond(prompt, **options)

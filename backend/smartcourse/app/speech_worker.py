@@ -10,7 +10,7 @@ from pathlib import Path
 
 def configure_session_paths(root):
     root=Path(root).resolve()
-    temporary=root/'tmp';cache=root/'cache'
+    temporary=Path(os.environ.get('SMARTCOURSE_SESSION_TMP',str(root/'tmp'))).resolve();cache=root/'cache'
     temporary.mkdir(parents=True,exist_ok=True);cache.mkdir(parents=True,exist_ok=True)
     os.environ.update(TMPDIR=str(temporary),TEMP=str(temporary),TMP=str(temporary),XDG_CACHE_HOME=str(cache))
     tempfile.tempdir=None
