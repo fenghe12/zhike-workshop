@@ -460,7 +460,7 @@ class FullPipelineRunner:
                 if [page['page_id'] for page in generated] != [page['page_id'] for page in structure['pages']]:
                     raise ValueError('生成讲稿的页码与课件不一致')
                 for page, narration in zip(structure['pages'], generated):
-                    page.update(script_text=narration['script_text'], script_source=narration['script_source'])
+                    page.update(narration)
             _write_json(output_dir / 'source_narration.json', structure)
             from .pptx_notes import write_speaker_notes
             write_speaker_notes(output_pptx, structure['pages'])
@@ -762,6 +762,8 @@ class FullPipelineRunner:
     def _translation_prompt(
         self, page: dict[str, Any], target_name: str, previous: dict[str, Any] | None
     ) -> str:
+        from .narration_style import DIRECT_TEACHING_RULE, authored_by_user
+        narration_rule = '' if authored_by_user(page) else DIRECT_TEACHING_RULE
         correction = ""
         if previous:
             correction = (
@@ -785,6 +787,7 @@ Back-translate the translated script to the source language and evaluate it. Ret
 "back_translation":"...","semantic_similarity":0.0,"terminology_coverage":0.0,
 "formula_number_proper_name_accuracy":0.0,"contextual_consistency":0.0,
 "passed":true,"note":"..."}}
+Narration style (script_text only; do not change slide text): {narration_rule}
 {correction}
 Source page:
 {json.dumps(page, ensure_ascii=False)}"""
@@ -800,12 +803,16 @@ Source page:
             # become narration merely because it appeared in the same model request.
             slide_page = {**page, "script_text": ""}
             script_page = {"page_id": page.get("page_id", 0), "title": "",
-                           "key_points": [], "script_text": page["script_text"]}
+                           "key_points": [], "script_text": page["script_text"],
+                           "script_source":page.get('script_source'),
+                           "original_script_source":page.get('original_script_source',page.get('script_source'))}
             slide, slide_report = self._translate_page(
                 slide_page, target_name, policy, protected_names, False)
             script, script_report = self._translate_page(
                 script_page, target_name, policy, protected_names, False)
             slide["script_text"] = script["script_text"]
+            for field in ('original_script_source','narration_style_review','narration_warning'):
+                if field in script:slide[field] = script[field]
             report = dict(slide_report)
             for field in ("semantic_similarity", "terminology_coverage",
                           "formula_number_proper_name_accuracy", "contextual_consistency"):
@@ -834,6 +841,7 @@ Source page:
                     self._translation_prompt(page, target_name, previous) + "\nRequired quality thresholds:\n" + json.dumps(policy) + "\nUse these official personal-name spellings exactly, including in the script:\n" + json.dumps(name_map, ensure_ascii=False),
                     reasoning_effort="medium",
                     max_output_tokens=12_000,
+                    json_retries=0,
                 )
                 if not isinstance(value, dict) or not isinstance(value.get("key_points", []), list):
                     raise ValueError("译文格式无效")
@@ -848,6 +856,7 @@ Source page:
                 "script_text": str(value.get("script_text", "")),
                 "layout": copy.deepcopy(page.get("layout", {})),
                 "script_source": "translation_agent",
+                "original_script_source": page.get('original_script_source',page.get('script_source')),
             }
             translated_text = "\n".join(
                 [translated["title"], translated["script_text"], *translated["key_points"]]
@@ -875,6 +884,14 @@ Source page:
             if not names_preserved:
                 report["note"] += " 人名需保留原文写法。"
             if str(page.get("script_text", "")).strip():
+                from .narration_style import authored_by_user, review_teaching_style, style_warning
+                if not authored_by_user(page):
+                    style = review_teaching_style(translated['script_text'])
+                    translated['narration_style_review'] = style
+                    report['narrationStyle'] = style
+                    if not style['passed']:
+                        report['passed'] = False
+                        report['note'] += ' 请直接讲授内容，避免描述幻灯片介绍或展示了什么。'
                 from .language_validation import check_target_language
                 language_check = check_target_language(translated["script_text"], target_name)
                 report["languageCheck"] = language_check
@@ -888,6 +905,10 @@ Source page:
             previous = {"translation": translated, "validation": report}
         if last_result:
             translated, report = last_result
+            if translated.get('narration_style_review',{}).get('passed') is False:
+                translated['narration_style_review']['continuedAfterRetries'] = True
+                from .narration_style import style_warning
+                translated['narration_warning'] = style_warning(translated['page_id'], policy['maxRetries'])
             report["attempt"] = policy["maxRetries"] + 1
             if last_error:
                 report["note"] += " 后续重试未返回完整译文。"
@@ -961,7 +982,7 @@ Source page:
                     name_spellings=localized_person_names(protected_names,target_name)
                     request_value = {"taskId":task['id'],"page":page,"language":target_name,
                                      "policy":task.get('translationPolicy'),"names":protected_names,
-                                     "model":self.settings.gateway_model,"translationVersion":"language-check-v2"}
+                                     "model":self.settings.gateway_model,"translationVersion":"direct-teaching-v3"}
                     if any(name_spellings[name]!=name for name in name_spellings):
                         request_value["officialNameSpellings"]=name_spellings
                     try:
@@ -1135,6 +1156,7 @@ Source page:
                 source_json = prepare_narration(json.loads(source_json.read_text(encoding="utf-8")), self.gateway,
                                                 root / "s3" / code / "narration_structure.json",
                                                 preserve_script=task.get('mode') == 'upload',
+                                                enforce_direct_style=not bool(task.get('inputs',{}).get('script')),
                                                 review_content=task.get('mode') == 'topic' and os.environ.get('SMARTCOURSE_STRICT_NARRATION_REVIEW') == '1',
                                                 target_duration_seconds=(float(task.get('inputs',{}).get('durationMinutes',10))*60
                                                                          if task.get('mode') == 'topic' else None),

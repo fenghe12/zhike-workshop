@@ -29,7 +29,7 @@ def generate_remote_lecture(pages, *, audience, minutes, output):
         path = Path(temporary) / 'request.json'
         path.write_text(json.dumps(request, ensure_ascii=False), encoding='utf-8')
         subprocess.run([*ssh, shlex.join(['mkdir', '-p', remote])], check=True, stdout=log, stderr=log, timeout=30)
-        subprocess.run([*scp, str(path), str(package / 'topic_lecture.py'), str(package / 'topic_lecture_worker.py'),
+        subprocess.run([*scp, str(path), str(package / 'topic_lecture.py'), str(package / 'topic_lecture_worker.py'),str(package/'narration_style.py'),
                         host + ':' + remote + '/'], check=True, stdout=log, stderr=log, timeout=120)
         python = os.environ.get('SMARTCOURSE_REMOTE_PYTHON', '/home/ma-user/anaconda3/envs/MindSpore/bin/python')
         subprocess.run([*ssh, shlex.join(['env', 'SMARTCOURSE_REMOTE_MEDIA=0', python,

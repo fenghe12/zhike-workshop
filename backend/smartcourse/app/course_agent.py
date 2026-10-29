@@ -466,6 +466,7 @@ class CourseStructureAgent:
                 learner_state,
                 preferences,
             )
+        from .narration_style import DIRECT_TEACHING_RULE
         prompt = f"""You are the course-generation agent in a MOOC production system.
 Create a university-level course about: {topic}
 Generate exactly {total_pages} PPT pages in {language}. Each page must contain a title,
@@ -473,6 +474,7 @@ Generate exactly {total_pages} PPT pages in {language}. Each page must contain a
 Each teaching script must be suitable for approximately 45 to 75 seconds of speech:
 120 to 220 Chinese characters for Chinese, or 90 to 150 words for alphabetic languages.
 End the script with a complete sentence and do not repeat the key points verbatim.
+{DIRECT_TEACHING_RULE}
 Keep definitions and worked examples internally consistent. When discussing learning systems,
 distinguish input data, model parameters, fixed decision settings, prediction, and training.
 Return JSON only:

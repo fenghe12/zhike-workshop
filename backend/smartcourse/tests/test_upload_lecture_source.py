@@ -9,7 +9,7 @@ class UploadLectureSourceTests(unittest.TestCase):
         class Gateway:
             def respond_json(self, prompt, **kwargs):
                 self.images = kwargs.get('image_paths')
-                return {'script_text': 'The slide presents two examples of artificial intelligence in science.'}
+                return {'script_text': 'Artificial intelligence can help scientists recognize patterns in their observations.'}
         gateway = Gateway()
         with tempfile.TemporaryDirectory() as folder:
             image = Path(folder) / 'slide.png'

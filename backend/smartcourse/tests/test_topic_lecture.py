@@ -20,10 +20,10 @@ class TopicLectureTests(unittest.TestCase):
 
     def test_remote_mode_delegates_page_inputs(self):
         pages = [{'page_id': 1, 'title': '主题'}]
-        with patch.dict(os.environ, {'SMARTCOURSE_REMOTE_MEDIA': '1'}), patch(
+        with tempfile.TemporaryDirectory() as directory, patch.dict(os.environ, {'SMARTCOURSE_REMOTE_MEDIA': '1'}), patch(
                 'app.remote_topic_lecture.generate_remote_lecture', return_value=pages) as remote:
             self.assertEqual(generate_topic_lecture(pages, audience='本科生', minutes=1,
-                                                   output=Path('/tmp/lecture.json')), pages)
+                                                   output=Path(directory)/'lecture.json'), pages)
             self.assertEqual(remote.call_args.args[0], pages)
 
     def test_page_order_and_cache(self):

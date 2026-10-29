@@ -6,6 +6,7 @@ import re
 from pathlib import Path
 
 from .gateway import GatewayError
+from .narration_style import STYLE_VERSION, DIRECT_TEACHING_RULE, review_teaching_style, authored_by_user, style_warning
 
 
 def validate_spoken_text(text):
@@ -26,19 +27,32 @@ def export_lecture_text(structure,output):
 
 
 def prepare_narration(structure, gateway, output, *, preserve_script=False, target_duration_seconds=None,
-                      review_content=False, progress_callback=None):
+                      review_content=False, progress_callback=None, enforce_direct_style=True):
     output=Path(output)
     if preserve_script:
         pages = structure.get('pages', [])
         if not pages or any(not isinstance(p.get('script_text'), str) or not p['script_text'].strip() for p in pages):
             raise ValueError('逐页讲稿不完整，无法生成语音')
+        result = copy.deepcopy(structure)
+        for index, page in enumerate(pages):
+            style = review_teaching_style(page['script_text'])
+            checked = page.get('narration_style_review') or {}
+            if (not enforce_direct_style or authored_by_user(page) or style['passed']
+                    or (checked.get('version') == STYLE_VERSION and checked.get('continuedAfterRetries'))):
+                continue
+            part = prepare_narration({**structure, 'pages':[page]}, gateway,
+                output.parent/'narration-style-pages'/f"page-{page['page_id']:03d}.json",
+                progress_callback=progress_callback, enforce_direct_style=True)
+            result['pages'][index] = json.loads(part.read_text())['pages'][0]
         output.parent.mkdir(parents=True, exist_ok=True)
-        output.write_text(json.dumps(structure, ensure_ascii=False, indent=2), encoding='utf-8')
+        output.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding='utf-8')
         return output
     request={'task_id':structure.get('task_id'),'language':structure.get('target_language',structure.get('language_code')),
              'pages':[{k:p.get(k) for k in ['page_id','title','script_text','key_points','formulas']} for p in structure['pages']]}
     if review_content:
         request['contentReviewVersion'] = 1
+    if enforce_direct_style:
+        request['narrationStyleVersion'] = STYLE_VERSION
     character_limit = None
     if target_duration_seconds is not None:
         if isinstance(target_duration_seconds, bool) or not isinstance(target_duration_seconds, (int,float)) or not math.isfinite(target_duration_seconds) or target_duration_seconds <= 0:
@@ -64,6 +78,9 @@ def prepare_narration(structure, gateway, output, *, preserve_script=False, targ
                 if (character_limit and len(page['script_text']) > character_limit
                         and not page.get('narration_length_review', {}).get('continuedAfterRetries')):
                     raise ValueError('缓存口播稿超过长度限制')
+                if (enforce_direct_style and not review_teaching_style(page['script_text'])['passed']
+                        and not page.get('narration_style_review',{}).get('continuedAfterRetries')):
+                    raise ValueError('缓存讲稿仍在描述幻灯片，需要改为直接讲授')
         except (ValueError, KeyError, TypeError):
             pass
         else:
@@ -78,7 +95,7 @@ def prepare_narration(structure, gateway, output, *, preserve_script=False, targ
             page_id = subset['pages'][0]['page_id']
             part=prepare_narration(subset,gateway,output.parent/'narration-batches'/f'pages-{page_id:03d}.json',
                 target_duration_seconds=(target_duration_seconds*len(subset['pages'])/len(structure['pages']) if target_duration_seconds else None),
-                review_content=review_content,progress_callback=progress_callback)
+                review_content=review_content,progress_callback=progress_callback,enforce_direct_style=enforce_direct_style)
             result['pages'].extend(json.loads(part.read_text())['pages'])
         output.parent.mkdir(parents=True,exist_ok=True)
         output.write_text(json.dumps(result,ensure_ascii=False,indent=2))
@@ -94,7 +111,8 @@ def prepare_narration(structure, gateway, output, *, preserve_script=False, targ
         'Keep proper personal names. Institutions may use their standard target-language names. '
         'Use short complete sentences separated by sentence punctuation and newlines. No stage directions, XML, Markdown or explanatory notes in script_text. '
         'When a maximum character count is supplied, aim for 90 percent of that limit to allow counting differences. Use concise phrasing and remove repeated introductions, without dropping numerical assumptions, definitions, or conditions. '
-        'Report genuinely missing or ambiguous source information in source_issues without inventing its replacement.\n'+json.dumps(request,ensure_ascii=False))
+        'Report genuinely missing or ambiguous source information in source_issues without inventing its replacement. '
+        +(DIRECT_TEACHING_RULE if enforce_direct_style else '')+'\n'+json.dumps(request,ensure_ascii=False))
     output.parent.mkdir(parents=True,exist_ok=True)
     feedback = ''
     best_pages = None
@@ -112,6 +130,8 @@ def prepare_narration(structure, gateway, output, *, preserve_script=False, targ
                 raise ValueError('口语讲稿未完整覆盖课件页面')
             for prepared in pages:
                 validate_spoken_text(prepared.get('script_text'))
+                if enforce_direct_style:
+                    prepared['narration_style_review'] = review_teaching_style(prepared['script_text'])
             if review_content:
                 from .course_content_review import review_course_content
                 source = [{'page':p['page_id'],'title':p.get('title'),
@@ -125,9 +145,15 @@ def prepare_narration(structure, gateway, output, *, preserve_script=False, targ
                 if not review['passed']:
                     reasons = [check.get('reason','') for check in review['checks'] if not check['met']]
                     raise ValueError('口播内容复核未通过：'+'；'.join(reasons))
-            if best_pages is None or sum(len(p['script_text']) for p in pages) < sum(len(p['script_text']) for p in best_pages):
+            def rank(values):
+                return (sum(p.get('narration_style_review',{}).get('passed') is False for p in values),
+                        sum(max(0,len(p['script_text'])-character_limit) for p in values) if character_limit else 0,
+                        sum(len(p['script_text']) for p in values))
+            if best_pages is None or rank(pages) < rank(best_pages):
                 best_pages = copy.deepcopy(pages)
             for prepared in pages:
+                if prepared.get('narration_style_review',{}).get('passed') is False:
+                    raise ValueError('请直接讲授知识，不要描述幻灯片介绍或展示了什么：'+', '.join(prepared['narration_style_review']['matches']))
                 if character_limit and len(prepared['script_text']) > character_limit:
                     raise ValueError(f"第 {prepared['page_id']} 页讲稿 {len(prepared['script_text'])} 字，超过 {character_limit} 字建议长度。需保留核心内容并减少重复说明")
         except (ValueError, GatewayError) as error:
@@ -139,14 +165,19 @@ def prepare_narration(structure, gateway, output, *, preserve_script=False, targ
                 if best_pages is not None:
                     pages = best_pages
                     for prepared in pages:
+                        warnings = []
+                        if prepared.get('narration_style_review',{}).get('passed') is False:
+                            prepared['narration_style_review']['continuedAfterRetries'] = True
+                            warnings.append(style_warning(prepared['page_id']))
                         length = len(prepared['script_text'])
                         if character_limit and length > character_limit:
                             prepared['narration_length_review'] = {
                                 'passed': False, 'suggestedMaximumCharacters': character_limit,
                                 'actualCharacters': length, 'retries': 3, 'continuedAfterRetries': True}
-                            prepared['narration_warning'] = (
+                            warnings.append(
                                 f"第 {prepared['page_id']} 页讲稿 {length} 字，超过建议长度 {character_limit} 字；"
                                 '局部修订三次后，保留最短的可朗读讲稿继续生成。')
+                        if warnings:prepared['narration_warning'] = '；'.join(warnings)
                     break
                 raise ValueError('口语讲稿三次重试后仍未通过检查：'+str(error)) from error
             feedback = '\nPrevious attempt failed validation. Correct the specific issue without inventing or deleting substantive claims. '
@@ -157,8 +188,10 @@ def prepare_narration(structure, gateway, output, *, preserve_script=False, targ
     for source,prepared in zip(result['pages'],pages):
         text=prepared.get('script_text')
         validate_spoken_text(text)
+        for field in ('narration_length_review','narration_style_review','narration_warning'):
+            source.pop(field, None)
         source.update(script_text=text,script_source='narration_agent',source_issues=prepared.get('source_issues',[]))
-        for field in ('narration_length_review','narration_warning'):
+        for field in ('narration_length_review','narration_style_review','narration_warning'):
             if field in prepared:
                 source[field] = prepared[field]
     output.parent.mkdir(parents=True,exist_ok=True)
