@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import {provideInputContext} from './inputAssistance'
 import {onMounted,ref} from 'vue'
 import {api,post} from './api'
 type Term={source:string;target:string;language:string}
@@ -9,6 +10,7 @@ const busy=ref(false),ready=ref(false),error=ref(''),message=ref('')
 async function load(){error.value='';try{memory.value=await api<Memory>('/v1/settings/teaching-memory');ready.value=true}catch(e){error.value=(e as Error).message}}
 onMounted(load)
 async function save(clear=false){busy.value=true;error.value='';message.value='';try{const value=clear?{enabled:false,audience:'',style:'',glossary:[],revision:memory.value.revision}:memory.value;memory.value=await post<Memory>('/v1/settings/teaching-memory',value);message.value=clear?'教学偏好与术语已清空。':'已保存，对之后新建的课程生效。'}catch(e){error.value=(e as Error).message}finally{busy.value=false}}
+provideInputContext(()=>({language:'zh-CN',context:{audience:memory.value.audience,style:memory.value.style,glossary:memory.value.glossary}}))
 </script>
 <template>
  <section class="teaching-memory">
@@ -18,13 +20,13 @@ async function save(clear=false){busy.value=true;error.value='';message.value=''
   <form v-if="ready" @submit.prevent="save()">
    <fieldset :disabled="busy">
     <label class="toggle"><input v-model="memory.enabled" type="checkbox">新课程使用我的教学偏好</label>
-    <label>常用教学对象<input v-model="memory.audience" maxlength="300" placeholder="例如：没有编程基础的本科生"></label>
-    <label>讲解偏好<textarea v-model="memory.style" rows="3" maxlength="1500" placeholder="例如：先解释术语再举例，使用简短句子，直接向学生讲授知识。"/></label>
+    <label>常用教学对象<AssistedInput v-model="memory.audience" maxlength="300" placeholder="例如：没有编程基础的本科生" assist-label="常用教学对象" assist-purpose="audience"/></label>
+    <label>讲解偏好<AssistedTextarea v-model="memory.style" rows="3" maxlength="1500" placeholder="例如：先解释术语再举例，使用简短句子，直接向学生讲授知识。" assist-label="讲解偏好" assist-purpose="memory"/></label>
     <div class="terms-head"><b>术语译法</b><button type="button" :disabled="memory.glossary.length>=40" @click="memory.glossary.push({source:'',target:'',language:'en-US'})">添加术语</button></div>
     <div v-for="(term,index) in memory.glossary" :key="index" class="term">
-     <input v-model="term.source" required maxlength="160" aria-label="术语原文" placeholder="术语原文">
+     <AssistedInput v-model="term.source" required maxlength="160" aria-label="术语原文" placeholder="术语原文" assist-label="术语原文" assist-purpose="memory" :assist-language="term.language" :assist-context="{term:term.source}"/>
      <select v-model="term.language" aria-label="目标语种"><option v-for="(name,code) in languages" :key="code" :value="code">{{name}}</option></select>
-     <input v-model="term.target" required maxlength="160" aria-label="指定译法" placeholder="指定译法">
+     <AssistedInput v-model="term.target" required maxlength="160" aria-label="指定译法" placeholder="指定译法" assist-label="术语指定译法" assist-purpose="memory" :assist-language="term.language" :assist-context="{term:term.source}"/>
      <button type="button" @click="memory.glossary.splice(index,1)">移除</button>
     </div>
     <p>课程本次填写的要求、原始内容和目标语种优先；术语仅用于对应目标语种。</p>

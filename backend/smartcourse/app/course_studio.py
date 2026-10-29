@@ -215,6 +215,10 @@ class CourseStudio:
                           feedback=[{k:copy.deepcopy(v) for k,v in x.items() if k not in {'adminNote','adminHistory'}} for x in self.app.store.snapshot().get('userFeedback', {}).values() if x.get('taskId') == task['id']],
                           repairs=[self.repair_status(x) for x in self.state().get('repairs', {}).values() if x.get('courseId') == task['id']],
                           members=task.get('courseMembers', {}), questionStats=question_stats(self.app.settings, task['id']))
+        if role in {'owner','editor'}:
+            from .input_assistance import public
+            result['revisionSuggestions']=[public(x) for x in self.state().get('revisionSuggestions',{}).values()
+                if x.get('courseId')==task['id'] and x.get('createdBy')==owner]
         return result
 
     def repair_status(self, record):
@@ -617,6 +621,19 @@ class CourseStudio:
                     tasks.append({**{k:task.get(k) for k in ('id','name','status','targetLanguages','updatedAt')}, 'role':role})
             handler._json(200, sorted(tasks, key=lambda x:x.get('updatedAt',''), reverse=True))
             return True
+        if path == '/v1/studio/assist-input':
+            from .input_assistance import public
+            query=parse_qs(urlparse(handler.path).query)
+            course_id=query.get('courseId',[''])[0];label=query.get('label',[''])[0]
+            rows=[]
+            for item in self.state().get('inputSuggestions',{}).values():
+                if item.get('createdBy')!=owner or (course_id and item.get('courseId')!=course_id) or (label and item.get('label')!=label):continue
+                if item.get('courseId'):
+                    try:self.task(item['courseId'],owner,'read' if item.get('purpose') in {'feedback','question','review'} else 'edit')
+                    except (ValueError,AuthSecurityError):continue
+                rows.append(public(item))
+            handler._json(200,sorted(rows,key=lambda x:x['createdAt'],reverse=True)[:20])
+            return True
         if path in {'/v1/studio/templates','/v1/studio/plans','/v1/studio/batches'}:
             group = path.rsplit('/',1)[-1]
             handler._json(200, [x for x in self.state().get(group, {}).values() if x.get('createdBy') == owner])
@@ -632,6 +649,15 @@ class CourseStudio:
         if not path.startswith('/v1/studio/'):
             return False
         owner = handler._agreement_user()
+        if path == '/v1/studio/assist-input':
+            from .input_assistance import suggest_input
+            handler._json(200,suggest_input(self.app,owner,payload))
+            return True
+        match=re.fullmatch(r'/v1/studio/assist-input/([^/]+)/accept',path)
+        if match:
+            from .input_assistance import accept_input
+            handler._json(200,accept_input(self.app,owner,match.group(1),payload))
+            return True
         if path == '/v1/studio/plans':
             handler._json(201, self.create_plan(owner, payload))
             return True
@@ -699,6 +725,12 @@ class CourseStudio:
             result = submit_repair(self.app, task, owner, payload)
         elif action == 'resolve-feedback':
             result = self.resolve_feedback(task, owner, payload)
+        elif action == 'suggest-revision':
+            from .input_assistance import suggest_revision
+            result = suggest_revision(self.app,owner,task,payload)
+        elif action == 'apply-suggestion':
+            from .input_assistance import apply_revision
+            result = apply_revision(self.app,owner,task,payload.get('suggestionId'),payload)
         else:
             return False
         handler._json(200, result)

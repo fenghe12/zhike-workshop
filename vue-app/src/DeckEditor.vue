@@ -1,7 +1,8 @@
 <script setup lang="ts">
+import {provideInputContext} from './inputAssistance'
 import {computed,onMounted,ref} from 'vue'
 import {api} from './api'
-type Task={id:string;name:string;status:string;outputs?:any}
+type Task={id:string;name:string;status:string;sourceLanguage?:string;outputs?:any}
 type Page={page_id:number;title:string;script_text:string;key_points?:string[]}
 const tasks=ref<Task[]>([]),taskId=ref(''),pages=ref<Page[]>([]),selected=ref(0),busy=ref(false),message=ref(''),error=ref('')
 const task=computed(()=>tasks.value.find(item=>item.id===taskId.value))
@@ -13,6 +14,7 @@ function save(){localStorage.setItem(`smartcourse-deck-editor-${taskId.value}`,J
 function restore(){try{const value=JSON.parse(localStorage.getItem(`smartcourse-deck-editor-${taskId.value}`)||'null');if(Array.isArray(value)){pages.value=value;message.value='已恢复本地编辑草稿'}}catch{}}
 function download(){const blob=new Blob([JSON.stringify({taskId:taskId.value,pages:pages.value},null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const link=document.createElement('a');link.href=url;link.download=`${task.value?.name||'course'}-editable-pages.json`;link.click();URL.revokeObjectURL(url)}
 onMounted(async()=>{try{tasks.value=(await api<Task[]>('/v1/tasks')).filter(item=>item.status==='completed');taskId.value=tasks.value[0]?.id||'';await loadPages();restore()}catch(e){error.value=(e as Error).message}})
+provideInputContext(()=>({courseId:taskId.value||undefined,page:pages.value[selected.value]?.page_id,language:task.value?.sourceLanguage||'zh-CN',context:{currentPage:pages.value[selected.value]}}))
 </script>
 <template>
  <div class="deck-editor">
@@ -21,7 +23,7 @@ onMounted(async()=>{try{tasks.value=(await api<Task[]>('/v1/tasks')).filter(item
   <el-alert v-if="error" :title="error" type="error" :closable="false"/><el-alert v-if="message" :title="message" type="success" :closable="false"/>
   <div v-if="pages.length" class="editor-layout">
    <section class="panel page-list"><div class="section-top"><h2>课程页面</h2><span>{{pages.length}} 页</span></div><button v-for="(page,index) in pages" :key="index" :class="{active:selected===index}" @click="selected=index"><span>{{index+1}}</span>{{page.title||'未命名页面'}}</button><div class="list-actions"><el-button size="small" @click="addPage">新增页</el-button><el-button size="small" @click="removePage" :disabled="pages.length<=1">删除页</el-button></div></section>
-   <section class="panel page-form"><div class="section-top"><h2>第 {{selected+1}} 页</h2><div><el-button text @click="move(-1)" :disabled="selected===0">上移</el-button><el-button text @click="move(1)" :disabled="selected===pages.length-1">下移</el-button></div></div><el-form label-position="top"><el-form-item label="页面标题"><el-input v-model="pages[selected].title"/></el-form-item><el-form-item label="可朗读讲稿"><el-input v-model="pages[selected].script_text" type="textarea" :rows="16"/></el-form-item><el-form-item label="教学要点"><el-input v-for="(_,index) in pages[selected].key_points" :key="index" v-model="pages[selected].key_points![index]" class="point-input"/><el-button link type="primary" @click="pages[selected].key_points!.push('')">新增教学要点</el-button></el-form-item></el-form></section>
+   <section class="panel page-form"><div class="section-top"><h2>第 {{selected+1}} 页</h2><div><el-button text @click="move(-1)" :disabled="selected===0">上移</el-button><el-button text @click="move(1)" :disabled="selected===pages.length-1">下移</el-button></div></div><el-form label-position="top"><el-form-item label="页面标题"><AssistedInput v-model="pages[selected].title" assist-label="页面标题" assist-purpose="topic"/></el-form-item><el-form-item label="可朗读讲稿"><AssistedTextarea v-model="pages[selected].script_text" type="textarea" :rows="16" assist-label="页面讲稿" assist-purpose="lecture"/></el-form-item><el-form-item label="教学要点"><AssistedInput v-for="(_,index) in pages[selected].key_points" :key="index" v-model="pages[selected].key_points![index]" class="point-input" assist-label="教学要点" assist-purpose="lecture"/><el-button link type="primary" @click="pages[selected].key_points!.push('')">新增教学要点</el-button></el-form-item></el-form></section>
   </div>
  </div>
 </template>

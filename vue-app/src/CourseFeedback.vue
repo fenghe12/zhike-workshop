@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import {provideInputContext} from './inputAssistance'
 import {computed,ref,watch} from 'vue'
 import {api,post,type Task} from './api'
 const props=defineProps<{task?:Task;language?:string;media?:HTMLMediaElement;pageId?:number|null}>()
@@ -15,6 +16,7 @@ function capturePosition(){if(props.media&&Number.isFinite(props.media.currentTi
 function clock(seconds:number){return `${Math.floor(seconds/60)}:${Math.floor(seconds%60).toString().padStart(2,'0')}`}
 function date(value:string){return new Date(value).toLocaleString()}
 async function submit(){error.value='';message.value='';if(!rating.value&&!comment.value.trim()){error.value='请选择评分或填写反馈内容。';return}busy.value=true;try{const value:Record<string,unknown>={rating:rating.value||null,categories:[...categories.value],comment:comment.value.trim()};if(props.task){value.taskId=props.task.id;if(props.language)value.language=props.language;if(positionPage.value!=='')value.page=Number(positionPage.value);if(positionSeconds.value!==null)value.playbackSeconds=positionSeconds.value}await post('/v1/feedback',value);message.value='反馈已保存，谢谢。';rating.value=0;categories.value=[];comment.value='';positionPage.value='';positionSeconds.value=null;await load()}catch(e){error.value=(e as Error).message}finally{busy.value=false}}
+provideInputContext(()=>({courseId:props.task?.id,page:Number(positionPage.value)||props.pageId||undefined,language:props.language||'zh-CN',context:{problemTypes:categories.value,reportedIssue:comment.value,playbackSeconds:positionSeconds.value}}))
 </script>
 <template>
  <section class="course-feedback">
@@ -23,7 +25,7 @@ async function submit(){error.value='';message.value='';if(!rating.value&&!comme
   <form @submit.prevent="submit">
    <fieldset><legend>{{task?'结果评分':'整体体验评分'}}（选填）</legend><div class="rating-options" role="radiogroup" aria-label="评分"><button v-for="score in 5" :key="score" type="button" role="radio" :aria-label="score+' 分'" :aria-checked="rating===score" :class="{selected:rating>=score}" @click="rating=score">★</button><span>{{rating?rating+' / 5':'尚未评分'}}</span><button v-if="rating" type="button" class="text-action" @click="rating=0">清除</button></div><small>1 分：很不满意；5 分：很满意。</small></fieldset>
    <fieldset><legend>问题类型（可多选）</legend><div class="feedback-categories"><label v-for="[key,label] in options" :key="key"><input v-model="categories" type="checkbox" :value="key">{{label}}</label></div></fieldset>
-   <label class="comment-label">问题或建议<textarea v-model="comment" rows="4" maxlength="4000" placeholder="例如：第 3 页漏译了一句话，或某处语音与字幕不一致。"></textarea></label>
+   <label class="comment-label">问题或建议<AssistedTextarea v-model="comment" rows="4" maxlength="4000" placeholder="例如：第 3 页漏译了一句话，或某处语音与字幕不一致。" assist-label="问题或建议" assist-purpose="feedback"></AssistedTextarea></label>
    <div v-if="task" class="feedback-position"><label>相关页码（选填）<input v-model="positionPage" type="number" min="1" :max="maxPage" step="1" placeholder="页码"></label><button v-if="media" type="button" class="secondary-action" @click="capturePosition">记录当前播放位置</button><span v-if="positionSeconds!==null">已记录 {{clock(positionSeconds)}}</span></div>
    <p v-if="error" class="feedback-error" role="alert">{{error}}</p><p v-if="message" class="feedback-success" role="status">{{message}}</p>
    <button class="submit-feedback" type="submit" :disabled="busy">{{busy?'正在提交…':'提交反馈'}}</button>

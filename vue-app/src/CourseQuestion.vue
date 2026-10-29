@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import {provideInputContext} from './inputAssistance'
 import {ref, watch, onUnmounted} from 'vue'
 import {api} from './api'
 import {PlaybackInterruption} from './playbackInterruption'
@@ -79,11 +80,12 @@ async function retryAnswer(){
  }catch(e){if(epoch===generation)error.value=(e as Error).message}
  finally{if(epoch===generation)submitting.value=false}
 }
+provideInputContext(()=>({courseId:props.courseId,language:props.language,context:{question:question.value,playbackSeconds:props.media?.currentTime}}))
 </script>
 <template>
  <section class="course-question">
   <h3>课程提问</h3>
-  <el-input v-model="question" type="textarea" :rows="3" maxlength="4000" show-word-limit placeholder="输入当前课程的问题，提交后课程将暂停。" :disabled="!!record||submitting"/>
+  <AssistedTextarea v-model="question" type="textarea" :rows="3" maxlength="4000" show-word-limit placeholder="输入当前课程的问题，提交后课程将暂停。" :disabled="!!record||submitting" assist-label="课程学习提问" assist-purpose="question"/>
   <div class="question-actions"><el-button type="primary" :loading="submitting" :disabled="!question.trim()||!!record" @click="submit">暂停并提问</el-button><el-button v-if="record||error" @click="resume">返回原课程</el-button></div>
   <el-alert v-if="error" :title="error" type="warning" :closable="false"/>
   <template v-if="record">

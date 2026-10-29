@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import {provideInputContext} from './inputAssistance'
 import {computed,onMounted,ref} from 'vue'
 import {useRouter} from 'vue-router'
 import {api,post} from './api'
@@ -77,6 +78,7 @@ async function submit(){
   }catch(e){error.value=(e as Error).message}
   finally{submitting.value=false}
 }
+provideInputContext(()=>({language:sourceLanguage.value,context:{name:name.value,audience:audience.value,codeLanguage:codeLanguage.value,code:codeText.value.slice(0,10000)}}))
 </script>
 
 <template>
@@ -86,17 +88,17 @@ async function submit(){
     <el-form label-position="top">
       <el-radio-group v-model="sourceType" class="source-mode"><el-radio-button value="custom">讲解我的代码</el-radio-button><el-radio-button value="catalog">示例动画课程</el-radio-button></el-radio-group>
       <template v-if="sourceType==='custom'">
-        <el-form-item label="待讲解代码" required><el-input v-model="codeText" type="textarea" :rows="12" maxlength="30000" show-word-limit placeholder="粘贴需要讲解的代码。系统只读取代码文本，不执行代码。"/></el-form-item>
+        <el-form-item label="待讲解代码" required><AssistedTextarea v-model="codeText" type="textarea" :rows="12" maxlength="30000" show-word-limit placeholder="粘贴需要讲解的代码。系统只读取代码文本，不执行代码。" assist-label="待讲解代码" assist-purpose="code"/></el-form-item>
         <el-form-item label="编程语言"><el-input v-model="codeLanguage" maxlength="80" placeholder="例如 Python、JavaScript"/></el-form-item>
         <el-form-item label="讲解源语言"><el-select v-model="sourceLanguage"><el-option v-for="language in languages" :key="language.code" :value="language.name" :label="language.name"/></el-select></el-form-item>
-        <el-form-item label="教学对象"><el-input v-model="audience" maxlength="120"/></el-form-item>
+        <el-form-item label="教学对象"><AssistedInput v-model="audience" maxlength="120" assist-label="代码课程教学对象" assist-purpose="audience"/></el-form-item>
         <el-form-item label="讲解页数"><el-input-number v-model="pageCount" :min="1" :max="10"/></el-form-item>
       </template>
       <template v-else>
         <el-form-item label="示例课程" required><el-select v-model="selected" filterable placeholder="选择课程主题" style="width:100%"><el-option v-for="lesson in lessons" :key="lesson.lessonId" :label="`${lesson.subject} · ${lesson.topic}`" :value="lesson.lessonId"/></el-select></el-form-item>
         <p v-if="chosen" class="lesson-description">{{chosen.grade}} · {{chosen.subject}} · {{chosen.topic}}</p>
       </template>
-      <el-form-item label="任务名称"><el-input v-model="name" :placeholder="sourceType==='catalog'?chosen?.topic:'输入便于辨认的名称'" maxlength="120"/></el-form-item>
+      <el-form-item label="任务名称"><AssistedInput v-model="name" :placeholder="sourceType==='catalog'?chosen?.topic:'输入便于辨认的名称'" maxlength="120" assist-label="代码课程名称" assist-purpose="topic"/></el-form-item>
       <el-form-item label="输出语种" required>
         <el-checkbox-group v-model="targetLanguages">
           <el-checkbox v-for="language in languages" :key="language.code" :value="language.name">{{language.name}}</el-checkbox>

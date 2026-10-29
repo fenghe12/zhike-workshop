@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import {provideInputContext} from './inputAssistance'
 import {computed,onMounted,onUnmounted,ref,watch} from 'vue'
 import {useRoute,useRouter} from 'vue-router'
 import {api,post,type Task} from './api'
@@ -207,6 +208,7 @@ onMounted(async()=>{
   }catch(e){error.value=(e as Error).message}
 })
 onUnmounted(()=>{if(buildTimer)clearTimeout(buildTimer)})
+provideInputContext(()=>({courseId:courseId.value||undefined,language:locale.value,context:{units:units.value,question:question.value,patchPage:patchPage.value,patchKind:patchKind.value,oldText:patchOldText.value}}))
 </script>
 
 <template>
@@ -225,8 +227,8 @@ onUnmounted(()=>{if(buildTimer)clearTimeout(buildTimer)})
         <el-form-item label="目标语言"><el-select v-model="locale" :disabled="selectedBlueprint?.status==='APPROVED'"><el-option v-for="item in locales" :key="item.code" :value="item.code" :label="item.name"/></el-select></el-form-item>
         <article v-for="(unit,index) in units" :key="unit.unitId" class="unit-editor">
           <div class="teacher-section-title"><h3>单元 {{index+1}}</h3><el-button v-if="units.length>1&&selectedBlueprint?.status!=='APPROVED'" link type="danger" @click="units.splice(index,1)">移除</el-button></div>
-          <el-form-item label="单元名称"><el-input v-model="unit.title" :disabled="selectedBlueprint?.status==='APPROVED'"/></el-form-item>
-          <el-form-item label="教学目标"><el-input v-model="unit.objectiveText" :disabled="selectedBlueprint?.status==='APPROVED'"/></el-form-item>
+          <el-form-item label="单元名称"><AssistedInput v-model="unit.title" :disabled="selectedBlueprint?.status==='APPROVED'" assist-label="教学单元标题" assist-purpose="topic"/></el-form-item>
+          <el-form-item label="教学目标"><AssistedInput v-model="unit.objectiveText" :disabled="selectedBlueprint?.status==='APPROVED'" assist-label="教学目标" assist-purpose="requirements"/></el-form-item>
           <el-form-item label="关联页面"><el-select v-model="unit.pageIds" multiple filterable :disabled="selectedBlueprint?.status==='APPROVED'" style="width:100%"><el-option v-for="page in sourcePages" :key="page.page_id" :value="page.page_id" :label="`第 ${page.page_id} 页 · ${page.title}`"/></el-select></el-form-item>
           <el-form-item label="先修单元"><el-select v-model="unit.prerequisiteIds" multiple :disabled="selectedBlueprint?.status==='APPROVED'" style="width:100%"><el-option v-for="option in availableUnitIds.filter(item=>item.value!==unit.unitId)" :key="option.value" :value="option.value" :label="option.label"/></el-select></el-form-item>
         </article>
@@ -242,7 +244,7 @@ onUnmounted(()=>{if(buildTimer)clearTimeout(buildTimer)})
         <el-form-item label="修订页面"><el-select v-model="patchPage"><el-option v-for="page in sourcePages" :key="page.page_id" :value="page.page_id" :label="`第 ${page.page_id} 页 · ${page.title}`"/></el-select></el-form-item>
         <el-form-item v-if="patchKind==='subtitle'" label="字幕语种"><el-select v-model="patchLocale"><el-option v-for="item in availablePatchLocales" :key="item.code" :value="item.code" :label="item.name"/></el-select></el-form-item>
         <el-form-item v-if="patchKind!=='script'" :label="patchKind==='subtitle'?'字幕中的原文片段':'课件上的原文（须位于同一文本片段）'"><el-input v-model="patchOldText"/></el-form-item>
-        <el-form-item :label="patchKind==='script'?'修订后的可朗读讲稿':patchKind==='subtitle'?'替换后的字幕文字':'替换后的课件文字'"><el-input v-model="patchText" :type="patchKind==='script'?'textarea':'text'" :rows="7"/></el-form-item>
+        <el-form-item :label="patchKind==='script'?'修订后的可朗读讲稿':patchKind==='subtitle'?'替换后的字幕文字':'替换后的课件文字'"><AssistedInput v-model="patchText" :type="patchKind==='script'?'textarea':'text'" :rows="7" assist-label="页面修订内容" :assist-language="patchLocale" :assist-page="patchPage" assist-purpose="lecture"/></el-form-item>
         <p v-if="patchKind==='subtitle'" class="muted">字幕修订会保留原语音和人物视频，重新合成对应语种的视频。请从课程结果下载 SRT，填写同一页面中的原文片段。</p>
         <el-button type="primary" :loading="busy" @click="createPatchPlan">保存修订方案</el-button>
       </el-form>
@@ -260,8 +262,8 @@ onUnmounted(()=>{if(buildTimer)clearTimeout(buildTimer)})
         <el-form-item label="语言"><el-select v-model="question.locale"><el-option v-for="item in locales" :key="item.code" :value="item.code" :label="item.name"/></el-select></el-form-item>
         <el-form-item label="关联页面"><el-select v-model="question.anchorPage"><el-option v-for="page in sourcePages" :key="page.page_id" :value="page.page_id" :label="`第 ${page.page_id} 页 · ${page.title}`"/></el-select></el-form-item>
         <el-form-item v-if="selectedBlueprint?.objectives?.length" label="关联教学目标"><el-select v-model="question.objectiveId" clearable placeholder="选择教学目标"><el-option v-for="item in selectedBlueprint.objectives" :key="item.objective_id" :value="item.objective_id" :label="item.text"/></el-select></el-form-item>
-        <el-form-item label="题干"><el-input v-model="question.prompt" type="textarea" :rows="2"/></el-form-item>
-        <div v-for="id in ['a','b','c','d']" :key="id" class="option-editor"><el-form-item :label="`选项 ${id.toUpperCase()}`"><el-input v-model="question[id as 'a'|'b'|'c'|'d']"/></el-form-item><el-form-item label="作答反馈"><el-input v-model="question[('feedback'+id.toUpperCase()) as 'feedbackA'|'feedbackB'|'feedbackC'|'feedbackD']"/></el-form-item></div>
+        <el-form-item label="题干"><AssistedTextarea v-model="question.prompt" type="textarea" :rows="2" assist-label="练习题干" assist-purpose="quiz" :assist-language="question.locale" :assist-page="question.anchorPage"/></el-form-item>
+        <div v-for="id in ['a','b','c','d']" :key="id" class="option-editor"><el-form-item :label="`选项 ${id.toUpperCase()}`"><AssistedInput v-model="question[id as 'a'|'b'|'c'|'d']" assist-label="练习选项" assist-purpose="quiz" :assist-language="question.locale" :assist-page="question.anchorPage"/></el-form-item><el-form-item label="作答反馈"><AssistedInput v-model="question[('feedback'+id.toUpperCase()) as 'feedbackA'|'feedbackB'|'feedbackC'|'feedbackD']" assist-label="选项讲解反馈" assist-purpose="quiz" :assist-language="question.locale" :assist-page="question.anchorPage"/></el-form-item></div>
         <el-form-item label="正确选项"><el-radio-group v-model="question.correct"><el-radio v-for="id in ['a','b','c','d']" :key="id" :value="id">{{id.toUpperCase()}}</el-radio></el-radio-group></el-form-item>
         <el-button type="primary" :loading="busy" @click="createQuestion">创建题目草稿</el-button>
       </el-form>
