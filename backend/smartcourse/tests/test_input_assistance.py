@@ -9,6 +9,14 @@ from app.account_security import AuthSecurityError
 
 
 class InputAssistanceTests(unittest.TestCase):
+    def test_chinese_narration_is_rejected_for_japanese_without_kana(self):
+        from app.input_assistance import require_language
+        from app.language_validation import check_target_language
+        text='水在自然界中循环，主要包含蒸发、凝结、降水与径流几个关键步骤。蒸发是液态水变成水蒸气，凝结是水蒸气遇冷形成小水滴。'
+        with self.assertRaises(ValueError):require_language(text,'ja-JP')
+        self.assertEqual(check_target_language('水は蒸発して雲となり、雨として地表に戻ります。','Japanese')['status'],'match')
+        self.assertEqual(check_target_language('水循環基礎','Japanese')['status'],'insufficient_text')
+
     setUp=fixture.CourseStudioTests.setUp
     tearDown=fixture.CourseStudioTests.tearDown
     uid=fixture.CourseStudioTests.uid

@@ -16,7 +16,13 @@ def check_target_language(text: str, target: str) -> dict:
     allowed = TARGETS.get(target.strip().lower())
     text = re.sub(r'https?://\S+', ' ', text or '')
     letters = sum(char.isalpha() for char in text)
-    if allowed == {'ja'} and len(re.findall(r'[\u3040-\u30ff]', text)) >= 2:
+    kana=len(re.findall(r'[\u3040-\u30ff]',text))
+    han=len(re.findall(r'[\u4e00-\u9fff]',text))
+    simplified=set('这们说为发该简环从进过对关气态结') & set(text)
+    if allowed=={'ja'} and kana==0 and han>=20 and len(simplified)>=2:
+        return {'status':'mismatch','detected':'zh-cn','confidence':None,
+                'reason':'Simplified Chinese prose without Japanese kana'}
+    if allowed == {'ja'} and kana >= 2:
         return {'status': 'match', 'detected': 'ja', 'confidence': None}
     if allowed == {'ko'} and len(re.findall(r'[\uac00-\ud7af]', text)) >= 2:
         return {'status': 'match', 'detected': 'ko', 'confidence': None}

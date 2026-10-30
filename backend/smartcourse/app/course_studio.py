@@ -251,6 +251,7 @@ class CourseStudio:
         language = payload.get('language', 'zh-CN')
         if language not in SUPPORTED_LANGUAGES:
             raise ValueError('课程方案语种无效。')
+        requirements=text(payload.get('requirements',''),3000,'课程要求',False)
         context = []
         source_id = payload.get('sourceTaskId')
         if source_id:
@@ -264,7 +265,7 @@ class CourseStudio:
                   '"activity":"exercise or demonstration","minutes":10,"requirements":"content constraints"}]}. '
                   'Different lessons must cover distinct concepts in prerequisite order. Use the requested language. '
                   'Do not invent details absent from supplied sources.\n'+json.dumps({'topic':topic, 'audience':audience,
-                    'lessons':lessons, 'language':LANGUAGE_NAMES[language], 'requirements':text(payload.get('requirements',''), 3000, '课程要求', False), 'source':context}, ensure_ascii=False))
+                    'lessons':lessons, 'language':LANGUAGE_NAMES[language], 'requirements':requirements, 'source':context}, ensure_ascii=False))
         resource = self.app.pipeline_runner.resources.STAGES['S2'][0]
         def validate(result):
             outline=result.get('outline') if isinstance(result,dict) else None
@@ -286,10 +287,11 @@ class CourseStudio:
         with self.app.pipeline_runner.resources.acquire(resource), use_memory(read_memory(self.app.store, owner), 'S1'):
             result=checked_json(gateway,prompt,validate,self.app.settings.data_root/'agent-requests'/identifier('plan'),max_output_tokens=6000)
         record = {'id':identifier('plan'), 'createdBy':owner, 'topic':topic, 'audience':audience,
-                  'language':language, 'sourceTaskId':source_id, 'createdAt':utc_now(), 'revision':0}
+                  'language':language, 'requirements':requirements, 'sourceTaskId':source_id, 'createdAt':utc_now(), 'revision':0}
         return self.save_plan(record, {'revision':0, 'outline':result.get('outline') if isinstance(result,dict) else None}, expected_count=lessons)
 
     def save_plan(self, record, payload, expected_count=None):
+        requirements=text(payload.get('requirements',record.get('requirements','')),3000,'课程要求',False)
         outline = payload.get('outline')
         if not isinstance(outline, list) or not 1 <= len(outline) <= 12 or (expected_count and len(outline) != expected_count):
             raise ValueError('课程大纲的课时数量无效。')
@@ -307,7 +309,7 @@ class CourseStudio:
             current = plans.get(record['id'], record)
             if current['revision'] != payload.get('revision'):
                 raise ValueError('课程方案已更新，请重新读取后保存。')
-            value = {**current, 'outline':clean, 'revision':current['revision']+1, 'updatedAt':utc_now()}
+            value = {**current, 'outline':clean, 'requirements':requirements, 'revision':current['revision']+1, 'updatedAt':utc_now()}
             plans[record['id']] = value
             return value
         return self.app.store.transact(operation)
@@ -332,7 +334,7 @@ class CourseStudio:
         # Reserve the batch before creating courses so a refresh shows partial preparation.
         self.save('batches', batch['id'], batch)
         for lesson in outline:
-            requirements = '\n'.join(x for x in (defaults.get('requirements'),lesson.get('objective'), lesson.get('activity'), lesson.get('requirements')) if x)
+            requirements = '\n'.join(x for x in (defaults.get('requirements'),record.get('requirements') if group=='plans' else '',lesson.get('objective'), lesson.get('activity'), lesson.get('requirements')) if x)
             inputs = {'topic':lesson['title'], 'requirements':requirements,
                       'totalPages':payload.get('totalPages',defaults.get('totalPages',5)), 'durationMinutes':lesson['minutes'],
                       'targetLearners':record.get('audience') or record.get('inputs',{}).get('targetLearners','高校本科生'),
@@ -371,7 +373,7 @@ class CourseStudio:
         if not images and payload.get('withImages',True):
             from .pptx_render import render_pptx
             images = render_pptx(self.root(task['id'])/'s1/generated.pptx', folder, width=1280)
-        selected = [Path(images[page_id-1])] if len(images) >= page_id else []
+        selected = [Path(images[page_id-1])] if payload.get('withImages', True) and len(images) >= page_id else []
         resource = self.app.pipeline_runner.resources.STAGES['S2'][0]
         last_error = None
         for attempt in range(4):
@@ -685,6 +687,10 @@ class CourseStudio:
                       'sourceTaskId':task['id'], 'voiceId':task.get('voiceId','default'),
                       'inputs':{k:copy.deepcopy(task['inputs'][k]) for k in ('requirements','courseProfile','durationMinutes','totalPages','targetLearners','subtitlesEnabled') if k in task.get('inputs',{})},
                       'targetLanguages':task['targetLanguages'], 'createdAt':utc_now()}
+            if 'totalPages' not in record['inputs']:
+                page_count=len(self.pages(task))
+                if page_count:
+                    record['inputs']['totalPages']=page_count
             handler._json(201, self.save('templates', record['id'], record))
             return True
         match = re.fullmatch(r'/v1/studio/(templates|plans)/([^/]+)/(launch|delete|save)', path)

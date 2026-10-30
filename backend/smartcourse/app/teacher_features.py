@@ -253,17 +253,22 @@ def generate_question_batch(settings, course_id, user_id, gateway, count=5, loca
               'key_points':[str(point)[:220] for point in page.get('key_points',[])[:8]],
               'script_excerpt':str(page.get('script_text',''))[:1000]}
              for number,page in pages.items()]
+    snippets={}
+    for number,page in pages.items():
+        values=[str(page.get('title','')),*map(str,page.get('key_points',[])),str(page.get('script_text',''))]
+        snippets[number]=list(dict.fromkeys(value.strip()[:600] for value in values if len(value.strip())>=8))
+    for page in context:page['source_snippets']=snippets[page['page_id']]
     language={'zh-CN':'中文','en-US':'英语','ja-JP':'日语','ko-KR':'韩语',
               'de-DE':'德语','fr-FR':'法语','ru-RU':'俄语','es-ES':'西班牙语'}[locale]
     prompt=(f'根据以下课程原文，为教师拟定最多 {requested} 道{language}判断题草稿。每题必须是可明确判断真假的完整陈述，'
             '不得写“关于某某的说法是否正确”一类空泛题干。真假两类都可以，但必须依据对应页面原文。'
             '只返回 JSON 对象 {"questions":[{"page_id":1,"statement":"完整陈述",'
-            '"correct":true,"explanation":"为什么","source_excerpt":"课程原文中的连续片段"}]}。'
-            'source_excerpt 必须从该页标题、教学要点或讲稿原文直接摘取；不得编造来源。'
+            '"correct":true,"explanation":"为什么","source_index":0}]}。'
+            'source_index 是该页 source_snippets 中支持题目的原文编号，从 0 开始；程序读取对应原句，不要自行改写引用。'
             '避免与已有题干重复。已有题干：'+json.dumps(sorted(existing),ensure_ascii=False)[:3500]
             +'。课程页面：'+json.dumps(context,ensure_ascii=False)[:20000])
     prompt += ('\nWrite every statement and explanation entirely in '+language+
-               '. Keep source_excerpt verbatim in its original source language. '
+               '. Select an integer source_index from that page source_snippets; the application retrieves its exact original wording. '
                'The source language must not replace the requested question language.')
     def validate_generated(value):
         from .language_validation import check_target_language
@@ -281,6 +286,9 @@ def generate_question_batch(settings, course_id, user_id, gateway, count=5, loca
                 raise ValueError('题目必须引用实际存在的课程页。')
             statement=str(row.get('statement','')).strip()
             explanation=str(row.get('explanation','')).strip()
+            index=row.get('source_index')
+            if isinstance(index,int) and not isinstance(index,bool) and 0<=index<len(snippets[page_id]):
+                row['source_excerpt']=snippets[page_id][index]
             excerpt=str(row.get('source_excerpt','')).strip()
             page=pages[page_id]
             original='\n'.join([str(page.get('title','')),*map(str,page.get('key_points',[])),str(page.get('script_text',''))])

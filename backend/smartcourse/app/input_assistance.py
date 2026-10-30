@@ -242,6 +242,7 @@ def suggest_revision(app,user,task,payload):
         '"questions":[],"changes":[{"page":1,"kind":"script|slide_text|subtitle|speech|avatar|layout",'
         '"oldText":"exact existing text","text":"proposed replacement","reason":"Chinese explanation"}]}. '
         'All changes use the selected language and requested pages. Script changes replace the complete narration. '
+        'A requested sentence count concerns prose length only; do not invent a count of steps or quantities. '
         'For slide_text use an oldText substring appearing exactly once in the supplied slide_text_runs. '
         'For subtitle use an exact substring of the supplied page subtitles. Do not mix subtitle changes with '
         'other kinds in one proposal; a script revision already regenerates its subtitles. Use speech/avatar/layout '
@@ -317,6 +318,9 @@ def apply_revision(app,user,task,key,payload):
     now=revision_material(app,task,record['language'],sorted({known[x]['page'] for x in selected}))
     if len(now)!=len({known[x]['page'] for x in selected}) or any(row!=old.get(row['page_id']) for row in now):raise ValueError('课程内容已变化，请重新生成修改建议。')
     changes=[{k:v for k,v in known[x].items() if k in {'page','language','kind','oldText','text'}} for x in selected]
+    for change in changes:
+        if change['kind']=='script':
+            require_language(change['text'],record['language'] if record['language']!='source' else language_code(task.get('sourceLanguage','中文')))
     def reserve(data):
         saved=data['courseStudio']['revisionSuggestions'][key]
         if saved.get('status')=='applying':raise ValueError('此建议正在处理，请稍后刷新。')

@@ -24,6 +24,63 @@ from app.teacher_features import create_question, review_question, generate_ques
 
 
 class CourseStudioTests(unittest.TestCase):
+    def test_question_source_index_uses_actual_original_instead_of_model_paraphrase(self):
+        self.app.pipeline_runner.gateway.respond_json.return_value={'questions':[{
+            'page_id':1,'statement':'Inputs and weights determine the output of a neuron.',
+            'correct':True,'explanation':'The course explains how inputs and weights determine the neuron output.',
+            'source_index':0,'source_excerpt':'A paraphrased source that is not literally in the page.'}]}
+        result=generate_question_batch(self.app.settings,self.task['id'],self.uid('owner'),self.app.pipeline_runner.gateway,1,'en-US')
+        self.assertEqual(result['created'],1)
+        prompt=self.app.pipeline_runner.gateway.respond_json.call_args.args[0]
+        self.assertIn('source_snippets',prompt)
+
+    def test_plan_preserves_overall_requirements_when_created_and_edited(self):
+        self.app.pipeline_runner.gateway.respond_json.return_value={'outline':[
+            {'title':'One lesson','objective':'Explain a neuron','activity':'Identify its inputs','minutes':1,'requirements':'Keep source facts'}]}
+        status,plan=self.call('/v1/studio/plans',{'topic':'Neurons','lessons':1,'requirements':'Use only the supplied facts.'})
+        self.assertEqual(status,201,plan)
+        self.assertEqual(plan['requirements'],'Use only the supplied facts.')
+        status,saved=self.call('/v1/studio/plans/'+plan['id']+'/save',{'revision':plan['revision'],'outline':plan['outline'],'requirements':'Retain the lesson and add a short example.'})
+        self.assertEqual(status,200,saved)
+        status,records=self.call('/v1/studio/plans')
+        self.assertEqual(next(x for x in records if x['id']==plan['id'])['requirements'],'Retain the lesson and add a short example.')
+        status,batch=self.call('/v1/studio/plans/'+plan['id']+'/launch',{'targetLanguages':['en-US'],'execute':False})
+        self.assertEqual(status,200,batch)
+        self.assertIn('Retain the lesson and add a short example.',self.app.get_task(batch['taskIds'][0])['inputs']['requirements'])
+        stale_status,_=self.call('/v1/studio/plans/'+plan['id']+'/save',{'revision':plan['revision'],'outline':plan['outline'],'requirements':'Outdated input'})
+        self.assertEqual(stale_status,400)
+
+    def test_upload_template_uses_actual_pages_when_input_has_no_page_count(self):
+        self.app.mutate_task(self.task['id'],lambda task,_:task['inputs'].pop('totalPages',None))
+        status,template=self.call('/v1/studio/templates',{'courseId':self.task['id'],'name':'Actual uploaded pages'})
+        self.assertEqual(status,201,template)
+        self.assertEqual(template['inputs']['totalPages'],len(self.pages))
+        status,batch=self.call('/v1/studio/templates/'+template['id']+'/launch',{'topics':['Another course'],'execute':False})
+        self.assertEqual(status,200,batch)
+        self.assertEqual(self.app.get_task(batch['taskIds'][0])['inputs']['totalPages'],len(self.pages))
+
+    def test_template_preserves_explicit_page_setting(self):
+        self.app.mutate_task(self.task['id'],lambda task,_:task['inputs'].update(totalPages=1))
+        status,template=self.call('/v1/studio/templates',{'courseId':self.task['id'],'name':'Explicit page preference'})
+        self.assertEqual(status,201,template)
+        self.assertEqual(template['inputs']['totalPages'],1)
+
+    def test_text_only_review_does_not_submit_existing_slide_images(self):
+        folder=self.course_root/'s1/source-slide-images'
+        folder.mkdir(parents=True,exist_ok=True)
+        image=folder/'page-001.png'
+        image.write_bytes(b'existing slide image')
+        gateway=self.app.pipeline_runner.gateway.respond_json
+        gateway.return_value={'page':1,'issues':[],'summary':'Review finished.'}
+        status,value=self.call('review',{'page':1,'withImages':False})
+        self.assertEqual(status,200,value)
+        self.assertFalse(value['imageReviewed'])
+        self.assertEqual(gateway.call_args.kwargs['image_paths'],[])
+        status,value=self.call('review',{'page':1,'withImages':True})
+        self.assertEqual(status,200,value)
+        self.assertTrue(value['imageReviewed'])
+        self.assertEqual(gateway.call_args.kwargs['image_paths'],[image])
+
     def test_memory_candidate_can_select_an_exact_source_snippet(self):
         self.app.pipeline_runner.gateway.respond_json.return_value={'entries':[{
             'kind':'definition','name':'神经元','value':'输入与权重共同决定输出。','pages':[1],'sourceIndex':2}]}

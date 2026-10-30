@@ -1,4 +1,5 @@
 import json
+import importlib.util
 import shutil
 import subprocess
 import tempfile
@@ -7,6 +8,31 @@ import wave
 from pathlib import Path
 
 from agents.flashhead_agent import FlashHeadAvatarAgent
+
+
+class FlashHeadRestoreFrameRateTests(unittest.TestCase):
+    def helper(self):
+        path=Path(__file__).resolve().parents[3]/'recovery/huawei/ensure_flashhead_fps.py'
+        spec=importlib.util.spec_from_file_location('flashhead_restore_fps',path)
+        module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+        return module.ensure_frame_rate
+
+    def test_restored_twenty_fps_config_is_updated_before_generation(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path=Path(directory)/'flash_head.yaml'
+            path.write_text('infer_params:\n  tgt_fps: 20\n  sample_rate: 16000\n')
+            ensure=self.helper()
+            self.assertTrue(ensure(path)['changed'])
+            self.assertIn('tgt_fps: 25',path.read_text())
+            self.assertIn('sample_rate: 16000',path.read_text())
+            self.assertFalse(ensure(path)['changed'])
+
+    def test_ambiguous_frame_rate_config_is_rejected_without_modification(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path=Path(directory)/'flash_head.yaml';original='tgt_fps: 20\ntgt_fps: 24\n'
+            path.write_text(original)
+            with self.assertRaises(ValueError):self.helper()(path)
+            self.assertEqual(path.read_text(),original)
 
 
 @unittest.skipUnless(shutil.which('ffmpeg') and shutil.which('ffprobe'),'FFmpeg required')
