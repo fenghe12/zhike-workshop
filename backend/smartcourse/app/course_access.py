@@ -54,3 +54,21 @@ def published_artifacts(task):
     for stage in ('s1', 's2', 's3', 's4', 's5'):
         visit(task.get('outputs', {}).get(stage, {}))
     return found
+
+
+def personal_remediation_artifacts(task, user_id, state):
+    """Expose completed quiz media only to its own participant."""
+    found=set()
+    for record in state.get('interruptions',{}).values():
+        if (record.get('purpose')!='quiz_remediation' or record.get('courseId')!=task['id']
+                or record.get('learnerId')!=user_id or record.get('status')!='completed'):
+            continue
+        prefix='/artifacts/tasks/'+task['id']+'/interruptions/'+record['id']+'/'
+        for key in ('videoUrl','audioUrl'):
+            url=record.get(key)
+            if isinstance(url,str) and url.startswith(prefix):
+                found.add(url)
+        video=record.get('videoUrl','')
+        if isinstance(video,str) and video.startswith(prefix) and video.endswith('.mp4'):
+            found.add(video[:-4]+'.png')
+    return found

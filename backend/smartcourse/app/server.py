@@ -601,13 +601,14 @@ def make_handler(application: SmartCourseApplication):
             user_id = self._user_id(required=True)
             parts = path.relative_to(root).parts
             if len(parts) > 1 and parts[0] == "tasks":
-                from .course_access import course_role, require_course, published_artifacts
+                from .course_access import course_role, require_course, published_artifacts, personal_remediation_artifacts
                 task = application.get_task(parts[1])
                 role = require_course(task,user_id)
                 if role not in {'owner','editor'}:
                     public_url = '/artifacts/'+str(path.relative_to(root))
                     image_folder = '/artifacts/tasks/'+task['id']+'/s1/source-slide-images/'
-                    if public_url not in published_artifacts(task) and not (role in {'reviewer','learner'} and public_url.startswith(image_folder) and path.suffix == '.png'):
+                    own_quiz_media=public_url in personal_remediation_artifacts(task,user_id,application.store.snapshot())
+                    if public_url not in published_artifacts(task) and not own_quiz_media and not (role in {'reviewer','learner'} and public_url.startswith(image_folder) and path.suffix == '.png'):
                         raise ApiError(HTTPStatus.FORBIDDEN,'此文件不属于共享课程的可读结果。')
             elif len(parts) > 2 and parts[0] == "uploads":
                 asset = application.store.snapshot().get("uploads", {}).get(parts[2])
@@ -1045,7 +1046,11 @@ def make_handler(application: SmartCourseApplication):
                 match = re.fullmatch(r"/v1/courses/([^/]+)/questions/batch", path)
                 if match:
                     course_id=unquote(match.group(1)); self._task_owner(course_id)
-                    user=self._user_id(required=True); result=generate_question_batch(application.settings,course_id,user,application.pipeline_runner.gateway,payload.get('count',5),payload.get('locale','zh-CN')); self._json(HTTPStatus.CREATED,result); return
+                    user=self._user_id(required=True)
+                    resource=application.pipeline_runner.resources.STAGES['S2'][0]
+                    with application.pipeline_runner.resources.acquire(resource):
+                        result=generate_question_batch(application.settings,course_id,user,application.pipeline_runner.gateway,payload.get('count',5),payload.get('locale','zh-CN'))
+                    self._json(HTTPStatus.CREATED,result); return
                 match = re.fullmatch(r"/v1/questions/([^/]+)/review", path)
                 if match:
                     record=_read(application.settings).get('questions',{}).get(unquote(match.group(1)))

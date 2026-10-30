@@ -36,6 +36,14 @@ def submit_repair(app, task, owner, payload):
         repairs = data.setdefault('courseStudio',{}).setdefault('repairs',{})
         previous = next((x for x in repairs.values() if x['feedbackId'] == feedback['id'] and x['courseId'] == task['id']), None)
         if previous:
+            if previous.get('status')=='failed' and not previous.get('releaseTaskId'):
+                history=previous.setdefault('previousFailures',[])
+                history.append({'attempts':previous.get('attempts',0),'message':previous.get('message',''),
+                                'finishedAt':previous.get('updatedAt',utc_now())})
+                previous.update(status='queued',attempts=0,updatedAt=utc_now(),
+                    correction=payload.get('correction',previous.get('correction','')),
+                    oldText=payload.get('oldText',previous.get('oldText','')))
+                previous.pop('message',None)
             return previous
         record = {'id':identifier('repair'), 'feedbackId':feedback['id'], 'courseId':task['id'], 'createdBy':owner,
                   'kind':kind,'page':page,'language':language,'status':'queued','attempts':0,'createdAt':utc_now(),
@@ -115,10 +123,12 @@ def _work(app, job_id):
                       '"replacements":[{"oldText":"exact existing translated slide text","text":"corrected translation"}]}. '
                       'Use the requested target language. Preserve every substantive source claim, number and condition. '
                       'Explain directly to students, without reporting what the slide shows. '
-                      'Do not change unrelated content or invent facts. Return an empty replacements list if slide text is already correct.\n'
+                      'Do not change unrelated content or invent facts. For narration repairs, change only script_text '
+                      'and return replacements=[]. For translation repairs, oldText must be copied exactly from slideTexts, '
+                      'never from source-language text. Return an empty replacements list if slide text is already correct.\n'
                       +json.dumps({'source':original,'current':translated,'slideTexts':slide_texts,
                                    'language':LANGUAGE_NAMES[code],'feedback':feedback['comment'],
-                                   'requestedCorrection':record.get('correction','')},ensure_ascii=False))
+                                   'repairKind':kind,'requestedCorrection':record.get('correction','')},ensure_ascii=False))
             last_error = '模型未返回有效修订。'
             for attempt in range(record.get('attempts',0),4):
                 record['attempts']=attempt+1
@@ -132,11 +142,10 @@ def _work(app, job_id):
                             json_retries=0,json_record_dir=folder/job_id/f'attempt-{attempt+1}',max_output_tokens=5000,
                             **({'image_paths':[images[page-1]]} if len(images)>=page else {}))
                     script = validate_spoken_text(answer.get('script_text'))
-                    from .language_validation import check_target_language
-                    if check_target_language(script,LANGUAGE_NAMES[code])['status']=='mismatch':
-                        raise ValueError('修订讲稿的语种不符合目标语种。')
+                    from .input_assistance import require_language
+                    require_language(script,code)
                     changes = [{'page':page,'language':code,'kind':'script','text':script}]
-                    replacements = answer.get('replacements',[])
+                    replacements = answer.get('replacements',[]) if kind=='translation' else []
                     if not isinstance(replacements,list) or len(replacements)>40:
                         raise ValueError('课件文字修订格式无效。')
                     for replacement in replacements:

@@ -253,7 +253,8 @@ def generate_question_batch(settings, course_id, user_id, gateway, count=5, loca
               'key_points':[str(point)[:220] for point in page.get('key_points',[])[:8]],
               'script_excerpt':str(page.get('script_text',''))[:1000]}
              for number,page in pages.items()]
-    language={'zh-CN':'中文','en-US':'英语','ja-JP':'日语','ko-KR':'韩语','de-DE':'德语','fr-FR':'法语'}[locale]
+    language={'zh-CN':'中文','en-US':'英语','ja-JP':'日语','ko-KR':'韩语',
+              'de-DE':'德语','fr-FR':'法语','ru-RU':'俄语','es-ES':'西班牙语'}[locale]
     prompt=(f'根据以下课程原文，为教师拟定最多 {requested} 道{language}判断题草稿。每题必须是可明确判断真假的完整陈述，'
             '不得写“关于某某的说法是否正确”一类空泛题干。真假两类都可以，但必须依据对应页面原文。'
             '只返回 JSON 对象 {"questions":[{"page_id":1,"statement":"完整陈述",'
@@ -261,7 +262,48 @@ def generate_question_batch(settings, course_id, user_id, gateway, count=5, loca
             'source_excerpt 必须从该页标题、教学要点或讲稿原文直接摘取；不得编造来源。'
             '避免与已有题干重复。已有题干：'+json.dumps(sorted(existing),ensure_ascii=False)[:3500]
             +'。课程页面：'+json.dumps(context,ensure_ascii=False)[:20000])
-    result=gateway.respond_json(prompt,reasoning_effort='medium',max_output_tokens=6000)
+    prompt += ('\nWrite every statement and explanation entirely in '+language+
+               '. Keep source_excerpt verbatim in its original source language. '
+               'The source language must not replace the requested question language.')
+    def validate_generated(value):
+        from .language_validation import check_target_language
+        targets={'zh-CN':'Simplified Chinese','en-US':'English','ja-JP':'Japanese','ko-KR':'Korean',
+                 'de-DE':'German','fr-FR':'French','ru-RU':'Russian','es-ES':'Spanish'}
+        rows=value.get('questions') if isinstance(value,dict) else None
+        if not isinstance(rows,list) or not rows or len(rows)>requested:
+            raise ValueError('需要返回实际题目列表。')
+        seen=set(existing)
+        for row in rows:
+            if not isinstance(row,dict):
+                raise ValueError('题目格式无效。')
+            page_id=_page_number(row.get('page_id'))
+            if page_id not in pages:
+                raise ValueError('题目必须引用实际存在的课程页。')
+            statement=str(row.get('statement','')).strip()
+            explanation=str(row.get('explanation','')).strip()
+            excerpt=str(row.get('source_excerpt','')).strip()
+            page=pages[page_id]
+            original='\n'.join([str(page.get('title','')),*map(str,page.get('key_points',[])),str(page.get('script_text',''))])
+            if not 12<=len(statement)<=180 or not explanation or not isinstance(row.get('correct'),bool):
+                raise ValueError('题干须为完整陈述，并提供真假答案和解释。')
+            if len(excerpt)<8 or excerpt not in original:
+                raise ValueError('来源摘录必须逐字来自对应页面的标题、要点或讲稿。')
+            normalized=re.sub(r'\s+','',statement).casefold()
+            if normalized in seen:
+                raise ValueError('题目与已有内容重复，请生成不同的完整陈述。')
+            seen.add(normalized)
+            for key in ('statement','explanation'):
+                text=str(row.get(key,''))
+                han=len(re.findall(r'[\u4e00-\u9fff]',text))
+                letters=sum(c.isalpha() for c in text)
+                wrong_chinese=locale in {'en-US','de-DE','fr-FR','ru-RU','es-ES'} and han>=8 and han/max(1,letters)>.8
+                if wrong_chinese or check_target_language(text,targets[locale])['status']=='mismatch':
+                    raise ValueError('题干和解释必须使用'+language+'，只有来源摘录保留原文。')
+        return value
+    from .agent_request import checked_json
+    result=checked_json(gateway,prompt,validate_generated,
+        Path(settings.data_root)/'agent-requests/questions'/course_id/_id('request'),
+        reasoning_effort='medium',max_output_tokens=6000)
     candidates=result.get('questions') if isinstance(result,dict) else None
     if not isinstance(candidates,list): raise ValueError('题目生成结果格式无效')
     created=[]
@@ -283,9 +325,19 @@ def generate_question_batch(settings, course_id, user_id, gateway, count=5, loca
         if normalized in existing: continue
         existing.add(normalized)
         correct=bool(item['correct'])
+        true_label,false_label,review_instruction={
+            'zh-CN':('正确','错误','请回看课程原文。'),
+            'en-US':('True','False','Please review the course material.'),
+            'ja-JP':('正しい','誤り','講義の内容を確認してください。'),
+            'ko-KR':('맞음','틀림','강의 내용을 다시 확인하세요.'),
+            'de-DE':('Richtig','Falsch','Bitte lesen Sie den Kursinhalt erneut.'),
+            'fr-FR':('Vrai','Faux','Veuillez revoir le contenu du cours.'),
+            'ru-RU':('Верно','Неверно','Повторите материал курса.'),
+            'es-ES':('Verdadero','Falso','Repase el contenido del curso.')
+        }[locale]
         draft=create_question(settings,course_id,{'locale':locale,'type':'true_false','prompt':statement,
-            'options':[{'id':'a','text':'正确','feedback':explanation if correct else '请回看课程原文。'},
-                       {'id':'b','text':'错误','feedback':explanation if not correct else '请回看课程原文。'}],
+            'options':[{'id':'a','text':true_label,'feedback':explanation if correct else review_instruction},
+                       {'id':'b','text':false_label,'feedback':explanation if not correct else review_instruction}],
             'correct_option_id':'a' if correct else 'b','anchor':{'page_id':page_id}},user_id)
         created.append(draft)
         if len(created)>=requested: break

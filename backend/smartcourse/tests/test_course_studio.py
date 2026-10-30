@@ -20,10 +20,120 @@ from app.feedback_repair import _work, submit_repair
 from app.server import SmartCourseApplication, make_handler
 from app.task_model import create_task
 from app.teaching_memory import generation_memory, memory_prompt
-from app.teacher_features import create_question, review_question
+from app.teacher_features import create_question, review_question, generate_question_batch
 
 
 class CourseStudioTests(unittest.TestCase):
+    def test_memory_candidate_can_select_an_exact_source_snippet(self):
+        self.app.pipeline_runner.gateway.respond_json.return_value={'entries':[{
+            'kind':'definition','name':'神经元','value':'输入与权重共同决定输出。','pages':[1],'sourceIndex':2}]}
+        status,value=self.call('extract-memory',{})
+        self.assertEqual(status,200,value)
+        self.assertEqual(value['entries'][0]['status'],'candidate')
+        self.assertEqual(value['entries'][0]['pages'],[1])
+        prompt=self.app.pipeline_runner.gateway.respond_json.call_args.args[0]
+        data=json.loads(prompt.rsplit('\n',1)[1])
+        self.assertEqual(data['sourceSnippets']['1'][2],self.pages[0]['script_text'])
+
+    def test_content_review_uses_selected_translation_and_original_facts(self):
+        self.app.pipeline_runner.gateway.respond_json.return_value={'page':1,'issues':[
+            {'quote':self.translated[0]['script_text'],'message':'Check the selected narration.','suggestion':'Keep the original facts.'}],
+            'summary':'Selected translation reviewed.'}
+        status,value=self.call('review',{'page':1,'language':'en-US','withImages':False})
+        self.assertEqual(status,200,value);self.assertEqual(value['language'],'en-US')
+        supplied=json.loads(self.app.pipeline_runner.gateway.respond_json.call_args.args[0].rsplit('\n',1)[1])
+        self.assertEqual(supplied['reviewedPage']['script_text'],self.translated[0]['script_text'])
+        self.assertEqual(supplied['originalPage']['script_text'],self.pages[0]['script_text'])
+        self.assertEqual(self.call('review',{'page':1,'language':'ru-RU','withImages':False})[0],400)
+
+    def test_narration_feedback_retry_preserves_slide_text(self):
+        feedback=self.feedback()
+        with patch('app.feedback_repair.start_worker'):
+            record=submit_repair(self.app,self.task,self.uid('owner'),
+                {'feedbackId':feedback['id'],'kind':'narration'})
+            self.app.studio.save('repairs',record['id'],{**record,'status':'failed','attempts':4,
+                'message':'Previous model response used the wrong slide text.'})
+            retried=submit_repair(self.app,self.task,self.uid('owner'),
+                {'feedbackId':feedback['id'],'kind':'narration'})
+        self.assertEqual(retried['attempts'],0);self.assertEqual(retried['status'],'queued')
+        self.assertEqual(len(retried['previousFailures']),1)
+        self.app.pipeline_runner.gateway.respond_json.return_value={
+            'script_text':'Training improves predictions by adjusting model weights according to the prediction errors.',
+            'replacements':[{'oldText':'Text not in this slide','text':'Unrequested slide edit'}]}
+        original=(self.course_root/'s2/en-US/translated.pptx').read_bytes()
+        _work(self.app,record['id'])
+        saved=self.app.studio.state()['repairs'][record['id']]
+        revised=self.app.get_task(saved['releaseTaskId'])
+        self.assertEqual({x['kind'] for x in revised['revisionChanges']},{'script'})
+        self.assertEqual((self.app.studio.root(revised['id'])/'s2/en-US/translated.pptx').read_bytes(),original)
+
+    def test_template_batch_inherits_saved_pages_minutes_and_requirements(self):
+        self.app.mutate_task(self.task['id'],lambda task,_:task['inputs'].update(
+            totalPages=2,durationMinutes=1,requirements='Preserve binary examples and use short sentences.'))
+        status,template=self.call('/v1/studio/templates',{'courseId':self.task['id'],'name':'Saved course settings'})
+        self.assertEqual(status,201,template)
+        status,batch=self.call('/v1/studio/templates/'+template['id']+'/launch',
+            {'topics':['First short lesson','Second short lesson'],'execute':False})
+        self.assertEqual(status,200,batch);self.assertEqual(len(batch['taskIds']),2)
+        for identifier in batch['taskIds']:
+            task=self.app.get_task(identifier)
+            self.assertEqual(task['inputs']['totalPages'],2)
+            self.assertEqual(task['inputs']['durationMinutes'],1)
+            self.assertIn('Preserve binary examples',task['inputs']['requirements'])
+            self.assertEqual(task['targetLanguages'],['英语'])
+
+    def test_question_generation_retries_source_language_for_target_question(self):
+        good={'questions':[{'page_id':1,'statement':'Inputs and weights determine the neuron output.',
+            'correct':True,'explanation':'The course states that inputs and weights jointly determine the output.',
+            'source_excerpt':self.pages[0]['script_text']}]}
+        bad=copy.deepcopy(good)
+        bad['questions'][0]['statement']='输入与权重共同决定神经元的输出。'
+        model=self.app.pipeline_runner.gateway.respond_json;model.side_effect=[bad,good]
+        result=generate_question_batch(self.app.settings,self.task['id'],self.uid('owner'),self.app.pipeline_runner.gateway,1,'en-US')
+        self.assertEqual(model.call_count,2)
+        self.assertEqual(result['questions'][0]['prompt'],good['questions'][0]['statement'])
+
+    def test_quiz_media_is_readable_only_by_its_own_course_participant(self):
+        self.member('learner','learner');self.member('other','learner');self.call('publish',{'status':'published'})
+        folder=self.course_root/'interruptions/answer-fixture';folder.mkdir(parents=True)
+        video=folder/'answer.mp4';video.write_bytes(b'private quiz media')
+        audio=folder/'answer.wav';audio.write_bytes(b'private quiz audio')
+        poster=folder/'answer.png';poster.write_bytes(b'private quiz poster')
+        private=folder/'request.json';private.write_text('{}')
+        record={'id':'answer-fixture','courseId':self.task['id'],'learnerId':self.uid('learner'),
+            'purpose':'quiz_remediation','status':'completed','videoUrl':self.url(video),'audioUrl':self.url(audio)}
+        self.app.store.transact(lambda data:data.setdefault('interruptions',{}).update({record['id']:record}))
+        for path in (video,audio,poster):
+            self.assertEqual(self.call(self.url(path),user='learner',raw=True)[0],200)
+            self.assertEqual(self.call(self.url(path),user='other',raw=True)[0],403)
+            self.assertEqual(self.call(self.url(path),user=None,raw=True)[0],401)
+        self.assertEqual(self.call(self.url(private),user='learner',raw=True)[0],403)
+        self.assertEqual(self.call('/artifacts/tasks/'+self.task['id']+'/execution-journal.json',user='learner',raw=True)[0],403)
+
+    def test_generated_true_false_questions_cover_all_supported_locales(self):
+        statements={
+            'zh-CN':'输入与权重共同决定神经元的输出。',
+            'en-US':'Inputs and weights determine the neuron output.',
+            'ja-JP':'入力と重みはニューロンの出力を決定します。',
+            'ko-KR':'입력과 가중치는 뉴런의 출력을 결정합니다.',
+            'de-DE':'Eingaben und Gewichte bestimmen die Ausgabe des Neurons.',
+            'fr-FR':'Les entrées et les poids déterminent la sortie du neurone.',
+            'ru-RU':'Входные данные и веса определяют выход нейрона.',
+            'es-ES':'Las entradas y los pesos determinan la salida de la neurona.'
+        }
+        expected={'zh-CN':('正确','错误'),'en-US':('True','False'),'ja-JP':('正しい','誤り'),
+                  'ko-KR':('맞음','틀림'),'de-DE':('Richtig','Falsch'),'fr-FR':('Vrai','Faux'),
+                  'ru-RU':('Верно','Неверно'),'es-ES':('Verdadero','Falso')}
+        for locale,statement in statements.items():
+            with self.subTest(locale=locale):
+                self.app.pipeline_runner.gateway.respond_json.return_value={'questions':[{
+                    'page_id':1,'statement':statement,'correct':True,'explanation':statement,
+                    'source_excerpt':self.pages[0]['script_text']}]}
+                value=generate_question_batch(self.app.settings,self.task['id'],self.uid('owner'),
+                    self.app.pipeline_runner.gateway,1,locale)
+                self.assertEqual(value['created'],1)
+                self.assertEqual(tuple(x['text'] for x in value['questions'][0]['options']),expected[locale])
+
     def setUp(self):
         self.directory=tempfile.TemporaryDirectory()
         self.root=Path(self.directory.name)

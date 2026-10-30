@@ -223,7 +223,9 @@ def execute_interruption(application, task, context, identifier):
         if previous.get('generationTaskId') and previous.get('needsSlides'):
             answer = {key: previous[key] for key in ('answer','needsSlides','slideOutline','sourcePages','needsClarification')}
         else:
-            answer = generate_interruption_answer(context, runner.gateway)
+            language_resource=ResourceScheduler(application.settings.data_root).STAGES['S2'][0]
+            with ResourceScheduler(application.settings.data_root).acquire(language_resource):
+                answer = generate_interruption_answer(context, runner.gateway)
         if previous.get('purpose') == 'quiz_remediation':
             answer['needsSlides'] = False
         if answer.get('needsSlides'):

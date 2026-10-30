@@ -2,7 +2,7 @@
 import json
 import os
 import subprocess
-from contextlib import contextmanager
+from contextlib import contextmanager, ExitStack
 from dataclasses import replace
 from pathlib import Path
 
@@ -27,15 +27,21 @@ def managed_model():
     def invoke(action):
         return subprocess.run(['ssh',*flags,'-p',str(port),host,shlex.join([python,control,action])],
                               capture_output=True,text=True,timeout=600)
-    started=invoke('start')
-    if started.returncode:
-        raise RuntimeError('DeepPresenter 模型启动失败：'+started.stderr[-600:])
-    try:
-        yield
-    finally:
-        stopped=invoke('stop')
-        if stopped.returncode:
-            raise RuntimeError('DeepPresenter 模型进程未正常停止，请检查模型服务日志。')
+    from .resource_scheduler import ResourceScheduler
+    scheduler=ResourceScheduler(Settings.from_env().data_root)
+    # Topic generation shares device memory with the speech and avatar engines.
+    with ExitStack() as resources:
+        for resource in sorted({scheduler.STAGES['S3'][0],scheduler.STAGES['S4'][0]}):
+            resources.enter_context(scheduler.acquire(resource))
+        started=invoke('start')
+        if started.returncode:
+            raise RuntimeError('DeepPresenter 模型启动失败：'+started.stderr[-600:])
+        try:
+            yield
+        finally:
+            stopped=invoke('stop')
+            if stopped.returncode:
+                raise RuntimeError('DeepPresenter 模型进程未正常停止，请检查模型服务日志。')
 
 
 def generate_native(topic,destination,*,pages,audience,minutes,language,requirements='',source_material=None):

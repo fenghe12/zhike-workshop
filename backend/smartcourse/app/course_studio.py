@@ -104,18 +104,28 @@ class CourseStudio:
 
     def extract_memory(self, task, owner):
         pages = self.pages(task)
+        snippets={p['page_id']:[value for value in [p.get('title',''),*p.get('key_points',[]),p.get('script_text','')]
+                                  if isinstance(value,str) and value.strip() and not re.fullmatch(r'[\d\s/]+',value)]
+                  for p in pages}
         gateway = self.app.pipeline_runner.gateway
         prompt = ('Extract reusable definitions, symbols and technical terms from this course. '
                   'Return JSON {"entries":[{"kind":"definition|symbol|term","name":"term",'
-                  '"value":"definition or explanation","pages":[1],"quote":"exact source substring"}]}. '
-                  'Use only the supplied content; every entry needs a literal source quote and a valid page. '
-                  'Return at most 30 entries. These are candidates for teacher review.\n'+json.dumps(pages, ensure_ascii=False))
+                  '"value":"definition or explanation","pages":[1],"sourceIndex":0}]}. '
+                  'Use only supplied content. Select the zero-based sourceIndex of an actual snippet on the first '
+                  'referenced page. The application retrieves its exact original text; do not paraphrase source quotes. '
+                  'Return 3 to 6 useful entries in Simplified Chinese. These are candidates for teacher review.\n'
+                  +json.dumps({'pages':pages,'sourceSnippets':snippets},ensure_ascii=False))
         def validate(result):
             entries=result.get('entries') if isinstance(result,dict) else None
             if not isinstance(entries,list) or len(entries)>30:
                 raise ValueError('记忆提取格式无效。')
             by_page={p['page_id']:source_text(p) for p in pages}
             for entry in entries:
+                if isinstance(entry,dict) and isinstance(entry.get('pages'),list) and entry['pages']:
+                    index=entry.get('sourceIndex')
+                    choices=snippets.get(entry['pages'][0],[])
+                    if isinstance(index,int) and not isinstance(index,bool) and 0<=index<len(choices):
+                        entry['quote']=choices[index]
                 if (not isinstance(entry,dict) or not isinstance(entry.get('pages'),list) or not entry['pages']
                     or not isinstance(entry.get('quote'),str) or not entry['quote']
                     or not any(entry['quote'] in by_page.get(p,'') for p in entry['pages'])):
@@ -127,7 +137,7 @@ class CourseStudio:
             return result
         resource=self.app.pipeline_runner.resources.STAGES['S2'][0]
         with self.app.pipeline_runner.resources.acquire(resource):
-            result=checked_json(gateway,prompt,validate,self.root(task['id'])/'studio/memory-requests'/identifier('request'),max_output_tokens=6000)
+            result=checked_json(gateway,prompt,validate,self.root(task['id'])/'studio/memory-requests'/identifier('request'),max_output_tokens=1800)
         entries = result.get('entries') if isinstance(result, dict) else None
         if not isinstance(entries, list) or len(entries) > 30:
             raise ValueError('记忆提取格式无效。')
@@ -303,8 +313,12 @@ class CourseStudio:
         return self.app.store.transact(operation)
 
     def launch_batch(self, owner, record, group, payload):
+        defaults=record.get('inputs',{}) if group=='templates' else {}
         languages = payload.get('targetLanguages') or ([record.get('language','zh-CN')] if group == 'plans' else record['targetLanguages'])
-        if not isinstance(languages, list) or not languages or len(languages) > 8 or any(x not in SUPPORTED_LANGUAGES for x in languages):
+        if not isinstance(languages, list) or not languages or len(languages) > 8:
+            raise ValueError('请选择有效的目标语种。')
+        languages=[next((code for code,name in SUPPORTED_LANGUAGES.items() if name==value),value) for value in languages]
+        if any(x not in SUPPORTED_LANGUAGES for x in languages):
             raise ValueError('请选择有效的目标语种。')
         if group == 'plans':
             outline = record['outline']
@@ -313,14 +327,14 @@ class CourseStudio:
             if not isinstance(topics, list) or not 1 <= len(topics) <= 12:
                 raise ValueError('请填写 1 至 12 个课程主题。')
             outline = [{'title':text(topic,300,'课程主题'), 'objective':'', 'activity':'',
-                        'minutes':payload.get('minutes',10), 'requirements':''} for topic in topics]
+                        'minutes':payload.get('minutes',defaults.get('durationMinutes',10)), 'requirements':''} for topic in topics]
         batch = {'id':identifier('batch'), 'createdBy':owner, 'sourceId':record['id'], 'taskIds':[], 'createdAt':utc_now(), 'errors':[]}
         # Reserve the batch before creating courses so a refresh shows partial preparation.
         self.save('batches', batch['id'], batch)
         for lesson in outline:
-            requirements = '\n'.join(x for x in (lesson.get('objective'), lesson.get('activity'), lesson.get('requirements')) if x)
+            requirements = '\n'.join(x for x in (defaults.get('requirements'),lesson.get('objective'), lesson.get('activity'), lesson.get('requirements')) if x)
             inputs = {'topic':lesson['title'], 'requirements':requirements,
-                      'totalPages':payload.get('totalPages',5), 'durationMinutes':lesson['minutes'],
+                      'totalPages':payload.get('totalPages',defaults.get('totalPages',5)), 'durationMinutes':lesson['minutes'],
                       'targetLearners':record.get('audience') or record.get('inputs',{}).get('targetLearners','高校本科生'),
                       'seriesId':batch['id']}
             try:
@@ -346,6 +360,9 @@ class CourseStudio:
 
     def content_review(self, task, owner, payload):
         page_id = payload.get('page')
+        language=payload.get('language','source')
+        if language!='source' and (language not in SUPPORTED_LANGUAGES or language not in task.get('outputs',{}).get('s2',{}).get('languages',{})):
+            raise ValueError('请选择课程中已经生成的审阅语种。')
         pages = self.pages(task)
         if isinstance(page_id, bool) or page_id not in {p['page_id'] for p in pages}:
             raise ValueError('请选择实际存在的课程页面。')
@@ -360,7 +377,8 @@ class CourseStudio:
         for attempt in range(4):
             try:
                 with self.app.pipeline_runner.resources.acquire(resource):
-                    result = review_page(task, self.root(task['id']), page_id, self.app.pipeline_runner.gateway, selected)
+                    result = review_page(task, self.root(task['id']), page_id, self.app.pipeline_runner.gateway, selected,
+                                         None if language=='source' else language)
                 break
             except Exception as error:
                 last_error = str(error)
