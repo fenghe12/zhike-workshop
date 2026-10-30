@@ -47,6 +47,22 @@ python3 -B deploy/huawei/build_release.py --output '/已确认的持久化目录
 7. 启动应用所属服务，检查网页、上传预览、注册登录、原课程播放、匿名文件访问拒绝及已授权管理账号。现有管理员名单继续使用；新增管理员通过 `python -m app.admin_access --account '已注册账号'` 设置。
 8. 模型计算关闭时，应显示计算未就绪，不把网页健康检查当成推理验收。部署检查结束后，依照本次网页时限关闭 ECS。
 
+## 计算授权续期同步
+
+ModelArts 续期后，预算控制器必须同时更新网站的计算状态文件。`smartcourseDeadline` 和 `lease.create_at + lease.duration` 都参与过期检查，更新其中一项会导致仍在运行的算力被网站判为过期。
+
+先通过已授权的 ModelArts 接口取得最新实例 JSON，保存在持久化私有目录，再调用：
+
+```bash
+PYTHONPATH=/srv/smartcourse/source/backend/smartcourse /srv/smartcourse/envs/api/bin/python -m app.compute_lease \
+  --state /srv/smartcourse/config/compute-state.json \
+  --platform /已确认的持久化私有目录/notebook-current.json \
+  --owner smartcourse-mobile-huawei-20261025 \
+  --deadline "$SMARTCOURSE_AUTHORIZED_DEADLINE"
+```
+
+`SMARTCOURSE_AUTHORIZED_DEADLINE` 使用本次授权截止时间的 UTC 秒值。同步工具检查实例身份和所属应用，保留平台的最新租期，以原子替换方式写入 600 权限文件，并保留服务账号的文件所属关系。运行中的预算控制器在写入新授权后执行这一步；平台原生停止与费用检查继续生效。平台返回停止状态时，网站也保存停止状态。
+
 ## 后续云端优化顺序
 
 | 项目 | 当前安排 | 云端验证要求 |

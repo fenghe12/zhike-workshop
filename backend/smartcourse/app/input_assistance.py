@@ -242,6 +242,8 @@ def suggest_revision(app,user,task,payload):
         '"questions":[],"changes":[{"page":1,"kind":"script|slide_text|subtitle|speech|avatar|layout",'
         '"oldText":"exact existing text","text":"proposed replacement","reason":"Chinese explanation"}]}. '
         'All changes use the selected language and requested pages. Script changes replace the complete narration. '
+        'Only summary, reasons and clarification questions use Chinese. Replacement text must use the selected '
+        'content language even when instructions, feedback or source quotations are Chinese. '
         'A requested sentence count concerns prose length only; do not invent a count of steps or quantities. '
         'For slide_text use an oldText substring appearing exactly once in the supplied slide_text_runs. '
         'For subtitle use an exact substring of the supplied page subtitles. Do not mix subtitle changes with '

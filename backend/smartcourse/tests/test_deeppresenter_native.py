@@ -10,6 +10,20 @@ from app.deeppresenter_native import generate_native,managed_model
 
 
 class NativeDeepPresenterTests(unittest.TestCase):
+    def test_reference_lesson_count_does_not_change_requested_page_count(self):
+        page={'page_id':1,'title':'关闭不用的水龙头','key_points':['刷牙时关闭水龙头','发现漏水及时报修'],
+              'script_text':'刷牙时关闭不用的水龙头，可以减少浪费。发现漏水时及时报修。'}
+        reference={'pages':[{'title':'水循环'},{'title':'节约用水'}]}
+        wrong={**page,'page_id':2}
+        with tempfile.TemporaryDirectory() as folder,patch.dict(os.environ,{'SMARTCOURSE_REMOTE_DEEPPRESENTER_CONTROL':''}),patch('app.gateway.ResponsesGateway.respond_json',side_effect=[wrong,page]) as model:
+            output=Path(folder)/'course.pptx'
+            generate_native('节约用水',output,pages=1,audience='大学生',minutes=1,
+                            language='Simplified Chinese',source_material=reference)
+            self.assertEqual(len(Presentation(output).slides),1)
+            self.assertEqual(model.call_count,2)
+            self.assertIn('"current_page": {"title": "节约用水"',model.call_args_list[0].args[0])
+            self.assertIn('Received page_id=2',model.call_args_list[1].args[0])
+
     def test_native_model_pages_are_rendered_with_scripts_and_reused_by_request(self):
         outline={'pages':[{'title':'二进制位值'},{'title':'逻辑运算'}]}
         first={'page_id':1,'title':'二进制位值','key_points':['零和一','从右向左位值翻倍'],

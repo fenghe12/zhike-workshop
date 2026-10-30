@@ -60,18 +60,31 @@ def generate_native(topic,destination,*,pages,audience,minutes,language,requirem
             return {**{k:v for k,v in saved.items() if k!='request'},'manifest':str(manifest_path)}
     def valid_outline(value):
         rows=value.get('pages') if isinstance(value,dict) else None
-        if not isinstance(rows,list) or len(rows)!=pages or any(not isinstance(x,dict) or not isinstance(x.get('title'),str) or not x['title'].strip() for x in rows):
-            raise ValueError('课程大纲的页面数量或标题无效。')
+        if not isinstance(rows,list):
+            raise ValueError('Return a JSON object containing a pages array.')
+        if len(rows)!=pages:
+            raise ValueError(f'Return exactly {pages} page(s) for the requested topic; received {len(rows)}. '
+                             'The number of pages or lessons in the reference material is not the requested output count.')
+        if any(not isinstance(x,dict) or not isinstance(x.get('title'),str) or not x['title'].strip() for x in rows):
+            raise ValueError('Each requested page must contain a nonempty title string.')
         return rows
     with managed_model():
         outline_path=model_root/'outline.json'
         cached=json.loads(outline_path.read_text()) if outline_path.is_file() else {}
-        if cached.get('request')==request:
+        if pages==1:
+            outline=[{'title':topic,'objectives':[]}]
+            outline_path.write_text(json.dumps({'request':request,'pages':outline,
+                'planning':'single_page_uses_requested_topic'},ensure_ascii=False,indent=2))
+        elif cached.get('request')==request:
             outline=valid_outline({'pages':cached['pages']})
         else:
-            outline=checked_json(gateway,'Plan distinct course pages in the requested language. '
+            outline=checked_json(gateway,f'Plan exactly {pages} page(s) for the single requested topic in the requested language. '
+                'Reference material may contain several lessons or pages; use it only as factual context. '
+                'Do not reproduce its lesson count, page count, unrelated topics, or a complete series outline. '
                 'Return JSON {"pages":[{"title":"specific title","objectives":["teaching objective"]}]}. '
-                'Use supplied sources when present and do not invent source facts.\n'+json.dumps(request,ensure_ascii=False),
+                'Use only title and objectives in each outline item. Do not invent source facts.\n'
+                +json.dumps(request,ensure_ascii=False)
+                +f'\nRequired output: a pages array of exactly {pages} item(s), solely about {topic}.',
                 valid_outline,model_root/'outline-responses',max_output_tokens=min(4096,500+pages*160))
             outline_path.write_text(json.dumps({'request':request,'pages':outline},ensure_ascii=False,indent=2))
         result=[]
@@ -79,8 +92,10 @@ def generate_native(topic,destination,*,pages,audience,minutes,language,requirem
             page_request={**request,'page_id':number,'outline':outline,'current_page':item}
             record=model_root/f'page-{number:03d}.json'
             def validate(value):
-                if not isinstance(value,dict) or value.get('page_id')!=number or not isinstance(value.get('title'),str):
+                if not isinstance(value,dict) or not isinstance(value.get('title'),str):
                     raise ValueError('课程页面编号或标题无效。')
+                if value.get('page_id')!=number:
+                    raise ValueError(f'Return only the requested page_id={number}. Received page_id={value.get("page_id")}.')
                 points=value.get('key_points')
                 if not isinstance(points,list) or not 2<=len(points)<=6 or any(not isinstance(x,str) or not x.strip() for x in points):
                     raise ValueError('课程页面需要 2 至 6 条完整教学要点。')

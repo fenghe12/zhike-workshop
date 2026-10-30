@@ -9,6 +9,20 @@ from app.account_security import AuthSecurityError
 
 
 class InputAssistanceTests(unittest.TestCase):
+    def test_japanese_revision_retries_chinese_before_saving_a_proposal(self):
+        folder=self.course_root/'s2/ja-JP';folder.mkdir(parents=True)
+        self.write(folder/'translated_structure.json',{'pages':[{'page_id':1,'title':'ニューロン',
+            'key_points':['入力と重み'],'script_text':'ニューロンは入力と重みを使って出力を計算します。学習では予測誤差に応じて重みを調整します。'}]})
+        self.app.mutate_task(self.task['id'],lambda t,_:t['outputs']['s2']['languages'].update({'ja-JP':{'translatedStructure':self.url(folder/'translated_structure.json')}}))
+        bad={'summary':'简化讲稿。','questions':[],'changes':[{'page':1,'kind':'script',
+            'text':'神经元使用输入和权重来计算输出。训练会根据预测误差调整权重，从而改变模型的预测结果。','reason':'保持原有事实。'}]}
+        good=copy.deepcopy(bad);good['changes'][0]['text']='ニューロンは入力と重みから出力を計算します。学習では予測誤差に応じて重みを調整します。'
+        model=self.app.pipeline_runner.gateway.respond_json;model.side_effect=[bad,good]
+        status,value=self.call('suggest-revision',{'instruction':'使用两句自然日语解释，保留原有事实。','page':1,'language':'ja-JP','withImages':False})
+        self.assertEqual(status,200,value);self.assertEqual(model.call_count,2)
+        self.assertEqual(value['changes'][0]['text'],good['changes'][0]['text'])
+        self.assertEqual(value['status'],'proposed')
+
     def test_chinese_narration_is_rejected_for_japanese_without_kana(self):
         from app.input_assistance import require_language
         from app.language_validation import check_target_language

@@ -67,16 +67,29 @@ def generate(body):
         tail=generated[:,inputs['input_ids'].shape[1]:]
         text=processor.batch_decode(tail,skip_special_tokens=True)[0]
         print(json.dumps({'generated_tokens':tail.shape[-1],'seconds':round(time.monotonic()-before,2)}),flush=True)
-        return text
+        eos=model.generation_config.eos_token_id
+        eos_ids=set(eos if isinstance(eos,(list,tuple)) else [eos])
+        tokens=int(tail.shape[-1])
+        completed=tokens<maximum or (tokens>0 and int(tail[0,-1]) in eos_ids)
+        return {'text':text,'completed':completed,'input_tokens':int(inputs['input_ids'].shape[1]),
+                'output_tokens':tokens}
 
 @app.post('/v1/chat/completions')
 def chat(body:dict):
-    text=generate(body)
+    result=generate(body)
     return {'id':'local-deeppresenter','object':'chat.completion','model':'DeepPresenter-9B',
-            'choices':[{'index':0,'message':{'role':'assistant','content':text},'finish_reason':'stop'}]}
+            'choices':[{'index':0,'message':{'role':'assistant','content':result['text']},
+                        'finish_reason':'stop' if result['completed'] else 'length'}],
+            'usage':{'prompt_tokens':result['input_tokens'],'completion_tokens':result['output_tokens'],
+                     'total_tokens':result['input_tokens']+result['output_tokens']}}
 
 @app.post('/v1/responses')
 def responses(body:dict):
-    text=generate(body)
-    return {'id':'local-deeppresenter','object':'response','model':'DeepPresenter-9B','status':'completed',
-            'output_text':text,'output':[{'type':'message','role':'assistant','content':[{'type':'output_text','text':text}]}]}
+    result=generate(body)
+    return {'id':'local-deeppresenter','object':'response','model':'DeepPresenter-9B',
+            'status':'completed' if result['completed'] else 'incomplete',
+            'incomplete_details':None if result['completed'] else {'reason':'max_output_tokens'},
+            'output_text':result['text'],
+            'output':[{'type':'message','role':'assistant','content':[{'type':'output_text','text':result['text']}]}],
+            'usage':{'input_tokens':result['input_tokens'],'output_tokens':result['output_tokens'],
+                     'total_tokens':result['input_tokens']+result['output_tokens']}}
