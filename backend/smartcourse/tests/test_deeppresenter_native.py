@@ -1,4 +1,5 @@
 import json
+import io
 import os
 import tempfile
 import unittest
@@ -50,6 +51,22 @@ class NativeDeepPresenterTests(unittest.TestCase):
             self.assertEqual(invoke.call_count,2)
             self.assertTrue(invoke.call_args_list[0].args[0][-1].endswith(' start'))
             self.assertTrue(invoke.call_args_list[1].args[0][-1].endswith(' stop'))
+
+    def test_local_owned_model_is_stopped_after_failure(self):
+        from unittest.mock import MagicMock
+        with tempfile.TemporaryDirectory() as folder:
+            env={'SMARTCOURSE_LOCAL_DEEPPRESENTER_COMMAND':json.dumps(['/persistent/model-server']),
+                 'SMARTCOURSE_LOCAL_DEEPPRESENTER_LOG':str(Path(folder)/'server.log'),
+                 'SMARTCOURSE_DATA_ROOT':folder}
+            child=MagicMock();child.poll.return_value=None
+            opener=MagicMock();opener.open.return_value=io.BytesIO(b'{"status":"ok"}')
+            with patch.dict(os.environ,env), patch('app.deeppresenter_native.socket.create_connection',side_effect=OSError), \
+                 patch('app.deeppresenter_native.urllib.request.build_opener',return_value=opener), \
+                 patch('app.deeppresenter_native.subprocess.Popen',return_value=child):
+                with self.assertRaisesRegex(ValueError,'generation failed'):
+                    with managed_model():raise ValueError('generation failed')
+            child.terminate.assert_called_once()
+            child.wait.assert_called_once()
 
 
 if __name__=='__main__':unittest.main()

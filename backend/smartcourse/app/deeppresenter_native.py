@@ -1,7 +1,11 @@
 """Page-aligned course generation with the deployed DeepPresenter-9B model."""
 import json
 import os
+import socket
 import subprocess
+import time
+import urllib.parse
+import urllib.request
 from contextlib import contextmanager, ExitStack
 from dataclasses import replace
 from pathlib import Path
@@ -17,6 +21,49 @@ from .narration_style import DIRECT_TEACHING_RULE, review_teaching_style
 @contextmanager
 def managed_model():
     control=os.environ.get('SMARTCOURSE_REMOTE_DEEPPRESENTER_CONTROL')
+    local_command=os.environ.get('SMARTCOURSE_LOCAL_DEEPPRESENTER_COMMAND')
+    if local_command:
+        from .resource_scheduler import ResourceScheduler
+        scheduler=ResourceScheduler(Settings.from_env().data_root)
+        command=json.loads(local_command)
+        if not isinstance(command,list) or not command or not all(isinstance(item,str) for item in command):
+            raise ValueError('DeepPresenter 本地启动配置无效。')
+        health=os.environ.get('SMARTCOURSE_DEEPPRESENTER_HEALTH','http://127.0.0.1:17815/health')
+        log_path=Path(os.environ['SMARTCOURSE_LOCAL_DEEPPRESENTER_LOG'])
+        log_path.parent.mkdir(parents=True,exist_ok=True)
+        with ExitStack() as resources:
+            for resource in sorted({scheduler.STAGES['S3'][0],scheduler.STAGES['S4'][0]}):
+                resources.enter_context(scheduler.acquire(resource))
+            opener=urllib.request.build_opener(urllib.request.ProxyHandler({}))
+            endpoint=urllib.parse.urlparse(health)
+            if endpoint.hostname not in {'127.0.0.1','localhost','::1'} or endpoint.port is None:
+                raise ValueError('DeepPresenter 健康检查必须使用本机地址和端口。')
+            try:
+                with socket.create_connection((endpoint.hostname,endpoint.port),timeout=2):
+                    pass
+            except OSError:
+                pass
+            else:raise RuntimeError('DeepPresenter 端口已有服务运行，请检查服务配置。')
+            with log_path.open('ab') as log:
+                process=subprocess.Popen(command,stdin=subprocess.DEVNULL,stdout=log,stderr=log)
+                try:
+                    for _ in range(180):
+                        if process.poll() is not None:
+                            raise RuntimeError('DeepPresenter 模型服务启动失败，请查看服务日志。')
+                        try:
+                            with opener.open(health,timeout=2) as response:
+                                if json.load(response).get('status')=='ok':break
+                        except (OSError,ValueError):pass
+                        time.sleep(1)
+                    else:raise RuntimeError('DeepPresenter 模型服务启动超时。')
+                    yield
+                finally:
+                    if process.poll() is None:
+                        process.terminate()
+                        try:process.wait(timeout=20)
+                        except subprocess.TimeoutExpired:
+                            process.kill();process.wait()
+        return
     if not control:
         yield
         return
