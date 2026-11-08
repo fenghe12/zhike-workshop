@@ -116,8 +116,13 @@ def burn_captions(video_path, srt_path, output_path, bbox_map, audio_path, horiz
             name = f'caption-{len(tiles):04d}.png'
             _render_tile(text, width, height, safe_width, band_height, font, wrap).save(work / name)
             tiles[text] = name
-        manifest += [f"file '{tiles[text]}'", f'option framerate {rate}', f"duration {event['frames'] / fps:.9f}"]
-    manifest += [f"file '{tiles[events[-1]['text']]}'", f'option framerate {rate}']
+        manifest.append(f"file '{tiles[text]}'")
+        if rate != 25:
+            manifest.append(f'option framerate {rate}')
+        manifest.append(f"duration {event['frames'] / fps:.9f}")
+    manifest.append(f"file '{tiles[events[-1]['text']]}'")
+    if rate != 25:
+        manifest.append(f'option framerate {rate}')
     (work / 'captions.ffconcat').write_text('\n'.join(manifest) + '\n')
     pending = work / 'captioned.mp4'
     filters = (f'[1:v]fps={rate}:round=near,format=rgba[caption];'
